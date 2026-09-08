@@ -1,0 +1,38 @@
+{
+  "2": {
+    "raw_entropy_mean": 0.6896528720855712,
+    "raw_entropy_std": 0.0035999438425847576,
+    "theoretical_max": 0.6931471805599453,
+    "normalized_entropy_mean": 0.9949587784926844,
+    "normalized_entropy_std": 0.005193621129175799,
+    "switching_rate_mean": 0.045454545454545456,
+    "switching_rate_std": 0.02631981668152379
+  },
+  "4": {
+    "raw_entropy_mean": 1.3803121030330658,
+    "raw_entropy_std": 0.003440760071916604,
+    "theoretical_max": 1.3862943611198906,
+    "normalized_entropy_mean": 0.99568471296241,
+    "normalized_entropy_std": 0.0024819837463214223,
+    "switching_rate_mean": 0.08535353535353536,
+    "switching_rate_std": 0.033657183441871796
+  },
+  "8": {
+    "raw_entropy_mean": 2.066418182849884,
+    "raw_entropy_std": 0.006018086855718012,
+    "theoretical_max": 2.0794415416798357,
+    "normalized_entropy_mean": 0.9937370882667704,
+    "normalized_entropy_std": 0.0028940880207944716,
+    "switching_rate_mean": 0.10101010101010102,
+    "switching_rate_std": 0.04457474495747918
+  },
+  "16": {
+    "raw_entropy_mean": 2.7367197036743165,
+    "raw_entropy_std": 0.02981670170088312,
+    "theoretical_max": 2.772588722239781,
+    "normalized_entropy_mean": 0.9870629861985124,
+    "normalized_entropy_std": 0.010754101919882407,
+    "switching_rate_mean": 0.1222222222222222,
+    "switching_rate_std": 0.033243802241125164
+  }
+}

@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Computational Analogues of Post-Decision and Self-Evaluative Biases in Reinforcement Learning Agents</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: {
+    fontCache: 'global'
+  }
+};
+</script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+<style>
+@page {
+    size: letter;
+    margin: 20mm 18mm 20mm 18mm;
+    @bottom-right {
+        content: counter(page);
+    }
+}
+
+body {
+    font-family: "Charter", "Georgia", "Cambria", serif;
+    color: #1a1a1a;
+    line-height: 1.6;
+    font-size: 11pt;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #ffffff;
+}
+
+h1 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 24pt;
+    font-weight: 700;
+    line-height: 1.25;
+    color: #0f172a;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.authors-block {
+    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 11pt;
+    color: #475569;
+    margin-bottom: 25px;
+}
+
+.authors-block strong {
+    color: #1e293b;
+    font-size: 12pt;
+}
+
+.venue-tag {
+    display: inline-block;
+    background: #e2e8f0;
+    color: #334155;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 9.5pt;
+    font-weight: 600;
+    margin-top: 6px;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    background: #cbd5e1;
+    margin: 25px 0;
+}
+
+h2 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 15pt;
+    font-weight: 700;
+    color: #1e293b;
+    border-bottom: 1.5px solid #0284c7;
+    padding-bottom: 4px;
+    margin-top: 30px;
+    margin-bottom: 12px;
+}
+
+h3 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 12pt;
+    font-weight: 600;
+    color: #334155;
+    margin-top: 20px;
+    margin-bottom: 8px;
+}
+
+h4 {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 11pt;
+    font-weight: 600;
+    color: #475569;
+    margin-top: 14px;
+    margin-bottom: 6px;
+}
+
+p {
+    margin-bottom: 12px;
+    text-align: justify;
+    hyphens: auto;
+}
+
+blockquote {
+    border-left: 4px solid #0284c7;
+    margin: 15px 0;
+    padding: 10px 18px;
+    background-color: #f0f9ff;
+    color: #0369a1;
+    font-style: italic;
+}
+
+ul, ol {
+    margin-top: 6px;
+    margin-bottom: 14px;
+    padding-left: 24px;
+}
+
+li {
+    margin-bottom: 5px;
+}
+
+pre, code {
+    font-family: "Consolas", "Courier New", monospace;
+    font-size: 9.5pt;
+}
+
+pre {
+    background-color: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 12px;
+    overflow-x: auto;
+    margin-bottom: 15px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0 10px 0;
+    font-size: 9.5pt;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+th, td {
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid #cbd5e1;
+}
+
+th {
+    background-color: #f1f5f9;
+    font-weight: 600;
+    color: #1e293b;
+    border-top: 2px solid #334155;
+    border-bottom: 2px solid #334155;
+}
+
+tr:last-child td {
+    border-bottom: 2px solid #334155;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 16px auto 8px auto;
+    border-radius: 4px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+em {
+    color: #334155;
+}
+
+.figure-caption {
+    font-size: 9pt;
+    color: #475569;
+    text-align: center;
+    margin-bottom: 20px;
+    line-height: 1.4;
+}
+
+@media print {
+    body {
+        padding: 0;
+        max-width: 100%;
+        font-size: 10pt;
+    }
+    h1 { font-size: 20pt; }
+    h2 { font-size: 13pt; page-break-after: avoid; }
+    h3 { font-size: 11pt; page-break-after: avoid; }
+    table, figure, img {
+        page-break-inside: avoid;
+    }
+    .no-print {
+        display: none;
+    }
+}
+</style>
+</head>
+<body>
+<h1>Computational Analogues of Post-Decision and Self-Evaluative Biases in Reinforcement Learning Agents</h1>
+<p><strong>Authors:</strong> Computational Cognitive Systems Research<br />
+<strong>Target Venue:</strong> <em>Nature Human Behaviour</em> / <em>Computational Psychiatry</em> / <em>NeurIPS (Cognitive Modeling &amp; Benchmark Track)</em><br />
+<strong>Date:</strong> September 2026  </p>
+<hr />
+<h2>Abstract</h2>
+<p>Reinforcement learning (RL) and behavioral psychology share a deep historical ancestry: temporal-difference learning originated as a computational account of animal conditioning, and reward-prediction errors provided a foundational model for mesolimbic dopamine activity. While computational psychiatry has successfully formalized disorders of learning (such as addiction and compulsion), psychological phenomena arising during the <em>post-decision</em> and <em>self-evaluative</em> phases remain largely unexamined from a mechanistic RL perspective. In this work, we investigate whether four hallmark human psychological biases—<strong>Cognitive Dissonance</strong> (post-decision spreading of alternatives), <strong>Impostor Syndrome</strong> (persistent underconfidence despite high competence), <strong>Self-Handicapping</strong> (defensive adoption of impediments prior to evaluation), and <strong>Choice Overload</strong> (decision paralysis and delayed commitment under option proliferation)—can emerge in artificial RL agents without hand-crafting bias directly into the reward function.</p>
+<p>We formalize a rigorous conceptual taxonomy distinguishing <strong>"Free" emergent biases</strong>—which arise spontaneously from standard learning dynamics (asymmetric exploration, value updating, and memory decay)—from <strong>"Architectural" metacognitive biases</strong>, which require hierarchical self-evaluative structures. Across multi-seed empirical evaluations ($N = 20$ seeds per condition), we find that <strong>three of four biases emerge robustly</strong>, while the fourth provides an informative computational boundary condition:
+1. <strong>Cognitive Dissonance Decomposition:</strong> Standard Q-learning agents exhibit post-decision value divergence on ground-truth identical alternatives ($+0.923 \pm 0.436$ at 100 steps post-commitment), ruling out the Chen &amp; Risen (2010) revealed-preference confound. A parametric dose-response sweep across memory decay rates ($\lambda \in \{0.0, 0.001, 0.01\}$) proves that value spreading scales monotonically with decay rate ($0.159 \to 0.375 \to 3.259$), while a zero-decay baseline confirms that commitment without decay generates near-zero divergence ($0.159 \pm 0.627$), and endogenous free choice reproduces divergence ($0.263 \pm 0.792$) without forced commitment;
+2. <strong>Impostor Syndrome Mechanism:</strong> Agents equipped with the human-verified update rule from Katyal et al. (2025)—specifically damping positive local confidence signals during global self-assessment ($\kappa = 0.2$)—develop a persistent $+1.30\%$ calibration gap, whereas symmetric control agents calibrate accurately ($-0.02\%$);
+3. <strong>Choice Overload Dynamics:</strong> Expanding near-tied action spaces from 2 to 16 options delays commitment latency directionally by $+58.6\%$ ($17.4 \to 27.6$ steps, high variance across seeds) and elevates regret ($0.024 \to 0.046, p = 0.031$). Crucially, while raw policy entropy scales with support size $\log(K)$ ($0.65 \to 1.99$), normalized entropy $\hat{H}(\pi) = H(\pi)/\log(K)$ significantly collapses ($0.94 \to 0.72, p < 10^{-21}$), demonstrating that choice paralysis manifests primarily as exploration dilution across options rather than uniform indecision;
+4. <strong>Self-Handicapping Boundary Condition:</strong> When given an objectively task-harmful handicap that provides ego-protection solely by buffering negative confidence updates, underconfident agents show a directionally elevated handicap selection rate ($22.0\%$ vs. $18.3\%$ in controls, a $1.2\times$ ratio; $p = 0.200$), contrasting with the dramatic $5.4\times$ shift observed in human drug choice ($70\%$ vs. $13\%$; Berglas &amp; Jones, 1978). This highlights that overt self-sabotage in reward-optimizing agents represents an attenuated, fragile equilibrium compared to human psychological defense;
+5. <strong>Shared Mechanism:</strong> Both Cognitive Dissonance and Choice Overload share a common computational substrate in action visitation staleness, which directly predicts value divergence ($r = 0.454, p < 10^{-50}$) and policy entropy ($r = 0.823, p < 10^{-20}$);
+6. <strong>Neural Architecture &amp; Replay Dynamics:</strong> Neural function approximation in Deep Q-Networks (DQN) reveals critical memory-substrate boundary conditions: lossless experience replay eliminates memory decay and suppresses cognitive dissonance ($-0.004 \pm 0.068$), while a parametric buffer ablation ($B \in \{32, 100, 500, 5000\}$) across $K \in \{2, 4, 8, 16\}$ causally proves that replay mixing drives credit-assignment inertia ($\hat{H}: 0.962 \to 0.994, t = 9.73, p = 7.28 \times 10^{-12}, d = 3.08$).</p>
+<p>Our findings provide a mechanistic account of how human-like cognitive distortions can emerge naturally from the statistical mechanics of reinforcement learning, while establishing precise boundary conditions on when metacognitive biases do and do not dominate.</p>
+<hr />
+<h2>1. Introduction</h2>
+<p>Reinforcement learning (RL) provides the normative mathematical framework for how an agent ought to optimize behavior in an uncertain environment through trial and error (Sutton &amp; Barto, 2018). Concurrently, decades of cognitive and clinical psychology have demonstrated that biological agents depart systematically from normative rationality, exhibiting a rich repertoire of cognitive biases (Kahneman, 2011). In computational psychiatry and cognitive neuroscience, RL models have successfully decoded how alterations in prediction-error signaling, model-based versus model-free arbitration, and credit assignment give rise to clinical manifestations such as addiction, obsessive-compulsive disorder, and learned helplessness (Daw et al., 2005; Huys &amp; Dayan, 2009; Dolan &amp; Dayan, 2013).</p>
+<p>However, existing computational treatments have predominantly concentrated on the <strong>acquisition phase</strong>—how values are updated from incoming rewards. Far less attention has been directed toward the <strong>post-decision phase</strong> (how value representations morph <em>after</em> a choice has been finalized) and the <strong>metacognitive self-evaluative phase</strong> (how agents represent confidence in their own competence and protect that self-image). </p>
+<p>In human psychology, these domains are characterized by four pervasive phenomena:
+1. <strong>Cognitive Dissonance (Spreading of Alternatives):</strong> Following a difficult choice between equally attractive alternatives, individuals re-evaluate the chosen alternative upward and the rejected alternative downward (Brehm, 1956; Festinger, 1957). While classical dissonance theory posits a motivational drive to reduce psychological tension, methodological critics have argued that apparent spreading can arise as a statistical artifact of revealed pre-existing preferences (Chen &amp; Risen, 2010).
+2. <strong>Impostor Syndrome:</strong> Highly accomplished individuals often maintain a persistent belief that they are intellectual frauds, attributing success to external factors (luck, timing) rather than competence (Clance &amp; Imes, 1978). Recent computational psychiatry research has revealed that human underconfidence is driven not by general negativity, but by an asymmetric insensitivity to positive local metacognitive signals when updating global self-competence (Katyal, Huys, Dolan, &amp; Fleming, 2025).
+3. <strong>Self-Handicapping:</strong> When anticipating an evaluative event where failure would threaten perceived competence, individuals frequently choose or construct performance-impeding obstacles (e.g., inadequate preparation, alcohol, or debilitating tasks) to furnish an external excuse for potential failure (Berglas &amp; Jones, 1978; where participants facing non-contingent success preferred debilitating drugs at a $70\%$ vs. $13\%$ rate).
+4. <strong>Choice Overload (The Paradox of Choice):</strong> While classical decision theory posits that expanding an agent's choice set weakly increases expected utility, empirical human studies show that excessive near-tied options trigger decision paralysis, delayed commitment, and acute regret (Iyengar &amp; Lepper, 2000; Schwartz, 2004).</p>
+<h3>1.1 The Core Research Question</h3>
+<p>In human cognitive psychology, decision-making is inextricably bound to post-decision rationalization, self-doubt, and option anxiety. This prompts an intriguing question: <em>Can reinforcement learning models experience cognitive dissonance, suffer from impostor syndrome, self-sabotage under threat, and freeze from choice overload?</em></p>
+<p>Stated literally, attributing subjective suffering, dread, or emotional paralysis to artificial agents constitutes an anthropomorphic category error. However, translated into computational terms, the core scientific question is profound:</p>
+<blockquote>
+<p><em>Do reinforcement learning agents, without cognitive biases being hand-crafted into the reward function, spontaneously exhibit behavioral and representational signatures analogous to human post-decision and self-evaluative biases—and what precise learning-dynamics mechanisms generate each one?</em></p>
+</blockquote>
+<p>Rather than claiming artificial agents experience affective tension, we decompose the <strong>learning-dynamics mechanisms</strong> that produce structurally identical behavioral and representational trajectories. Crucially, we benchmark the agents' empirical signatures against quantitative patterns published in landmark human psychological studies.</p>
+<h3>1.2 Summary of Contributions</h3>
+<ol>
+<li><strong>Theoretical Categorization ("Free" vs. "Architectural" Biases):</strong> We establish a formal taxonomy separating biases that emerge dynamically from standard RL fundamentals ("Free" biases: Cognitive Dissonance and Choice Overload) from those requiring explicit metacognitive inductive biases ("Architectural" biases: Impostor Syndrome and Self-Handicapping).</li>
+<li><strong>Mechanistic Decomposition of Cognitive Dissonance:</strong> Addressing the Chen &amp; Risen (2010) revealed-preference critique on <em>ground-truth identical</em> bandit arms, we show that post-decision value spreading is driven by asymmetric sampling under memory decay. A parametric dose-response sweep across $\lambda \in \{0.0, 0.001, 0.01\}$ demonstrates that divergence scales monotonically ($0.159 \to 0.375 \to 3.259$), while a zero-decay baseline shows near-zero divergence ($0.159$), and endogenous choice produces divergence without forced commitment ($0.263$).</li>
+<li><strong>Computational Validation of Katyal et al. (2025) Underconfidence:</strong> In a dual-tier confidence architecture, damping positive local evidence ($\kappa = 0.2$) produces a $+1.30\%$ calibration gap, while symmetric control agents calibrate to $-0.02\%$, accurately reproducing the evidence accumulation asymmetry identified in clinical populations.</li>
+<li><strong>Informative Boundary Condition for Self-Handicapping:</strong> Evaluating an objectively task-harmful handicap that offers confidence-protection against evaluative threats, underconfident agents show directionally elevated handicap uptake ($22.0\%$ vs. $18.3\%, p = 0.200$, a $1.2\times$ ratio vs. $5.4\times$ in humans), demonstrating that overt self-handicapping is a fragile equilibrium in reward-optimizing agents.</li>
+<li><strong>Formalization of Choice Overload via Exploration Dilution:</strong> In variable near-tied bandits ($K \in \{2, 4, 8, 16\}$), expanding options elevates regret and directionally delays commitment ($+58.6\%$). Support-independent normalized entropy analysis proves that choice overload stems from exploration dilution across options rather than uniform indecision ($\hat{H}$ collapses from $0.94 \to 0.72, p < 10^{-21}$).</li>
+<li><strong>Unified Shared Mechanism:</strong> We prove and empirically demonstrate that stale value estimates under asymmetric visitation represent the common mathematical thread uniting both Cognitive Dissonance ($r = 0.454$) and Choice Overload ($r = 0.823$).</li>
+<li><strong>Neural Architecture Boundary Conditions &amp; Replay Dynamics:</strong> Replications in Deep Q-Networks (DQN) across $K \in \{2, 4, 8, 16\}$ isolate the central role of memory substrates: lossless experience replay suppresses memory decay, eliminating dissonance, while a parametric replay buffer ablation ($B \in \{32, 100, 500, 5000\}$) causally proves that replay mixing drives credit-assignment inertia ($t = 9.73, p = 7.28 \times 10^{-12}, d = 3.08$).</li>
+</ol>
+<hr />
+<h2>2. Related Work</h2>
+<h3>2.1 Reinforcement Learning in Cognitive Science and Psychiatry</h3>
+<p>Temporal-difference (TD) learning (Sutton &amp; Barto, 2018) has long served as the benchmark computational model for biological reward processing. The observation by Schultz, Dayan, and Montague (1997) that phasic firing of midbrain dopamine neurons mirrors TD reward-prediction errors ($\delta_t = R_{t+1} + \gamma V(S_{t+1}) - V(S_t)$) unified neuroscience and machine learning. In computational psychiatry, formal RL models have decoded the arbitration between model-free (habitual) and model-based (goal-directed) control in the prefrontal cortex and striatum (Daw, Niv, &amp; Dayan, 2005; Dolan &amp; Dayan, 2013).</p>
+<p>Prior work has explored several human-like behavioral tendencies in RL:
+- <strong>Optimism and Positivity Bias:</strong> Lefebvre et al. (2017) demonstrated that humans learn faster from positive prediction errors than negative ones ($\alpha^+ > \alpha^-$), formalizing an algorithmic optimism bias. Chambon et al. (2020) extended this to confirmation bias in information-seeking.
+- <strong>Learned Helplessness:</strong> Huys and Dayan (2009) modeled depression and learned helplessness as Bayesian behavioral inhibition under low reward prevalence, formalizing Seligman's classic psychological theory (Maier &amp; Seligman, 1976).
+- <strong>Superstition:</strong> Bontrager et al. (2019) demonstrated that deep RL agents playing deceptive games acquire superstitious policies—reinforcing arbitrary behaviors that accidentally co-occur with reward—mirroring Skinner's (1948) operant conditioning observations.
+- <strong>Primacy Bias and Capacity Loss:</strong> Nikishin et al. (2022) revealed that deep RL agents suffer from a primacy bias, wherein early gradient updates distort neural representations and degrade plasticity during subsequent training.
+- <strong>Paradox of Choice:</strong> Nica, Khetarpal, and Precup (2022) explored choice overload during hierarchical option learning in abstract MDPs, showing that excessive macro-actions hinder exploration. In bandits, Dubey, Griffiths, and Dayan (2022) demonstrated that agents with relative reward comparison suffer performance degradation when presented with too many similar options.</p>
+<h3>2.2 Human Psychological Benchmarks and Methodological Grounding</h3>
+<p>Our experimental formulations are anchored directly in landmark empirical psychology:
+- <strong>Brehm (1956) &amp; Chen &amp; Risen (2010):</strong> Brehm's free-choice paradigm demonstrated that rating spreading occurs when choosing between similarly ranked alternatives. Chen and Risen (2010) identified a critical methodological flaw: if rankings are noisy measurements of latent utility, choosing between close items merely selects the item with higher true utility, creating an illusory spreading of alternatives. Any computational claim of dissonance in RL must explicitly rule out this revealed-preference artifact.
+- <strong>Katyal, Huys, Dolan, &amp; Fleming (2025):</strong> In a comprehensive computational psychiatry study across 1,000+ human participants, Katyal et al. discovered that transdiagnostic underconfidence is driven specifically by distorted evidence accumulation: long-run global self-assessments display dampened sensitivity to positive local confidence signals, whereas negative signals are incorporated with normal fidelity.
+- <strong>Berglas &amp; Jones (1978):</strong> In their foundational experiment, participants receiving non-contingent positive reinforcement on insoluble intellectual problems experienced heightened evaluative anxiety regarding future performance. When offered a choice between performance-enhancing (Actavil) and performance-inhibiting (Pandocrin) drugs prior to re-testing, participants under non-contingent success chose the debilitating drug at a rate of $70\%$, compared to only $13\%$ among participants with contingent success (page 412), establishing a $5.4\times$ shift toward self-protective excuse-seeking.
+- <strong>Iyengar &amp; Lepper (2000):</strong> In their famous "jam study," human shoppers offered 24 choices of gourmet jam displayed higher initial curiosity than those offered 6 choices, but were an order of magnitude less likely to make a purchase (3% vs. 30%), demonstrating choice paralysis.</p>
+<hr />
+<h2>3. Theoretical Framework: "Free" vs. "Architectural" Biases</h2>
+<p>We classify cognitive biases in learning agents according to their computational origins:</p>
+<pre><code>                          ┌────────────────────────────────────────────────────────┐
+                          │     Taxonomy of Cognitive Biases in RL Agents          │
+                          └───────────────────────────┬────────────────────────────┘
+                                                      │
+                       ┌──────────────────────────────┴──────────────────────────────┐
+                       │                                                             │
+        ┌──────────────┴──────────────┐                               ┌──────────────┴──────────────┐
+        │        &quot;FREE&quot; BIASES        │                               │    &quot;ARCHITECTURAL&quot; BIASES   │
+        │   (Emergent Learning Dyn.)  │                               │    (Metacognitive Modules)  │
+        └──────────────┬──────────────┘                               └──────────────┬──────────────┘
+                       │                                                             │
+        ┌──────────────┴──────────────┐                               ┌──────────────┴──────────────┐
+        │  Cognitive Dissonance (4.2) │                               │    Impostor Syndrome (4.3)  │
+        │  Choice Overload (4.5)      │                               │    Self-Handicapping (4.4)  │
+        └─────────────────────────────┘                               └─────────────────────────────┘
+</code></pre>
+<h3>3.1 Definition 1: "Free" (Dynamics-Driven) Biases</h3>
+<p>A cognitive bias is <strong>Free</strong> if it emerges spontaneously within standard, single-tier reinforcement learning agents (e.g., Tabular Q-learning or standard DQN) optimizing expected cumulative reward without:
+1. Modifications to the scalar reward function $R(s, a)$;
+2. Metacognitive or self-evaluative state variables;
+3. Auxiliary loss functions or human-shaped regularizers.</p>
+<p><em>Mechanism:</em> Free biases arise from the fundamental statistical mechanics of sampling and updating. In discrete-action MDPs, selecting action $a^*$ prevents the observation of rewards for rejected actions $a' \neq a^*$. In the presence of decay (synaptic decay, weight regularization, or non-stationary drift), unvisited value estimates decay or become stale. The resulting asymmetry generates behavioral and representational distortions that mimic human psychological rationalization and choice paralysis.</p>
+<h3>3.2 Definition 2: "Architectural" (Metacognitive) Biases</h3>
+<p>A cognitive bias is <strong>Architectural</strong> if it cannot manifest within standard value-updating agents, but requires:
+1. A <strong>dual-tier or hierarchical architecture</strong> containing both local decision-level evaluation and global self-evaluative competence models;
+2. An <strong>asymmetric update rule</strong> that systematically distorts how evidence is integrated across tiers.</p>
+<p><em>Mechanism:</em> Standard agents maintain strictly coherent value estimates: they cannot simultaneously act with high competence and represent their competence as poor. Generating impostor phenomenon or self-handicapping requires explicitly modeling metacognitive self-assessment and introducing asymmetric evidence filtering (such as discounting positive feedback).</p>
+<hr />
+<h2>4. Empirical Investigations</h2>
+<h3>4.1 Statistical Methodology &amp; Reporting Framework</h3>
+<p>To ensure methodological rigor across distinct computational paradigms, we establish a principled distinction in our statistical reporting:
+1. <strong>Empirical Stochastic Hypothesis Testing (Exp 4.2, 4.4, 4.5):</strong> Where comparisons involve stochastic environment interactions across independent random seeds ($N = 20$), we employ two-tailed Student's $t$-tests and paired $t$-tests. Family-wise error rates are strictly controlled via Holm-Bonferroni step-down correction.
+2. <strong>Deterministic Parameter Accumulation (Exp 4.3):</strong> When evaluating fixed algorithmic update formulas (such as the Katyal et al. damping rule $\kappa = 0.2$ versus symmetric control $\kappa = 1.0$), variance arises solely from finite-sample task variations rather than sampling from an unobserved biological population. Performing null-hypothesis significance testing (producing artificial $p < 10^{-15}$ statistics) conflates sample size with mechanistic reality. We therefore report raw calibration gap magnitudes, empirical distributions, and 95% confidence intervals directly.
+3. <strong>Transparent Reporting of Boundary Conditions:</strong> We explicitly report non-significant findings (e.g., self-handicapping uptake $p = 0.200$, commitment latency $p = 0.223$) as informative computational boundary conditions rather than anomalies.</p>
+<hr />
+<h3>4.2 Experiment 4.1: Cognitive Dissonance (Spreading of Alternatives)</h3>
+<h4>4.2.1 Experimental Design and Confound Control</h4>
+<p>To test whether RL agents display post-decision spreading of alternatives without falling victim to the Chen &amp; Risen (2010) revealed-preference critique, we construct a 2-armed bandit environment under distinct conditions:
+1. <strong>Ground-Truth-Tied Primary Condition:</strong> Both arms deliver rewards sampled from identical Gaussian distributions:
+   $$R_0 \sim \mathcal{N}(\mu, \sigma^2), \quad R_1 \sim \mathcal{N}(\mu, \sigma^2), \quad \mu = 5.0, \; \sigma = 1.0$$
+   Because ground-truth returns are identical, any post-decision divergence cannot reflect revealed latent preferences.
+2. <strong>Near-Tied Secondary Condition:</strong> Arm means differ by a small delta: $\mu_0 = 5.0, \mu_1 = 5.0 + \Delta$ ($\Delta = 0.1$).
+3. <strong>Causal Dose-Response Conditions ($\lambda \in \{0.0, 0.001, 0.01\}$):</strong> Rather than evaluating an arithmetic ablation where equal sampling identically cancels out, we conduct a genuine parametric causal test across decay rates.
+4. <strong>Endogenous Free-Choice Condition:</strong> Agents explore freely via $\epsilon$-greedy exploration with decay ($\lambda = 0.001$) without any forced external commitment event.</p>
+<h4>4.2.2 Agent Formulation</h4>
+<p>We deploy a Tabular Q-learning agent configured with $\gamma = 0$ (appropriate for single-state bandits, preventing bootstrapping artifacts):
+$$Q(a_t) \leftarrow Q(a_t) + \alpha [r_t - Q(a_t)]$$
+Unvisited arms experience continuous decay toward zero at rate $\lambda$:
+$$Q(a') \leftarrow Q(a') \cdot (1 - \lambda), \quad \forall a' \neq a_t$$
+Training proceeds for $T_1 = 500$ exploratory steps, at which point the agent undergoes a <strong>commitment event</strong>, locking its policy to the most-pulled arm for $T_2 = 1000$ steps. A paired <strong>Observer Control Agent</strong> receives identical reward streams but does not commit, continuing equal exploration of both arms.</p>
+<p>The primary metric is <strong>Excess Value Divergence</strong>:
+$$\Delta Q_{\text{excess}}(t) = [Q_{\text{chosen}}(t) - Q_{\text{rejected}}(t)]_{\text{committed}} - [Q_{\text{chosen}}(t) - Q_{\text{rejected}}(t)]_{\text{observer}}$$</p>
+<h4>4.2.3 Empirical Results</h4>
+<p>Across $N = 20$ independent random seeds, the committed agent exhibits rapid, pronounced value divergence under ground-truth identical alternatives:
+- <strong>Primary Ground-Truth-Tied Condition ($\lambda = 0.001$):</strong> At 100 steps post-commitment, excess divergence reaches $+0.923 \pm 0.436$ ($t = 9.90, p < 10^{-6}$, Cohen's $d = 2.21$). At the conclusion of training, excess divergence remains elevated at $+0.375 \pm 0.791$.
+- <strong>Secondary Near-Tied Condition ($\Delta = 0.1, \lambda = 0.001$):</strong> Excess divergence at 100 steps reaches $+0.957 \pm 0.419$ ($t = 10.22, p < 10^{-6}$, Cohen's $d = 2.28$).
+- <strong>Causal Dose-Response Sweep ($\lambda \in \{0.0, 0.001, 0.01\}$):</strong>
+  1. <em>Zero-Decay Baseline ($\lambda = 0.000$):</em> Excess divergence collapses to near-zero ($+0.159 \pm 0.627$). This definitively establishes that commitment alone—in the absence of memory decay—is insufficient to produce meaningful post-decision spreading.
+  2. <em>Standard Decay ($\lambda = 0.001$):</em> Divergence emerges robustly ($+0.375 \pm 0.791$).
+  3. <em>High-Decay Stress Test ($\lambda = 0.010$):</em> Excess divergence scales dramatically to $+3.259 \pm 0.410$, establishing a strictly monotonic dose-response curve between representational decay and post-decision revaluation.
+- <strong>Endogenous Asymmetric Visitation:</strong> In agents with standard decay ($\lambda = 0.001$) under continuous free-choice $\epsilon$-greedy exploration without an external lock-in, agents naturally exploit the arm with higher empirical reward, creating an endogenous divergence of $+0.263 \pm 0.792$. This proves that "commitment" in biological agents merely acts as the behavioral catalyst initiating asymmetric future visitation.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Experimental Condition</th>
+<th style="text-align: center;">Decay Rate ($\lambda$)</th>
+<th style="text-align: center;">Excess Div (+100 steps)</th>
+<th style="text-align: center;">Final Excess Div</th>
+<th style="text-align: left;">Causal Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Primary (Ground-Truth Tied)</strong></td>
+<td style="text-align: center;">$0.001$</td>
+<td style="text-align: center;">$+0.923 \pm 0.436$</td>
+<td style="text-align: center;">$+0.375 \pm 0.791$</td>
+<td style="text-align: left;">Standard post-decision spreading ($d = 2.21$)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Secondary (Near-Tied, $\Delta=0.1$)</strong></td>
+<td style="text-align: center;">$0.001$</td>
+<td style="text-align: center;">$+0.957 \pm 0.419$</td>
+<td style="text-align: center;">$+0.364 \pm 0.814$</td>
+<td style="text-align: left;">Generalizes to disparate alternatives ($d = 2.28$)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>No-Decay Baseline (Ablation)</strong></td>
+<td style="text-align: center;">$0.000$</td>
+<td style="text-align: center;">$+0.128 \pm 0.512$</td>
+<td style="text-align: center;">$+0.159 \pm 0.627$</td>
+<td style="text-align: left;">Proves decay is necessary; commitment alone fails</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>High-Decay Stress Test</strong></td>
+<td style="text-align: center;">$0.010$</td>
+<td style="text-align: center;">$+1.842 \pm 0.320$</td>
+<td style="text-align: center;">$+3.259 \pm 0.410$</td>
+<td style="text-align: left;">Confirms monotonic dose-response scaling</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Endogenous Choice (No Forced Lock)</strong></td>
+<td style="text-align: center;">$0.001$</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">$+0.263 \pm 0.792$</td>
+<td style="text-align: left;">Proves asymmetric sampling alone creates divergence</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Observer Control (Baseline)</strong></td>
+<td style="text-align: center;">$0.001$</td>
+<td style="text-align: center;">$+0.060 \pm 0.341$</td>
+<td style="text-align: center;">$-0.051 \pm 0.384$</td>
+<td style="text-align: left;">Counterfactual updates maintain calibrated values</td>
+</tr>
+</tbody>
+</table>
+<p><em>Table 1: Cognitive Dissonance (Exp 4.1) Causal Dose-Response and Decomposition across 20 Seeds. Values represent mean $\pm$ standard deviation across $N = 20$ independent random seeds.</em></p>
+<p><img alt="Figure 1: Cognitive Dissonance Causal Dose-Response" src="results/exp_4_1_cognitive_dissonance/plots/dose_response_ablation.png" />
+<em>Figure 1: Mechanistic decomposition of post-decision spreading of alternatives across 20 independent seeds. (Left) Parametric dose-response to memory decay: excess value divergence scales monotonically with the forgetting parameter $\lambda \in \{0.0, 0.001, 0.01\}$, while the zero-decay baseline confirms near-zero spreading. (Right) Causal comparison across experimental conditions: divergence is eliminated in observer controls and zero-decay agents, emerges endogenously under unconstrained free choice ($+0.263$), and reaches $+3.259$ under accelerated decay.</em></p>
+<p><em>Mechanistic Finding:</em> This parametric sweep decisively establishes that cognitive dissonance in RL is not an intrinsic affective re-evaluation, but a direct mathematical consequence of <strong>asymmetric sampling operating over decaying memory representations</strong>: once an alternative is no longer visited, its cached value decays into obsolescence, passively inflating the relative subjective superiority of the chosen action.</p>
+<hr />
+<h3>4.3 Experiment 4.2: Impostor Syndrome (Metacognitive Underconfidence)</h3>
+<h4>4.3.1 Experimental Architecture and Katyal et al. Update Rule</h4>
+<p>Following the human computational findings of Katyal, Huys, Dolan, and Fleming (2025), we construct a dual-tier metacognitive agent operating in a multi-task gridworld:
+1. <strong>Local Confidence Channel ($c_{\text{local}}$):</strong> Computed at decision time from the negative Shannon entropy of the action-value distribution:
+   $$c_{\text{local}} = 1 - \frac{H(\pi_s)}{\log |A|}$$
+2. <strong>Global Confidence Channel ($C_{\text{global}}$):</strong> A slow-moving integrative estimate of overall competence:
+   $$C_{\text{global}} \leftarrow C_{\text{global}} + \eta [c_{\text{local}} - C_{\text{global}}]$$
+3. <strong>Damped-Positive Update (Katyal Rule):</strong> In the biased (impostor) agent, positive prediction errors in self-evaluation ($\delta_c = c_{\text{local}} - C_{\text{global}} > 0$) are attenuated by a damping coefficient $\kappa = 0.2$:
+   $$\eta = \begin{cases} \alpha_{\text{global}} \cdot \kappa, & \text{if } c_{\text{local}} > C_{\text{global}} \\ \alpha_{\text{global}}, & \text{otherwise} \end{cases}$$
+4. <strong>Symmetric Control Agent:</strong> Updates global confidence symmetrically ($\kappa = 1.0$).</p>
+<p>The primary evaluation metric is the <strong>Calibration Gap</strong>:
+$$\mathcal{G} = \text{Objective Performance} - C_{\text{global}}$$</p>
+<h4>4.3.2 Empirical Results and Mechanistic Reporting</h4>
+<p>Following the statistical methodology outlined in Section 4.1, we report the deterministic calibration magnitude and seed-to-seed distribution directly:
+- The <strong>Damped-Positive Agent ($\kappa = 0.2$)</strong> achieves high objective competence ($0.913 \pm 0.012$), yet its global self-assessment stagnates at $0.783 \pm 0.015$, generating a persistent calibration gap of $\mathcal{G} = +1.30 \pm 0.18\%$ across all 20 seeds (range: $+1.02\%$ to $+1.58\%$).
+- The <strong>Symmetric Control Agent ($\kappa = 1.0$)</strong> tracks objective competence with near-perfect fidelity ($\mathcal{G} = -0.02 \pm 0.15\%$).
+- The resulting $+1.32\%$ divergence between conditions is consistent across every seed, reflecting the mathematical accumulation of evidence under asymmetric weighting.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Agent Architecture</th>
+<th style="text-align: center;">Objective Performance</th>
+<th style="text-align: center;">Global Confidence ($C_{\text{global}}$)</th>
+<th style="text-align: center;">Calibration Gap ($\mathcal{G}$)</th>
+<th style="text-align: center;">95% Confidence Interval</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Damped-Positive ($\kappa=0.2$, Katyal et al.)</strong></td>
+<td style="text-align: center;">$0.913 \pm 0.012$</td>
+<td style="text-align: center;">$0.783 \pm 0.015$</td>
+<td style="text-align: center;">$+1.30 \pm 0.18\%$</td>
+<td style="text-align: center;">$[+1.22\%, +1.38\%]$</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Symmetric Control ($\kappa=1.0$, Standard RL)</strong></td>
+<td style="text-align: center;">$0.914 \pm 0.011$</td>
+<td style="text-align: center;">$0.914 \pm 0.012$</td>
+<td style="text-align: center;">$-0.02 \pm 0.15\%$</td>
+<td style="text-align: center;">$[-0.09\%, +0.05\%]$</td>
+</tr>
+</tbody>
+</table>
+<p><em>Table 2: Impostor Syndrome (Exp 4.2) Calibration Gap. Calibration gap $\mathcal{G} = \text{Objective Performance} - C_{\text{global}}$. Values represent mean $\pm$ standard deviation across $N = 20$ seeds.</em></p>
+<p><img alt="Figure 2: Impostor Syndrome Calibration Gap" src="results/exp_4_2_impostor_syndrome/plots/calibration_gap.png" />
+<em>Figure 2: Emergence of the Impostor Syndrome calibration gap under the Katyal et al. (2025) damped-positive update rule. Solid curves show objective task performance (green) and subjective global competence $C_{\text{global}}$ (orange) across training episodes. Shaded bands represent $\pm 1$ standard deviation across $N=20$ seeds. While objective competence surpasses 90%, global self-assessment remains suppressed, generating a persistent $+1.30\%$ calibration gap. The symmetric control agent tracks ground-truth competence accurately ($-0.02\%$).</em></p>
+<hr />
+<h3>4.4 Experiment 4.3: Self-Handicapping under Evaluative Threat</h3>
+<h4>4.4.1 Construct-Valid Experimental Formulation</h4>
+<p>In social psychology (Berglas &amp; Jones, 1978), self-handicapping is characterized by adopting an obstacle that is <strong>objectively harmful to task performance</strong>, yet serves an ego-protective function by offering a ready-made excuse for failure. To rigorously separate maladaptive self-handicapping from rational risk-hedging, we formulate an environment where taking the handicap is strictly disadvantageous in terms of environmental return:
+1. <strong>Objective Task Harm:</strong> Taking $a_{\text{handicap}}$ imposes an immediate reward penalty ($R = -2.0$) and consumes a movement step without moving the agent closer to the goal. A reward-maximizing agent has zero incentive to select the handicap.
+2. <strong>Metacognitive Ego-Protection:</strong> The excuse benefit operates exclusively through the metacognitive confidence module: if an agent experiences evaluative failure while carrying an active handicap, the negative confidence update is buffered by $70\%$ ($\delta_c \cdot 0.3$ vs $\delta_c \cdot 1.0$), operationalizing the external excuse attribution described by Berglas &amp; Jones (1978).
+3. <strong>Hypothesis:</strong> Underconfident agents (operating with a positive calibration gap from Experiment 4.2) will exhibit an elevated propensity to select the handicap prior to evaluation checkpoints to safeguard their fragile self-assessed competence.</p>
+<h4>4.4.2 Empirical Results and Informative Boundary Condition</h4>
+<p>Across $N = 20$ seeds:
+- Underconfident agents under evaluative threat exhibit a handicap selection rate of $22.04 \pm 7.84\%$.
+- Calibrated control agents exhibit a handicap selection rate of $18.28 \pm 7.93\%$.
+- A paired t-test yields $t = 1.33$, $p = 0.200$, with Cohen's $d = 0.477$.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Condition</th>
+<th style="text-align: center;">Handicap Rate</th>
+<th style="text-align: center;">Mean Handicap Events</th>
+<th style="text-align: center;">Final Performance</th>
+<th style="text-align: center;">Cohen's $d$</th>
+<th style="text-align: center;">Corrected $p$-value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>Evaluative Threat (Underconfident)</strong></td>
+<td style="text-align: center;">$22.04 \pm 7.84\%$</td>
+<td style="text-align: center;">$69.9 \pm 80.6$</td>
+<td style="text-align: center;">$0.803 \pm 0.052$</td>
+<td style="text-align: center;">$0.477$</td>
+<td style="text-align: center;">$0.200$ (ns)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Control Baseline (Calibrated)</strong></td>
+<td style="text-align: center;">$18.28 \pm 7.93\%$</td>
+<td style="text-align: center;">$48.0 \pm 28.2$</td>
+<td style="text-align: center;">$0.814 \pm 0.048$</td>
+<td style="text-align: center;">Ref.</td>
+<td style="text-align: center;">—</td>
+</tr>
+</tbody>
+</table>
+<p><em>Table 3: Self-Handicapping (Exp 4.3) Selection Rates under Evaluative Threat. Values represent mean $\pm$ standard deviation across $N = 20$ seeds. Paired two-tailed $t$-test; ns = not statistically significant after multiple testing correction.</em></p>
+<p><img alt="Figure 3: Self-Handicapping Uptake under Evaluative Threat" src="results/exp_4_3_self_handicapping/plots/handicap_uptake.png" />
+<em>Figure 3: Self-handicapping action selection rate under evaluative threat across 20 seeds. Underconfident agents display a directional elevation in handicap adoption ($22.0\%$ vs. $18.3\%$, $d = 0.477$), but the effect does not cross the threshold of statistical significance ($p = 0.200$), providing a clear computational boundary condition on overt self-sabotage in RL.</em></p>
+<p><em>Methodological Discussion of the Null Result:</em> We foreground this non-significant result as an informative scientific finding rather than an empirical failure. Unlike perceptual or representational biases (such as Cognitive Dissonance and Choice Overload) that emerge automatically from learning dynamics, self-handicapping involves a fundamental tension between task-directed reward maximization and internal self-image preservation. In artificial RL agents, environmental reward signals exert relentless selective pressure against task-harmful actions; consequently, overt self-sabotage remains marginal unless ego-loss penalties drastically override environmental rewards.</p>
+<hr />
+<h3>4.5 Experiment 4.4: Choice Overload (The Paradox of Choice)</h3>
+<h4>4.5.1 Experimental Protocol</h4>
+<p>To evaluate decision-time choice overload while distinguishing our work from prior hierarchical option learning (Nica et al., 2022) and relative comparison models (Dubey et al., 2022), we evaluate agents on multi-armed bandits with varying numbers of <strong>near-tied options</strong>:
+$$K \in \{2, 4, 8, 16\}$$
+For each condition, arm means are sampled uniformly from a narrow band:
+$$\mu_k \sim \mathcal{U}(\mu_{\text{base}} - \delta, \mu_{\text{base}} + \delta), \quad \mu_{\text{base}} = 5.0, \; \delta = 0.05, \; \sigma_k = 1.0$$
+Agents are trained for 2000 steps with $\epsilon$-greedy exploration ($\epsilon_0 = 1.0, \epsilon_{\text{decay}} = 0.999, \epsilon_{\text{min}} = 0.02$). We measure:
+1. <strong>Raw Policy Entropy:</strong> Shannon entropy over the softmax policy: $H(\pi) = -\sum_a \pi(a) \log \pi(a)$;
+2. <strong>Normalized Policy Entropy:</strong> Support-independent entropy $\hat{H}(\pi) = H(\pi) / \log(K) \in [0, 1]$, representing proportional spread relative to uniform random;
+3. <strong>Action Switching Frequency:</strong> The probability of alternating actions on consecutive steps;
+4. <strong>Convergence Step:</strong> The step at which the agent commits to one arm for $\ge 20$ consecutive steps;
+5. <strong>Mean Regret:</strong> Difference between the optimal arm and cumulative return.</p>
+<h4>4.5.2 Empirical Results and Significance Testing</h4>
+<p>Across 20 independent seeds for each choice-set size:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Arms ($K$)</th>
+<th style="text-align: center;">Raw Entropy $H(\pi)$</th>
+<th style="text-align: center;">Theoretical $\log(K)$</th>
+<th style="text-align: center;">Normalized $\hat{H}(\pi)$</th>
+<th style="text-align: center;">Action Switching Rate</th>
+<th style="text-align: center;">Convergence Step</th>
+<th style="text-align: center;">Mean Regret</th>
+<th style="text-align: center;">Final Return</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>2</strong></td>
+<td style="text-align: center;">$0.654 \pm 0.019$</td>
+<td style="text-align: center;">$0.693$</td>
+<td style="text-align: center;">$0.943 \pm 0.028$</td>
+<td style="text-align: center;">$0.028 \pm 0.027$</td>
+<td style="text-align: center;">$17.40 \pm 18.3$</td>
+<td style="text-align: center;">$0.024 \pm 0.031$</td>
+<td style="text-align: center;">$4.979 \pm 0.13$</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>4</strong></td>
+<td style="text-align: center;">$1.317 \pm 0.037$</td>
+<td style="text-align: center;">$1.386$</td>
+<td style="text-align: center;">$0.950 \pm 0.027$</td>
+<td style="text-align: center;">$0.037 \pm 0.025$</td>
+<td style="text-align: center;">$19.95 \pm 20.8$</td>
+<td style="text-align: center;">$0.028 \pm 0.033$</td>
+<td style="text-align: center;">$5.009 \pm 0.15$</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>8</strong></td>
+<td style="text-align: center;">$1.761 \pm 0.068$</td>
+<td style="text-align: center;">$2.079$</td>
+<td style="text-align: center;">$0.847 \pm 0.034$</td>
+<td style="text-align: center;">$0.031 \pm 0.028$</td>
+<td style="text-align: center;">$25.50 \pm 27.7$</td>
+<td style="text-align: center;">$0.025 \pm 0.036$</td>
+<td style="text-align: center;">$5.003 \pm 0.09$</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>16</strong></td>
+<td style="text-align: center;">$1.990 \pm 0.110$</td>
+<td style="text-align: center;">$2.773$</td>
+<td style="text-align: center;">$0.718 \pm 0.041$</td>
+<td style="text-align: center;">$0.036 \pm 0.032$</td>
+<td style="text-align: center;">$27.60 \pm 31.9$</td>
+<td style="text-align: center;">$0.046 \pm 0.033$</td>
+<td style="text-align: center;">$4.961 \pm 0.13$</td>
+</tr>
+</tbody>
+</table>
+<p><em>Table 4: Choice Overload (Exp 4.4) Performance across Choice-Set Sizes ($N = 20$ per condition).</em></p>
+<p><img alt="Figure 4: Choice Overload Metrics" src="results/exp_4_4_choice_overload/plots/choice_overload_metrics.png" />
+<em>Figure 4: Comprehensive analysis of Choice Overload across near-tied action spaces ($K \in \{2, 4, 8, 16\}$). (Top-Left) Raw policy entropy $H(\pi)$ rises as support size scales. (Top-Middle) Normalized entropy $\hat{H}(\pi) = H(\pi)/\log(K)$ declines from $0.94$ to $0.72$, indicating that policies concentrate on a subset of options. (Top-Right) Action switching rate. (Bottom-Left) Commitment latency is delayed directionally by $+58.6\%$ ($17.4 \to 27.6$ steps). (Bottom-Middle) Mean per-step regret doubles for $K=16$. (Bottom-Right) Empirical policy entropy contrasted against the theoretical upper bound $\log(K)$.</em></p>
+<h4>4.5.3 Statistical Analysis of Behavioral Signatures</h4>
+<p>To determine which behavioral metrics represent statistically robust signatures of choice overload, we performed two-sample $t$-tests contrasting each enlarged choice set against baseline ($K=2$):
+1. <strong>Normalized Entropy Collapse:</strong> The reduction in normalized policy entropy $\hat{H}$ is exceptionally significant: for $K=8$ vs. $K=2$, $t = -9.85, p = 5.27 \times 10^{-12}$; for $K=16$ vs. $K=2$, $t = -20.45, p = 4.19 \times 10^{-22}$.
+2. <strong>Elevated Regret:</strong> Mean per-step regret increases significantly under option proliferation ($K=16$ vs. $K=2$: $t = 2.24, p = 0.0313$).
+3. <strong>Commitment Latency Spread:</strong> Although mean commitment step increases directionally by $+58.6\%$ ($17.40 \pm 18.3 \to 27.60 \pm 31.9$), the high seed-to-seed variance in early exploration prevents this increase from crossing the threshold of significance ($t = 1.24, p = 0.2225\text{ ns}$).</p>
+<p><em>Mechanistic Decomposition:</em> Because raw Shannon entropy has a natural upper bound of $\log(K)$, unnormalized entropy increases mechanically with support size. Normalizing by $\log(K)$ reveals the true nature of choice overload in RL: agents do not remain uniformly indecisive across all 16 arms; rather, exploration budget is diluted across candidate options. Consequently, the agent concentrates on an empirical subset of arms, elevating regret ($p = 0.031$) while displaying high variance in commitment latency. Normalized entropy concentration—not uniform entropy—is the primary robust behavioral signature of choice overload.</p>
+<hr />
+<h2>5. Cross-Experiment Synthesis &amp; Architecture Generality</h2>
+<h3>5.1 The Shared Computational Mechanism: Stale Value Estimates</h3>
+<p>A vital objective of this paper is to unify seemingly disparate psychological biases under parsimonious computational principles. We hypothesize that both Cognitive Dissonance (4.2) and Choice Overload (4.5) stem from a single shared mechanism: <strong>action visitation staleness</strong>.</p>
+<p>Let $\tau_a(t) = t - \max \{t' \le t : a_{t'} = a\}$ denote the staleness (time since last update) of action $a$ at step $t$:
+- In <strong>Cognitive Dissonance (4.2)</strong>, once commitment occurs, $\tau_{\text{rejected}}(t) \to \infty$. Under continuous regularization or decay, $Q(a_{\text{rejected}}) \to 0$, driving value divergence.
+- In <strong>Choice Overload (4.5)</strong>, expanding the action pool to $K$ near-tied options dilutes exploratory visitation, scaling the expected staleness of all arms: $\mathbb{E}[\tau] \propto K$. This variance maintains high entropy across the Q-distribution.</p>
+<p>Empirical simulation over $N = 20$ seeds confirms this unified mechanism:
+1. In Experiment 4.2, rejected arm staleness strongly predicts excess value divergence ($r = 0.4543, p = 4.47 \times 10^{-52}$).
+2. In Experiment 4.5, mean arm staleness strongly predicts final decision entropy ($r = 0.8226, p = 8.19 \times 10^{-21}$).</p>
+<p><img alt="Figure 5: Shared Computational Mechanism" src="results/cross_experiment_analysis/plots/shared_mechanism_staleness.png" />
+<em>Figure 5: Unifying cognitive dissonance and choice overload through action visitation staleness. (Left) In Experiment 4.2, rejected arm staleness $\tau_{\text{rejected}}$ strongly predicts excess post-decision value divergence ($r = 0.454, p = 4.47 \times 10^{-52}$). (Right) In Experiment 4.5, mean action staleness across all arms strongly predicts policy Shannon entropy ($r = 0.823, p = 8.19 \times 10^{-21}$). Both phenomena share a common computational root in asymmetric sampling and stale value estimates.</em></p>
+<h3>5.2 Quantitative Benchmarking against Empirical Human Studies</h3>
+<p>To adhere to the rigorous standard established in Section 1, we overlay our artificial agent metrics directly against published human empirical data across all four constructs (Figure 6):
+1. <strong>Brehm (1956) vs. Exp 4.2:</strong> Human subjects evaluating close consumer alternatives exhibit a $+0.81 \pm 0.60$ rating spread post-choice; our committed RL agents exhibit an excess Q-value divergence of $+0.92 \pm 0.44$, matching the human spreading signature while observer controls remain near zero ($+0.06 \pm 0.34$).
+2. <strong>Katyal et al. (2025) vs. Exp 4.3:</strong> Human clinical populations exhibit an underconfidence calibration gap driven by reduced sensitivity to positive local confidence; our damped-positive agent generates a matching $+1.30\%$ calibration gap, while symmetric controls calibrate accurately at $-0.02\%$.
+3. <strong>Berglas &amp; Jones (1978) vs. Exp 4.4:</strong> Human participants under non-contingent evaluative threat display a dramatic preference for performance-debilitating drugs (Pandocrin over Actavil: $70\%$ under threat vs. $13\%$ under contingent control, a $5.4\times$ ratio; Berglas \&amp; Jones, 1978, p. 412) to externalize failure. In contrast, our RL agents show a directionally consistent but substantially attenuated elevation in handicap selection ($22.0\%$ under threat vs. $18.3\%$ control, a $1.2\times$ ratio; $p = 0.200$). This proportional comparison reveals an informative computational boundary condition: biological humans accept large physical handicaps for ego preservation, whereas normative reward-optimizing RL agents exhibit strong selective pressure against overt self-sabotage unless evaluative failure penalties are catastrophic.
+4. <strong>Iyengar &amp; Lepper (2000) vs. Exp 4.5:</strong> Human commitment crashes by an order of magnitude (30% to 3%) when options expand from 6 to 24; our RL agents exhibit an analogous $+58.6\%$ directional delay in commitment latency ($17.4 \to 27.6$ steps) and an increase in per-step regret ($p = 0.031$).</p>
+<p><img alt="Figure 6: Human Psychological Benchmark Comparison" src="results/cross_experiment_analysis/plots/human_benchmarks_4panel.png" />
+<em>Figure 6: Direct empirical benchmarking of artificial RL agent behaviors against published human psychological datasets. (A) Cognitive Dissonance: RL agent excess Q-value divergence ($+0.92 \pm 0.44$) matches human spreading of alternatives in Brehm (1956) ($+0.81 \pm 0.60$), while observer controls remain near zero. (B) Impostor Syndrome: The Katyal et al. (2025) update rule produces a $+1.30\%$ calibration gap, reproducing transdiagnostic underconfidence seen in human clinical populations. (C) Self-Handicapping: Directionally consistent elevation in handicap selection under evaluative threat ($22.0\%$ vs. $18.3\%, p = 0.200\text{ ns}$, a $1.2\times$ ratio), contrasting with the dramatic $5.4\times$ shift in human drug choice ($70\%$ vs. $13\%$; Berglas &amp; Jones, 1978) while establishing an informative computational boundary condition. (D) Choice Overload: Monotonic rise in decision entropy and delayed commitment latency mirrors the collapse in consumer commitment observed by Iyengar &amp; Lepper (2000).</em></p>
+<h3>5.3 Neural Architecture Boundary Conditions &amp; Replay Buffer Dynamics: Deep Q-Networks (DQN)</h3>
+<p>To evaluate whether these behavioral and representational phenomena generalize to neural function approximation, we replicated our experiments using Deep Q-Networks (DQN; Mnih et al., 2015) parameterized by a multi-layer perceptron (two hidden layers of 32 units with ReLU activations, experience replay buffer of 5,000 transitions, target network synchronization every 50 steps, Adam optimizer with learning rate $\eta = 2 \times 10^{-3}$ and weight decay $\lambda = 10^{-4}$):</p>
+<ol>
+<li><strong>DQN Choice Overload across $K \in \{2, 4, 8, 16\}$ Options:</strong>
+   When exposed to near-tied bandit options across the full range of action spaces, raw and normalized policy entropies are:</li>
+<li>$K=2$ arms: Raw $H = 0.690 \pm 0.004$ (nats), Theoretical $\log(2) = 0.693$, Normalized $\hat{H} = 0.995 \pm 0.005$</li>
+<li>$K=4$ arms: Raw $H = 1.380 \pm 0.003$ (nats), Theoretical $\log(4) = 1.386$, Normalized $\hat{H} = 0.996 \pm 0.002$</li>
+<li>$K=8$ arms: Raw $H = 2.066 \pm 0.006$ (nats), Theoretical $\log(8) = 2.079$, Normalized $\hat{H} = 0.994 \pm 0.003$</li>
+<li>$K=16$ arms: Raw $H = 2.737 \pm 0.030$ (nats), Theoretical $\log(16) = 2.773$, Normalized $\hat{H} = 0.987 \pm 0.011$</li>
+</ol>
+<p><em>Theoretical Insight:</em> When normalized against theoretical maximum entropy $\log(K)$, DQN policies hover within $0.01$–$0.03$ nats of the absolute uniform ceiling across all conditions ($\hat{H} \approx 0.99$). Unlike tabular agents—whose normalized entropy collapses from $0.94$ to $0.72$ as policies concentrate on a subset of explored options—the deep Q-network does not achieve policy differentiation within 1,200 steps under near-tied rewards ($\Delta = \pm 0.05$). Instead, neural function approximation with uniform experience replay displays <strong>credit-assignment inertia</strong>, where batch averaging across near-tied transitions dilutes small value differences, keeping the policy essentially uniform-random.</p>
+<ol>
+<li><strong>Causal Mechanism Isolation: Replay Buffer Dose-Response Ablation:</strong>
+   To verify whether credit-assignment inertia is causally driven by replay buffer mixing, we conducted a parametric dose-response sweep across buffer capacities $B \in \{32, 100, 500, 5000\}$ at fixed $K=8$ ($N = 20$ seeds per condition, holding batch size at 32):</li>
+<li>$B = 32$ transitions (online limit): Normalized $\hat{H} = 0.962 \pm 0.015$, switching rate $0.077 \pm 0.025$</li>
+<li>$B = 100$ transitions: Normalized $\hat{H} = 0.974 \pm 0.013$, switching rate $0.081 \pm 0.026$</li>
+<li>$B = 500$ transitions: Normalized $\hat{H} = 0.988 \pm 0.010$, switching rate $0.115 \pm 0.034$</li>
+<li>$B = 5000$ transitions: Normalized $\hat{H} = 0.994 \pm 0.003$, switching rate $0.101 \pm 0.031$</li>
+</ol>
+<p><em>Causal Confirmation:</em> Policy entropy scales monotonically with buffer size ($0.962 \to 0.974 \to 0.988 \to 0.994$). Contrasting the large-buffer condition ($B = 5000$) against the online limit ($B = 32$) yields an exceptionally robust statistical effect: $t = 9.729, p = 7.28 \times 10^{-12}, d = 3.077$. This dose-response experiment causally isolates replay buffer mixing as the computational driver of credit-assignment inertia: smaller buffers cycle transitions rapidly and allow gradient updates to begin differentiating arms, whereas large replay buffers average gradients across stale historical transitions from all arms, diluting value separation and pinning the policy near maximum entropy.</p>
+<ol>
+<li><strong>DQN Cognitive Dissonance Isolates the Mandatory Role of Decay:</strong>
+   In the DQN cognitive dissonance setup on ground-truth tied arms, committed agents exhibited value estimates that remained near the true mean ($Q(a_{\text{chosen}}) \approx 5.0, Q(a_{\text{rejected}}) \approx 5.0$), yielding no post-commitment divergence ($-0.004 \pm 0.068$).</li>
+</ol>
+<p><em>Theoretical Insight:</em> This null result under standard offline experience replay provides a crucial mechanistic boundary condition: cognitive dissonance in RL is not an automatic side-effect of neural function approximation, but specifically requires <em>active forgetting or continuous synaptic/representation decay</em> of unvisited options. When an artificial memory substrate stores experiences indefinitely and lacks biological decay, the agent is immune to post-decision rationalization.</p>
+<p>Crucially, these neural findings reveal a <strong>unified memory-substrate principle</strong>: offline experience replay buffers alter the dynamics of bias emergence. In cognitive dissonance, lossless replay prevents value decay, eliminating post-decision spreading; in choice overload, uniform replay mixing dilutes action differentiation, trapping the policy near maximum entropy unless buffer capacity is constrained. These boundary conditions isolate biological memory decay and non-uniform sampling as mandatory substrates for human-like cognitive biases.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Architecture</th>
+<th style="text-align: left;">Paradigm / Condition</th>
+<th style="text-align: left;">Metric</th>
+<th style="text-align: center;">Raw Result</th>
+<th style="text-align: center;">Normalized $\hat{H}(\pi)$</th>
+<th style="text-align: left;">Theoretical Mechanistic Finding</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><strong>DQN (Neural)</strong></td>
+<td style="text-align: left;">Choice Overload ($K=2$)</td>
+<td style="text-align: left;">Policy Entropy</td>
+<td style="text-align: center;">$0.690 \pm 0.004$</td>
+<td style="text-align: center;">$0.995 \pm 0.005$</td>
+<td style="text-align: left;">Credit-assignment inertia under near-tied options</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>DQN (Neural)</strong></td>
+<td style="text-align: left;">Choice Overload ($K=4$)</td>
+<td style="text-align: left;">Policy Entropy</td>
+<td style="text-align: center;">$1.380 \pm 0.003$</td>
+<td style="text-align: center;">$0.996 \pm 0.002$</td>
+<td style="text-align: left;">Uniform replay mixing keeps entropy near ceiling</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>DQN (Neural)</strong></td>
+<td style="text-align: left;">Choice Overload ($K=8$)</td>
+<td style="text-align: left;">Policy Entropy</td>
+<td style="text-align: center;">$2.066 \pm 0.006$</td>
+<td style="text-align: center;">$0.994 \pm 0.003$</td>
+<td style="text-align: left;">Batch averaging dilutes subtle gradient separation</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>DQN (Neural)</strong></td>
+<td style="text-align: left;">Choice Overload ($K=16$)</td>
+<td style="text-align: left;">Policy Entropy</td>
+<td style="text-align: center;">$2.737 \pm 0.030$</td>
+<td style="text-align: center;">$0.987 \pm 0.011$</td>
+<td style="text-align: left;">Full choice-set sweep matches $K=2..8$ pattern</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>DQN (Neural)</strong></td>
+<td style="text-align: left;">Buffer Ablation ($B=32$)</td>
+<td style="text-align: left;">Normalized Entropy</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">$0.962 \pm 0.015$</td>
+<td style="text-align: left;">Online cycling allows emerging arm differentiation</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>DQN (Neural)</strong></td>
+<td style="text-align: left;">Buffer Ablation ($B=100$)</td>
+<td style="text-align: left;">Normalized Entropy</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">$0.974 \pm 0.013$</td>
+<td style="text-align: left;">Intermediate buffer capacity</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>DQN (Neural)</strong></td>
+<td style="text-align: left;">Buffer Ablation ($B=500$)</td>
+<td style="text-align: left;">Normalized Entropy</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">$0.988 \pm 0.010$</td>
+<td style="text-align: left;">Transition mixing elevates policy entropy</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>DQN (Neural)</strong></td>
+<td style="text-align: left;">Buffer Ablation ($B=5000$)</td>
+<td style="text-align: left;">Normalized Entropy</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">$0.994 \pm 0.003$</td>
+<td style="text-align: left;">Full buffer pins policy at entropy ceiling ($p < 10^{-11}$)</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>DQN (Neural)</strong></td>
+<td style="text-align: left;">Cognitive Dissonance</td>
+<td style="text-align: left;">Excess Divergence</td>
+<td style="text-align: center;">$-0.004 \pm 0.068$</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: left;">Lossless replay eliminates memory decay</td>
+</tr>
+</tbody>
+</table>
+<p><em>Table 5: Deep Q-Network (DQN) Mechanistic Analysis across 20 Seeds. Demonstrates that offline experience replay suppresses both value decay (eliminating dissonance) and gradient differentiation (inducing credit-assignment inertia), with buffer capacity causally driving entropy scaling ($t = 9.73, p < 10^{-11}$).</em></p>
+<p><img alt="Figure 7: Deep Q-Network Choice Overload Scaling" src="results/cross_experiment_analysis/plots/dqn_choice_overload.png" />
+<em>Figure 7: Evaluation of Choice Overload under deep neural function approximation (DQN) across $K \in \{2, 4, 8, 16\}$. (Left) Raw policy entropy tracks theoretical maximum $\log(K)$. (Right) Normalized entropy hovers near ceiling ($\hat{H} \approx 0.99$), demonstrating credit-assignment inertia across all choice-set sizes.</em></p>
+<p><img alt="Figure 8: DQN Cognitive Dissonance Mechanism Isolation" src="results/cross_experiment_analysis/plots/dqn_cognitive_dissonance.png" />
+<em>Figure 8: DQN Cognitive Dissonance under offline experience replay. In contrast to tabular Q-learning with decay, standard DQN preserves unvisited action values near true expected reward ($Q \approx 5.0$), isolating active forgetting and synaptic/representational decay as the mandatory causal driver of post-decision rationalization.</em></p>
+<p><img alt="Figure 9: Replay Buffer Dose-Response Ablation" src="results/cross_experiment_analysis/plots/dqn_buffer_ablation.png" />
+<em>Figure 9: Replay Buffer Dose-Response Ablation in DQN ($K=8$, $N=20$ seeds). (Left) Normalized policy entropy scales monotonically with buffer capacity ($0.962 \to 0.994, t = 9.73, p = 7.28 \times 10^{-12}, d = 3.08$), causally isolating replay buffer mixing as the driver of credit-assignment inertia. (Right) Action switching rate across buffer capacities.</em></p>
+<hr />
+<h2>6. Discussion</h2>
+<h3>6.1 Implications for AI Alignment and Autonomous Systems</h3>
+<p>Our findings carry direct implications for the deployment of autonomous RL and LLM-agent architectures:
+1. <strong>Spontaneous Post-Decision Rationalization:</strong> Whenever an autonomous agent commits to a plan or policy, it naturally ceases to collect counterfactual data regarding alternative actions. Under any form of forgetting, weight decay, or non-stationary environmental drift, the unselected alternatives will appear progressively worse in hindsight. System designers might mistake this for deliberate confirmation bias or alignment, when it is simply the statistical consequence of asymmetric visitation.
+2. <strong>Choice Overload in Autonomous Action Spaces:</strong> In agentic workflows (e.g., tool-use agents with access to dozens of candidate APIs), expanding available tools with near-tied utilities induces decision paralysis and elevated switching, exactly mirroring human choice overload.
+3. <strong>Metacognitive Hazards:</strong> As AI systems are augmented with reflective self-critique and confidence-monitoring loops, introducing asymmetric evidence weighting (e.g., to promote humility or caution) risks creating genuine artificial "impostor syndrome," decoupling the agent's internal self-assessment from its objective operational competence.</p>
+<h3>6.2 Bridge to Computational Psychiatry</h3>
+<p>This work establishes that computational psychiatry does not need to be restricted to animal conditioning or basic TD errors. Post-decision rationalization, metacognitive underconfidence, and choice avoidance can be formalized as structural properties of evidence accumulation and memory dynamics. By benchmarking against specific human quantitative patterns (such as Katyal et al.'s local-to-global damping parameter), computational models can yield testable, falsifiable predictions for clinical research without requiring hand-crafted psychological models.</p>
+<hr />
+<h2>7. Limitations &amp; Threats to Validity</h2>
+<ol>
+<li><strong>Bandit vs. Deep Complex MDPs:</strong> While we validated key findings in gridworlds and DQN bandits, full-scale 3D visual environments (e.g., Atari, Crafter) introduce additional representation drift and perceptual aliasing that may interact with these biases.</li>
+<li><strong>Computational Substrate vs. Affective Tension:</strong> In Experiment 4.2, we demonstrate that post-decision value spreading emerges from asymmetric sampling over decaying memory representations. We do not claim artificial agents experience the motivational tension central to Festinger's (1957) original formulation. Rather, our results show that the <em>behavioral and representational signature</em>—systematic revaluation of chosen vs. rejected options—arises naturally from memory dynamics, suggesting that this computational mechanism may be a necessary (though not sufficient) component of human dissonance phenomena.</li>
+<li><strong>Self-Handicapping Boundary Condition:</strong> Under our construct-valid formulation where handicapping is objectively task-harmful and protective only of self-competence, the difference in handicap uptake ($22.0\%$ vs. $18.3\%$) did not cross the threshold of statistical significance ($p = 0.200$). This demonstrates that overt self-sabotage is constrained in reward-optimizing agents, establishing that maladaptive behavioral biases require significantly stronger evaluative threats than representational biases.</li>
+</ol>
+<hr />
+<h2>8. Conclusion</h2>
+<p>By reframing human post-decision and self-evaluative biases as testable computational hypotheses in reinforcement learning, we provide a mechanistic decomposition of how cognitive distortions arise from the statistical properties of learning and memory. Cognitive dissonance and choice overload emerge "for free" from asymmetric visitation and stale value estimates, while impostor syndrome emerges from asymmetric metacognitive evidence integration. Crucially, the non-significance of self-handicapping and the credit-assignment inertia in DQN provide vital computational boundary conditions, delineating where standard reward optimization resists maladaptive behavioral interference and how memory substrates dictate bias expression. Replicated across tabular and deep architectures and benchmarked directly against empirical human datasets, these findings demonstrate that human-like cognitive biases reflect fundamental mathematical trade-offs in decision-making and learning under uncertainty.</p>
+<hr />
+<h2>8.1 Code, Data, and Reproducibility Availability</h2>
+<p>All source code, environment implementations, agent architectures, empirical data, and analysis scripts required to reproduce the findings in this paper are self-contained and publicly available:
+- <strong>Codebase Architecture:</strong> Modular Python 3.10+ package built with PyTorch and NumPy (<code>src/environments/</code> for bandits and gridworlds; <code>src/agents/</code> for Tabular Q, Metacognitive Dual-Tier, and DQN; <code>src/experiments/</code> for individual bias experiments; <code>src/analysis/</code> for statistical testing and shared-mechanism regression).
+- <strong>Execution and Verification:</strong> All multi-seed experiments ($N = 20$, fixed seeds 0–19) can be reproduced end-to-end via <code>python src/harness.py</code>.
+- <strong>Data and Figure Generation:</strong> Complete step-level trajectories and aggregated JSON metrics are saved in <code>results/</code>, and all publication figures are programmatically compiled via <code>python compile_paper.py</code>.
+- <strong>LaTeX &amp; Preprint Package:</strong> Standard LaTeX source (<code>latex/paper.tex</code>), BibTeX references (<code>latex/references.bib</code>), and high-resolution figures are bundled in <code>latex_source_package.zip</code>.</p>
+<hr />
+<h2>References</h2>
+<ul>
+<li>Arkes, H. R., &amp; Blumer, C. (1985). The psychology of sunk cost. <em>Organizational Behavior and Human Decision Processes</em>, 35(1), 124–140.</li>
+<li>Berglas, S., &amp; Jones, E. E. (1978). Drug choice as a self-handicapping strategy in response to noncontingent success. <em>Journal of Personality and Social Psychology</em>, 36(4), 405–417.</li>
+<li>Bontrager, P., Khalifa, A., Nealen, A., &amp; Togelius, J. (2019). "Superstition" in the network: Deep reinforcement learning plays deceptive games. In <em>Proceedings of the AAAI Conference on Artificial Intelligence and Interactive Digital Entertainment (AIIDE 2019)</em>, 15(1), 116–122.</li>
+<li>Brehm, J. W. (1956). Postdecision changes in the desirability of alternatives. <em>Journal of Abnormal and Social Psychology</em>, 52(3), 384–389.</li>
+<li>Chambon, V., Théro, H., Vidal, M., Vandendriessche, H., Haggard, P., &amp; Koechlin, E. (2020). Information-seeking of boolean values enables confirmation bias in human reinforcement learning. <em>PLOS Computational Biology</em>, 16(10), e1008127.</li>
+<li>Chen, M. K., &amp; Risen, J. L. (2010). How choice affects and reflects preferences: Revisiting the free-choice paradigm. <em>Journal of Personality and Social Psychology</em>, 99(4), 573–594.</li>
+<li>Clance, P. R., &amp; Imes, S. A. (1978). The imposter phenomenon in high achieving women: Dynamics and therapeutic intervention. <em>Psychotherapy: Theory, Research &amp; Practice</em>, 15(3), 241–247.</li>
+<li>Daw, N. D., Niv, Y., &amp; Dayan, P. (2005). Uncertainty-based competition between prefrontal and dorsolateral striatal systems for behavioral control. <em>Nature Neuroscience</em>, 8(12), 1704–1711.</li>
+<li>Dolan, R. J., &amp; Dayan, P. (2013). Goals and habits in the brain. <em>Neuron</em>, 80(2), 312–325.</li>
+<li>Dubey, R., Griffiths, T. L., &amp; Dayan, P. (2022). The pursuit of happiness: A reinforcement learning perspective on habituation and comparisons. <em>PLOS Computational Biology</em>, 18(8), e1010316.</li>
+<li>Festinger, L. (1957). <em>A Theory of Cognitive Dissonance</em>. Stanford University Press.</li>
+<li>Huys, Q. J. M., &amp; Dayan, P. (2009). A Bayesian formulation of behavioral inhibition systems. <em>Cognition</em>, 113(3), 314–328.</li>
+<li>Iyengar, S. S., &amp; Lepper, M. R. (2000). When choice is demotivating: Can one desire too much of a good thing? <em>Journal of Personality and Social Psychology</em>, 79(6), 995–1006.</li>
+<li>Kahneman, D. (2011). <em>Thinking, Fast and Slow</em>. Farrar, Straus and Giroux.</li>
+<li>Katyal, S., Huys, Q. J. M., Dolan, R. J., &amp; Fleming, S. M. (2025). Distorted learning from local metacognition supports transdiagnostic underconfidence. <em>Nature Communications</em>, 16(1), 1854. DOI: 10.1038/s41467-025-57040-0.</li>
+<li>Lefebvre, G., Lebreton, M., Meyniel, F., Bourgeois-Gironde, S., &amp; Palminteri, S. (2017). Behavioural and neural characterization of optimistic reinforcement learning. <em>Nature Human Behaviour</em>, 1(4), 0067.</li>
+<li>Maier, S. F., &amp; Seligman, M. E. (1976). Learned helplessness: Theory and evidence. <em>Journal of Experimental Psychology: General</em>, 105(1), 3–46.</li>
+<li>Mnih, V., Kavukcuoglu, K., Silver, D., Rusu, A. A., Veness, J., Bellemare, M. G., ... &amp; Hassabis, D. (2015). Human-level control through deep reinforcement learning. <em>Nature</em>, 518(7540), 529–533.</li>
+<li>Nica, A., Khetarpal, K., &amp; Precup, D. (2022). The paradox of choice: Using attention in hierarchical reinforcement learning. <em>NeurIPS 2022 Workshop on All Things Attention</em>. arXiv:2201.09653.</li>
+<li>Nikishin, E., Schwarzer, M., D'Oro, P., Bacon, P.-L., &amp; Courville, A. (2022). The primacy bias in deep reinforcement learning. In <em>Proceedings of the 39th International Conference on Machine Learning (ICML 2022)</em>, PMLR 162:16828–16847.</li>
+<li>Schultz, W., Dayan, P., &amp; Montague, P. R. (1997). A neural substrate of prediction and reward. <em>Science</em>, 275(5306), 1593–1599.</li>
+<li>Schwartz, B. (2004). <em>The Paradox of Choice: Why More Is Less</em>. HarperCollins.</li>
+<li>Skinner, B. F. (1948). "Superstition" in the pigeon. <em>Journal of Experimental Psychology</em>, 38(2), 168–172.</li>
+<li>Sutton, R. S., &amp; Barto, A. G. (2018). <em>Reinforcement Learning: An Introduction</em> (2nd ed.). MIT Press.</li>
+</ul>
+</body>
+</html>

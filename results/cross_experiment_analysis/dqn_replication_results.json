@@ -1,0 +1,92 @@
+{
+  "dqn_dissonance": {
+    "t_statistic": -0.2143,
+    "p_value": 0.833378,
+    "cohens_d": -0.0625,
+    "n_seeds": 15,
+    "finding": "Without explicit decay/regularization, neural networks preserve unchosen arm estimates (Q ~ 5.0)."
+  },
+  "dqn_choice_overload": {
+    "2": {
+      "raw_entropy_mean": 0.6896528720855712,
+      "raw_entropy_std": 0.0035999438425847576,
+      "theoretical_max": 0.6931471805599453,
+      "normalized_entropy_mean": 0.9949587784926844,
+      "normalized_entropy_std": 0.005193621129175799,
+      "switching_rate_mean": 0.045454545454545456,
+      "switching_rate_std": 0.02631981668152379
+    },
+    "4": {
+      "raw_entropy_mean": 1.3803121030330658,
+      "raw_entropy_std": 0.003440760071916604,
+      "theoretical_max": 1.3862943611198906,
+      "normalized_entropy_mean": 0.99568471296241,
+      "normalized_entropy_std": 0.0024819837463214223,
+      "switching_rate_mean": 0.08535353535353536,
+      "switching_rate_std": 0.033657183441871796
+    },
+    "8": {
+      "raw_entropy_mean": 2.066418182849884,
+      "raw_entropy_std": 0.006018086855718012,
+      "theoretical_max": 2.0794415416798357,
+      "normalized_entropy_mean": 0.9937370882667704,
+      "normalized_entropy_std": 0.0028940880207944716,
+      "switching_rate_mean": 0.10101010101010102,
+      "switching_rate_std": 0.04457474495747918
+    },
+    "16": {
+      "raw_entropy_mean": 2.7367197036743165,
+      "raw_entropy_std": 0.02981670170088312,
+      "theoretical_max": 2.772588722239781,
+      "normalized_entropy_mean": 0.9870629861985124,
+      "normalized_entropy_std": 0.010754101919882407,
+      "switching_rate_mean": 0.1222222222222222,
+      "switching_rate_std": 0.033243802241125164
+    }
+  },
+  "dqn_buffer_ablation": {
+    "summary": {
+      "32": {
+        "buffer_size": 32,
+        "raw_entropy_mean": 1.9992928683757782,
+        "raw_entropy_std": 0.03026163078465288,
+        "normalized_entropy_mean": 0.9614566354968022,
+        "normalized_entropy_std": 0.014552768220743834,
+        "switching_rate_mean": 0.07676767676767679,
+        "switching_rate_std": 0.04005698902953902
+      },
+      "100": {
+        "buffer_size": 100,
+        "raw_entropy_mean": 2.0250205397605896,
+        "raw_entropy_std": 0.027025293409406053,
+        "normalized_entropy_mean": 0.9738290301369652,
+        "normalized_entropy_std": 0.012996418926773112,
+        "switching_rate_mean": 0.0808080808080808,
+        "switching_rate_std": 0.03194219858755939
+      },
+      "500": {
+        "buffer_size": 500,
+        "raw_entropy_mean": 2.053530728816986,
+        "raw_entropy_std": 0.02050183240095407,
+        "normalized_entropy_mean": 0.9875395329257884,
+        "normalized_entropy_std": 0.009859297311331032,
+        "switching_rate_mean": 0.11464646464646464,
+        "switching_rate_std": 0.0412296040306548
+      },
+      "5000": {
+        "buffer_size": 5000,
+        "raw_entropy_mean": 2.066418182849884,
+        "raw_entropy_std": 0.006018086855718012,
+        "normalized_entropy_mean": 0.9937370882667704,
+        "normalized_entropy_std": 0.0028940880207944716,
+        "switching_rate_mean": 0.10101010101010102,
+        "switching_rate_std": 0.04457474495747918
+      }
+    },
+    "contrast_5000_vs_32": {
+      "t_statistic": 9.729411733768133,
+      "p_value": 7.27705391831291e-12,
+      "cohens_d": 3.0767101372275065
+    }
+  }
+}

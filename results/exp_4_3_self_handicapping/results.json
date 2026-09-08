@@ -1,0 +1,671 @@
+{
+  "config": {
+    "experiment_name": "exp_4_3_self_handicapping",
+    "n_seeds": 20,
+    "seed_offset": 0,
+    "agent_type": "tabular",
+    "results_dir": "results",
+    "save_logs": true,
+    "learning_rate": 0.1,
+    "discount_factor": 0.99,
+    "epsilon": 0.1,
+    "epsilon_decay": 1.0,
+    "epsilon_min": 0.01,
+    "grid_size": 7,
+    "n_episodes": 500,
+    "max_steps_per_episode": 100,
+    "damping_factor_biased": 0.2,
+    "damping_factor_control": 1.0,
+    "global_lr": 0.05,
+    "n_ensemble": 5,
+    "eval_every": 20,
+    "eval_confidence_multiplier": 3.0,
+    "handicap_reward_penalty": -2.0,
+    "n_handicap_states": 3,
+    "snapshot_every_episodes": 10
+  },
+  "biased": [
+    {
+      "seed": 0,
+      "metrics": {
+        "handicap_rate": 0.3591101694915254,
+        "total_handicap_count": 339,
+        "total_handicap_opportunities": 944,
+        "final_performance": 0.8793500000000002,
+        "n_handicap_events": 339,
+        "handicap_rate_prox_1": 0.020127118644067795,
+        "handicap_rate_prox_2": 0.037076271186440676,
+        "handicap_rate_prox_3": 0.05190677966101695,
+        "handicap_rate_prox_5": 0.09427966101694915,
+        "handicap_rate_prox_10": 0.2108050847457627,
+        "handicap_rate_prox_25": 0.3591101694915254
+      }
+    },
+    {
+      "seed": 1,
+      "metrics": {
+        "handicap_rate": 0.2094017094017094,
+        "total_handicap_count": 49,
+        "total_handicap_opportunities": 234,
+        "final_performance": 0.9175000000000001,
+        "n_handicap_events": 49,
+        "handicap_rate_prox_1": 0.004273504273504274,
+        "handicap_rate_prox_2": 0.008547008547008548,
+        "handicap_rate_prox_3": 0.02564102564102564,
+        "handicap_rate_prox_5": 0.04700854700854701,
+        "handicap_rate_prox_10": 0.09401709401709402,
+        "handicap_rate_prox_25": 0.2094017094017094
+      }
+    },
+    {
+      "seed": 2,
+      "metrics": {
+        "handicap_rate": 0.25112107623318386,
+        "total_handicap_count": 56,
+        "total_handicap_opportunities": 223,
+        "final_performance": 0.9096000000000001,
+        "n_handicap_events": 56,
+        "handicap_rate_prox_1": 0.0,
+        "handicap_rate_prox_2": 0.004484304932735426,
+        "handicap_rate_prox_3": 0.02242152466367713,
+        "handicap_rate_prox_5": 0.08520179372197309,
+        "handicap_rate_prox_10": 0.17040358744394618,
+        "handicap_rate_prox_25": 0.25112107623318386
+      }
+    },
+    {
+      "seed": 3,
+      "metrics": {
+        "handicap_rate": 0.27848101265822783,
+        "total_handicap_count": 66,
+        "total_handicap_opportunities": 237,
+        "final_performance": 0.17890000000000075,
+        "n_handicap_events": 66,
+        "handicap_rate_prox_1": 0.0,
+        "handicap_rate_prox_2": 0.029535864978902954,
+        "handicap_rate_prox_3": 0.05907172995780591,
+        "handicap_rate_prox_5": 0.08016877637130802,
+        "handicap_rate_prox_10": 0.19831223628691982,
+        "handicap_rate_prox_25": 0.27848101265822783
+      }
+    },
+    {
+      "seed": 4,
+      "metrics": {
+        "handicap_rate": 0.18834080717488788,
+        "total_handicap_count": 42,
+        "total_handicap_opportunities": 223,
+        "final_performance": 0.9199500000000002,
+        "n_handicap_events": 42,
+        "handicap_rate_prox_1": 0.004484304932735426,
+        "handicap_rate_prox_2": 0.013452914798206279,
+        "handicap_rate_prox_3": 0.013452914798206279,
+        "handicap_rate_prox_5": 0.03587443946188341,
+        "handicap_rate_prox_10": 0.12556053811659193,
+        "handicap_rate_prox_25": 0.18834080717488788
+      }
+    },
+    {
+      "seed": 5,
+      "metrics": {
+        "handicap_rate": 0.3017241379310345,
+        "total_handicap_count": 70,
+        "total_handicap_opportunities": 232,
+        "final_performance": 0.9235000000000001,
+        "n_handicap_events": 70,
+        "handicap_rate_prox_1": 0.06465517241379311,
+        "handicap_rate_prox_2": 0.08189655172413793,
+        "handicap_rate_prox_3": 0.09482758620689655,
+        "handicap_rate_prox_5": 0.15517241379310345,
+        "handicap_rate_prox_10": 0.1896551724137931,
+        "handicap_rate_prox_25": 0.3017241379310345
+      }
+    },
+    {
+      "seed": 6,
+      "metrics": {
+        "handicap_rate": 0.05128205128205128,
+        "total_handicap_count": 8,
+        "total_handicap_opportunities": 156,
+        "final_performance": 0.27075000000000066,
+        "n_handicap_events": 8,
+        "handicap_rate_prox_1": 0.0,
+        "handicap_rate_prox_2": 0.0,
+        "handicap_rate_prox_3": 0.00641025641025641,
+        "handicap_rate_prox_5": 0.00641025641025641,
+        "handicap_rate_prox_10": 0.04487179487179487,
+        "handicap_rate_prox_25": 0.05128205128205128
+      }
+    },
+    {
+      "seed": 7,
+      "metrics": {
+        "handicap_rate": 0.20853080568720378,
+        "total_handicap_count": 44,
+        "total_handicap_opportunities": 211,
+        "final_performance": 0.9203000000000001,
+        "n_handicap_events": 44,
+        "handicap_rate_prox_1": 0.014218009478672985,
+        "handicap_rate_prox_2": 0.02843601895734597,
+        "handicap_rate_prox_3": 0.04265402843601896,
+        "handicap_rate_prox_5": 0.052132701421800945,
+        "handicap_rate_prox_10": 0.0995260663507109,
+        "handicap_rate_prox_25": 0.20853080568720378
+      }
+    },
+    {
+      "seed": 8,
+      "metrics": {
+        "handicap_rate": 0.1282051282051282,
+        "total_handicap_count": 25,
+        "total_handicap_opportunities": 195,
+        "final_performance": 0.9226000000000003,
+        "n_handicap_events": 25,
+        "handicap_rate_prox_1": 0.0,
+        "handicap_rate_prox_2": 0.005128205128205128,
+        "handicap_rate_prox_3": 0.015384615384615385,
+        "handicap_rate_prox_5": 0.02564102564102564,
+        "handicap_rate_prox_10": 0.041025641025641026,
+        "handicap_rate_prox_25": 0.1282051282051282
+      }
+    },
+    {
+      "seed": 9,
+      "metrics": {
+        "handicap_rate": 0.26605504587155965,
+        "total_handicap_count": 58,
+        "total_handicap_opportunities": 218,
+        "final_performance": 0.9107000000000002,
+        "n_handicap_events": 58,
+        "handicap_rate_prox_1": 0.013761467889908258,
+        "handicap_rate_prox_2": 0.013761467889908258,
+        "handicap_rate_prox_3": 0.04128440366972477,
+        "handicap_rate_prox_5": 0.06880733944954129,
+        "handicap_rate_prox_10": 0.13761467889908258,
+        "handicap_rate_prox_25": 0.26605504587155965
+      }
+    },
+    {
+      "seed": 10,
+      "metrics": {
+        "handicap_rate": 0.13768115942028986,
+        "total_handicap_count": 19,
+        "total_handicap_opportunities": 138,
+        "final_performance": 0.060700000000000906,
+        "n_handicap_events": 19,
+        "handicap_rate_prox_1": 0.0,
+        "handicap_rate_prox_2": 0.0,
+        "handicap_rate_prox_3": 0.0,
+        "handicap_rate_prox_5": 0.014492753623188406,
+        "handicap_rate_prox_10": 0.09420289855072464,
+        "handicap_rate_prox_25": 0.13768115942028986
+      }
+    },
+    {
+      "seed": 11,
+      "metrics": {
+        "handicap_rate": 0.3337765957446808,
+        "total_handicap_count": 251,
+        "total_handicap_opportunities": 752,
+        "final_performance": 0.8983000000000003,
+        "n_handicap_events": 251,
+        "handicap_rate_prox_1": 0.011968085106382979,
+        "handicap_rate_prox_2": 0.041223404255319146,
+        "handicap_rate_prox_3": 0.05851063829787234,
+        "handicap_rate_prox_5": 0.0851063829787234,
+        "handicap_rate_prox_10": 0.18351063829787234,
+        "handicap_rate_prox_25": 0.3337765957446808
+      }
+    },
+    {
+      "seed": 12,
+      "metrics": {
+        "handicap_rate": 0.19760479041916168,
+        "total_handicap_count": 33,
+        "total_handicap_opportunities": 167,
+        "final_performance": 0.06850000000000091,
+        "n_handicap_events": 33,
+        "handicap_rate_prox_1": 0.023952095808383235,
+        "handicap_rate_prox_2": 0.07784431137724551,
+        "handicap_rate_prox_3": 0.11377245508982035,
+        "handicap_rate_prox_5": 0.11976047904191617,
+        "handicap_rate_prox_10": 0.16766467065868262,
+        "handicap_rate_prox_25": 0.19760479041916168
+      }
+    },
+    {
+      "seed": 13,
+      "metrics": {
+        "handicap_rate": 0.22395833333333334,
+        "total_handicap_count": 43,
+        "total_handicap_opportunities": 192,
+        "final_performance": 0.10650000000000087,
+        "n_handicap_events": 43,
+        "handicap_rate_prox_1": 0.026041666666666668,
+        "handicap_rate_prox_2": 0.036458333333333336,
+        "handicap_rate_prox_3": 0.036458333333333336,
+        "handicap_rate_prox_5": 0.08854166666666667,
+        "handicap_rate_prox_10": 0.171875,
+        "handicap_rate_prox_25": 0.22395833333333334
+      }
+    },
+    {
+      "seed": 14,
+      "metrics": {
+        "handicap_rate": 0.3103448275862069,
+        "total_handicap_count": 90,
+        "total_handicap_opportunities": 290,
+        "final_performance": 0.9195000000000002,
+        "n_handicap_events": 90,
+        "handicap_rate_prox_1": 0.006896551724137931,
+        "handicap_rate_prox_2": 0.04827586206896552,
+        "handicap_rate_prox_3": 0.06551724137931035,
+        "handicap_rate_prox_5": 0.09310344827586207,
+        "handicap_rate_prox_10": 0.23448275862068965,
+        "handicap_rate_prox_25": 0.3103448275862069
+      }
+    },
+    {
+      "seed": 15,
+      "metrics": {
+        "handicap_rate": 0.20772946859903382,
+        "total_handicap_count": 43,
+        "total_handicap_opportunities": 207,
+        "final_performance": 0.9269000000000003,
+        "n_handicap_events": 43,
+        "handicap_rate_prox_1": 0.03864734299516908,
+        "handicap_rate_prox_2": 0.057971014492753624,
+        "handicap_rate_prox_3": 0.0821256038647343,
+        "handicap_rate_prox_5": 0.14009661835748793,
+        "handicap_rate_prox_10": 0.16908212560386474,
+        "handicap_rate_prox_25": 0.20772946859903382
+      }
+    },
+    {
+      "seed": 16,
+      "metrics": {
+        "handicap_rate": 0.2356020942408377,
+        "total_handicap_count": 45,
+        "total_handicap_opportunities": 191,
+        "final_performance": 0.9247500000000002,
+        "n_handicap_events": 45,
+        "handicap_rate_prox_1": 0.005235602094240838,
+        "handicap_rate_prox_2": 0.020942408376963352,
+        "handicap_rate_prox_3": 0.02617801047120419,
+        "handicap_rate_prox_5": 0.05759162303664921,
+        "handicap_rate_prox_10": 0.17277486910994763,
+        "handicap_rate_prox_25": 0.2356020942408377
+      }
+    },
+    {
+      "seed": 17,
+      "metrics": {
+        "handicap_rate": 0.20074349442379183,
+        "total_handicap_count": 54,
+        "total_handicap_opportunities": 269,
+        "final_performance": 0.9244500000000003,
+        "n_handicap_events": 54,
+        "handicap_rate_prox_1": 0.04460966542750929,
+        "handicap_rate_prox_2": 0.07063197026022305,
+        "handicap_rate_prox_3": 0.08550185873605948,
+        "handicap_rate_prox_5": 0.10780669144981413,
+        "handicap_rate_prox_10": 0.15613382899628253,
+        "handicap_rate_prox_25": 0.20074349442379183
+      }
+    },
+    {
+      "seed": 18,
+      "metrics": {
+        "handicap_rate": 0.22857142857142856,
+        "total_handicap_count": 48,
+        "total_handicap_opportunities": 210,
+        "final_performance": 0.9221500000000001,
+        "n_handicap_events": 48,
+        "handicap_rate_prox_1": 0.004761904761904762,
+        "handicap_rate_prox_2": 0.004761904761904762,
+        "handicap_rate_prox_3": 0.05238095238095238,
+        "handicap_rate_prox_5": 0.14285714285714285,
+        "handicap_rate_prox_10": 0.18571428571428572,
+        "handicap_rate_prox_25": 0.22857142857142856
+      }
+    },
+    {
+      "seed": 19,
+      "metrics": {
+        "handicap_rate": 0.08974358974358974,
+        "total_handicap_count": 14,
+        "total_handicap_opportunities": 156,
+        "final_performance": 0.90605,
+        "n_handicap_events": 14,
+        "handicap_rate_prox_1": 0.0,
+        "handicap_rate_prox_2": 0.02564102564102564,
+        "handicap_rate_prox_3": 0.02564102564102564,
+        "handicap_rate_prox_5": 0.03205128205128205,
+        "handicap_rate_prox_10": 0.05128205128205128,
+        "handicap_rate_prox_25": 0.08974358974358974
+      }
+    }
+  ],
+  "control": [
+    {
+      "seed": 0,
+      "metrics": {
+        "handicap_rate": 0.10599078341013825,
+        "total_handicap_count": 138,
+        "total_handicap_opportunities": 1302,
+        "final_performance": 0.9066500000000002,
+        "n_handicap_events": 138,
+        "handicap_rate_prox_1": 0.0038402457757296467,
+        "handicap_rate_prox_2": 0.01152073732718894,
+        "handicap_rate_prox_3": 0.019201228878648235,
+        "handicap_rate_prox_5": 0.040706605222734255,
+        "handicap_rate_prox_10": 0.07757296466973887,
+        "handicap_rate_prox_25": 0.10599078341013825
+      }
+    },
+    {
+      "seed": 1,
+      "metrics": {
+        "handicap_rate": 0.13306451612903225,
+        "total_handicap_count": 33,
+        "total_handicap_opportunities": 248,
+        "final_performance": 0.9256000000000002,
+        "n_handicap_events": 33,
+        "handicap_rate_prox_1": 0.0,
+        "handicap_rate_prox_2": 0.028225806451612902,
+        "handicap_rate_prox_3": 0.04435483870967742,
+        "handicap_rate_prox_5": 0.07661290322580645,
+        "handicap_rate_prox_10": 0.10080645161290322,
+        "handicap_rate_prox_25": 0.13306451612903225
+      }
+    },
+    {
+      "seed": 2,
+      "metrics": {
+        "handicap_rate": 0.12100840336134454,
+        "total_handicap_count": 72,
+        "total_handicap_opportunities": 595,
+        "final_performance": 0.9229500000000003,
+        "n_handicap_events": 72,
+        "handicap_rate_prox_1": 0.008403361344537815,
+        "handicap_rate_prox_2": 0.015126050420168067,
+        "handicap_rate_prox_3": 0.023529411764705882,
+        "handicap_rate_prox_5": 0.05714285714285714,
+        "handicap_rate_prox_10": 0.0907563025210084,
+        "handicap_rate_prox_25": 0.12100840336134454
+      }
+    },
+    {
+      "seed": 3,
+      "metrics": {
+        "handicap_rate": 0.2748091603053435,
+        "total_handicap_count": 72,
+        "total_handicap_opportunities": 262,
+        "final_performance": 0.1884000000000007,
+        "n_handicap_events": 72,
+        "handicap_rate_prox_1": 0.030534351145038167,
+        "handicap_rate_prox_2": 0.03816793893129771,
+        "handicap_rate_prox_3": 0.08396946564885496,
+        "handicap_rate_prox_5": 0.17557251908396945,
+        "handicap_rate_prox_10": 0.20229007633587787,
+        "handicap_rate_prox_25": 0.2748091603053435
+      }
+    },
+    {
+      "seed": 4,
+      "metrics": {
+        "handicap_rate": 0.19014084507042253,
+        "total_handicap_count": 54,
+        "total_handicap_opportunities": 284,
+        "final_performance": 0.9263000000000002,
+        "n_handicap_events": 54,
+        "handicap_rate_prox_1": 0.014084507042253521,
+        "handicap_rate_prox_2": 0.017605633802816902,
+        "handicap_rate_prox_3": 0.03873239436619718,
+        "handicap_rate_prox_5": 0.07042253521126761,
+        "handicap_rate_prox_10": 0.14084507042253522,
+        "handicap_rate_prox_25": 0.19014084507042253
+      }
+    },
+    {
+      "seed": 5,
+      "metrics": {
+        "handicap_rate": 0.22535211267605634,
+        "total_handicap_count": 48,
+        "total_handicap_opportunities": 213,
+        "final_performance": 0.9262,
+        "n_handicap_events": 48,
+        "handicap_rate_prox_1": 0.004694835680751174,
+        "handicap_rate_prox_2": 0.014084507042253521,
+        "handicap_rate_prox_3": 0.014084507042253521,
+        "handicap_rate_prox_5": 0.056338028169014086,
+        "handicap_rate_prox_10": 0.14553990610328638,
+        "handicap_rate_prox_25": 0.22535211267605634
+      }
+    },
+    {
+      "seed": 6,
+      "metrics": {
+        "handicap_rate": 0.15819209039548024,
+        "total_handicap_count": 28,
+        "total_handicap_opportunities": 177,
+        "final_performance": 0.9190000000000002,
+        "n_handicap_events": 28,
+        "handicap_rate_prox_1": 0.005649717514124294,
+        "handicap_rate_prox_2": 0.03389830508474576,
+        "handicap_rate_prox_3": 0.05649717514124294,
+        "handicap_rate_prox_5": 0.062146892655367235,
+        "handicap_rate_prox_10": 0.10734463276836158,
+        "handicap_rate_prox_25": 0.15819209039548024
+      }
+    },
+    {
+      "seed": 7,
+      "metrics": {
+        "handicap_rate": 0.24568965517241378,
+        "total_handicap_count": 57,
+        "total_handicap_opportunities": 232,
+        "final_performance": 0.9224500000000002,
+        "n_handicap_events": 57,
+        "handicap_rate_prox_1": 0.004310344827586207,
+        "handicap_rate_prox_2": 0.008620689655172414,
+        "handicap_rate_prox_3": 0.02586206896551724,
+        "handicap_rate_prox_5": 0.125,
+        "handicap_rate_prox_10": 0.16810344827586207,
+        "handicap_rate_prox_25": 0.24568965517241378
+      }
+    },
+    {
+      "seed": 8,
+      "metrics": {
+        "handicap_rate": 0.2028301886792453,
+        "total_handicap_count": 43,
+        "total_handicap_opportunities": 212,
+        "final_performance": 0.9236000000000003,
+        "n_handicap_events": 43,
+        "handicap_rate_prox_1": 0.0047169811320754715,
+        "handicap_rate_prox_2": 0.0047169811320754715,
+        "handicap_rate_prox_3": 0.018867924528301886,
+        "handicap_rate_prox_5": 0.0330188679245283,
+        "handicap_rate_prox_10": 0.11320754716981132,
+        "handicap_rate_prox_25": 0.2028301886792453
+      }
+    },
+    {
+      "seed": 9,
+      "metrics": {
+        "handicap_rate": 0.23873873873873874,
+        "total_handicap_count": 53,
+        "total_handicap_opportunities": 222,
+        "final_performance": 0.9207000000000002,
+        "n_handicap_events": 53,
+        "handicap_rate_prox_1": 0.0,
+        "handicap_rate_prox_2": 0.0,
+        "handicap_rate_prox_3": 0.0,
+        "handicap_rate_prox_5": 0.06306306306306306,
+        "handicap_rate_prox_10": 0.13513513513513514,
+        "handicap_rate_prox_25": 0.23873873873873874
+      }
+    },
+    {
+      "seed": 10,
+      "metrics": {
+        "handicap_rate": 0.1643835616438356,
+        "total_handicap_count": 24,
+        "total_handicap_opportunities": 146,
+        "final_performance": 0.12025000000000087,
+        "n_handicap_events": 24,
+        "handicap_rate_prox_1": 0.0,
+        "handicap_rate_prox_2": 0.0410958904109589,
+        "handicap_rate_prox_3": 0.0410958904109589,
+        "handicap_rate_prox_5": 0.0684931506849315,
+        "handicap_rate_prox_10": 0.1232876712328767,
+        "handicap_rate_prox_25": 0.1643835616438356
+      }
+    },
+    {
+      "seed": 11,
+      "metrics": {
+        "handicap_rate": 0.016304347826086956,
+        "total_handicap_count": 3,
+        "total_handicap_opportunities": 184,
+        "final_performance": 0.9262000000000001,
+        "n_handicap_events": 3,
+        "handicap_rate_prox_1": 0.0,
+        "handicap_rate_prox_2": 0.0,
+        "handicap_rate_prox_3": 0.0,
+        "handicap_rate_prox_5": 0.0,
+        "handicap_rate_prox_10": 0.016304347826086956,
+        "handicap_rate_prox_25": 0.016304347826086956
+      }
+    },
+    {
+      "seed": 12,
+      "metrics": {
+        "handicap_rate": 0.16042780748663102,
+        "total_handicap_count": 30,
+        "total_handicap_opportunities": 187,
+        "final_performance": 0.9266000000000002,
+        "n_handicap_events": 30,
+        "handicap_rate_prox_1": 0.026737967914438502,
+        "handicap_rate_prox_2": 0.0855614973262032,
+        "handicap_rate_prox_3": 0.0962566844919786,
+        "handicap_rate_prox_5": 0.0962566844919786,
+        "handicap_rate_prox_10": 0.13368983957219252,
+        "handicap_rate_prox_25": 0.16042780748663102
+      }
+    },
+    {
+      "seed": 13,
+      "metrics": {
+        "handicap_rate": 0.203125,
+        "total_handicap_count": 39,
+        "total_handicap_opportunities": 192,
+        "final_performance": 0.05055000000000093,
+        "n_handicap_events": 39,
+        "handicap_rate_prox_1": 0.0,
+        "handicap_rate_prox_2": 0.0,
+        "handicap_rate_prox_3": 0.015625,
+        "handicap_rate_prox_5": 0.03125,
+        "handicap_rate_prox_10": 0.15104166666666666,
+        "handicap_rate_prox_25": 0.203125
+      }
+    },
+    {
+      "seed": 14,
+      "metrics": {
+        "handicap_rate": 0.2198952879581152,
+        "total_handicap_count": 42,
+        "total_handicap_opportunities": 191,
+        "final_performance": 0.9312,
+        "n_handicap_events": 42,
+        "handicap_rate_prox_1": 0.02617801047120419,
+        "handicap_rate_prox_2": 0.03664921465968586,
+        "handicap_rate_prox_3": 0.06282722513089005,
+        "handicap_rate_prox_5": 0.07853403141361257,
+        "handicap_rate_prox_10": 0.14136125654450263,
+        "handicap_rate_prox_25": 0.2198952879581152
+      }
+    },
+    {
+      "seed": 15,
+      "metrics": {
+        "handicap_rate": 0.18072289156626506,
+        "total_handicap_count": 30,
+        "total_handicap_opportunities": 166,
+        "final_performance": 0.9236,
+        "n_handicap_events": 30,
+        "handicap_rate_prox_1": 0.012048192771084338,
+        "handicap_rate_prox_2": 0.012048192771084338,
+        "handicap_rate_prox_3": 0.024096385542168676,
+        "handicap_rate_prox_5": 0.03614457831325301,
+        "handicap_rate_prox_10": 0.0783132530120482,
+        "handicap_rate_prox_25": 0.18072289156626506
+      }
+    },
+    {
+      "seed": 16,
+      "metrics": {
+        "handicap_rate": 0.19607843137254902,
+        "total_handicap_count": 40,
+        "total_handicap_opportunities": 204,
+        "final_performance": 0.9250500000000004,
+        "n_handicap_events": 40,
+        "handicap_rate_prox_1": 0.029411764705882353,
+        "handicap_rate_prox_2": 0.05392156862745098,
+        "handicap_rate_prox_3": 0.05392156862745098,
+        "handicap_rate_prox_5": 0.06862745098039216,
+        "handicap_rate_prox_10": 0.16176470588235295,
+        "handicap_rate_prox_25": 0.19607843137254902
+      }
+    },
+    {
+      "seed": 17,
+      "metrics": {
+        "handicap_rate": 0.039816232771822356,
+        "total_handicap_count": 26,
+        "total_handicap_opportunities": 653,
+        "final_performance": 0.9254000000000003,
+        "n_handicap_events": 26,
+        "handicap_rate_prox_1": 0.0015313935681470138,
+        "handicap_rate_prox_2": 0.0030627871362940277,
+        "handicap_rate_prox_3": 0.006125574272588055,
+        "handicap_rate_prox_5": 0.013782542113323124,
+        "handicap_rate_prox_10": 0.026033690658499236,
+        "handicap_rate_prox_25": 0.039816232771822356
+      }
+    },
+    {
+      "seed": 18,
+      "metrics": {
+        "handicap_rate": 0.2026431718061674,
+        "total_handicap_count": 46,
+        "total_handicap_opportunities": 227,
+        "final_performance": 0.9321499999999999,
+        "n_handicap_events": 46,
+        "handicap_rate_prox_1": 0.00881057268722467,
+        "handicap_rate_prox_2": 0.039647577092511016,
+        "handicap_rate_prox_3": 0.04405286343612335,
+        "handicap_rate_prox_5": 0.04405286343612335,
+        "handicap_rate_prox_10": 0.14096916299559473,
+        "handicap_rate_prox_25": 0.2026431718061674
+      }
+    },
+    {
+      "seed": 19,
+      "metrics": {
+        "handicap_rate": 0.3761467889908257,
+        "total_handicap_count": 82,
+        "total_handicap_opportunities": 218,
+        "final_performance": 0.9012500000000001,
+        "n_handicap_events": 82,
+        "handicap_rate_prox_1": 0.027522935779816515,
+        "handicap_rate_prox_2": 0.0963302752293578,
+        "handicap_rate_prox_3": 0.13302752293577982,
+        "handicap_rate_prox_5": 0.1559633027522936,
+        "handicap_rate_prox_10": 0.25688073394495414,
+        "handicap_rate_prox_25": 0.3761467889908257
+      }
+    }
+  ]
+}
