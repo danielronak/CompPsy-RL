@@ -24,7 +24,8 @@ from pathlib import Path
 from tqdm import tqdm
 
 from src.agents.tabular_q import TabularQAgent, TabularQConfig
-from src.agents.dqn import DQNAgent, DQNConfig
+# NOTE: DQNAgent (and its torch dependency) is imported lazily inside create_agent
+# so the tabular experiments (Exp 1-4) run without requiring PyTorch.
 from src.analysis.statistics import (
     independent_ttest, paired_ttest, holm_bonferroni,
     summarize_across_seeds, format_result, TestResult,
@@ -109,6 +110,7 @@ class ExperimentRunner:
             )
             return TabularQAgent(agent_config, seed=seed)
         elif self.config.agent_type == "dqn":
+            from src.agents.dqn import DQNAgent, DQNConfig  # lazy: only needs torch here
             agent_config = DQNConfig(
                 n_states=env.n_states,
                 n_actions=env.n_actions,

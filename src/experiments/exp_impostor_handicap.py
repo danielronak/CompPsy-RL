@@ -51,7 +51,7 @@ class ImpostorConfig(ExperimentConfig):
     max_steps_per_episode: int = 100
 
     # Confidence module
-    damping_factor_biased: float = 0.4     # < 1: damped positive evidence
+    damping_factor_biased: float = 0.2     # kappa < 1: damped positive evidence
     damping_factor_control: float = 1.0    # 1.0: symmetric (well-calibrated)
     global_lr: float = 0.02
     n_ensemble: int = 5
@@ -175,7 +175,10 @@ class ImpostorSyndromeExperiment(ExperimentRunner):
                 episode_return, max_possible, min_possible
             )
 
-            # Update global confidence
+            # Local self-appraisal: the agent's own (noisy, per-episode) readout of
+            # how competent it was this episode, operationalized as the normalized
+            # episode return. The global self-model integrates these local appraisals
+            # with damped sensitivity to positive prediction errors (Katyal et al. 2025).
             conf.update_global_confidence(norm_return)
 
             # Record metrics

@@ -102,19 +102,31 @@ class ConfidenceModule:
     def update_global_confidence(self, local_performance: float,
                                  handicap_active: bool = False) -> Dict:
         """
-        Update global confidence using the Katyal et al. mechanism:
+        Update global confidence using the Katyal et al. (2025) mechanism.
 
-        - If local_performance > threshold (positive signal):
-            global_conf += alpha_slow * DAMPING_FACTOR * (local_perf - global_conf)
-        - If local_performance <= threshold (negative signal):
+        Positive vs. negative evidence is defined by the sign of the
+        self-evaluation prediction error delta_c = local_performance - C_global
+        (i.e. evidence that the agent performed BETTER than it currently believes),
+        NOT by the raw sign of performance. This distinction is critical: damping
+        on raw performance (which is always > 0 for a normalized return) merely
+        gives the biased agent a smaller learning rate, so its estimate still
+        converges to the truth given enough episodes — a slow-learning artifact,
+        not a bias. Damping only the POSITIVE prediction errors instead pulls the
+        global estimate persistently below the truth, reproducing the genuine,
+        non-vanishing underconfidence asymmetry reported by Katyal et al.
+
+        - Positive prediction error (local_performance > C_global):
+            global_conf += alpha_slow * kappa * (local_perf - global_conf)
+        - Negative prediction error (local_performance <= C_global):
             - If handicap_active: discounted negative update (alpha_slow * 0.3)
               representing external excuse attribution (Berglas & Jones 1978)
             - If unhandicapped: full negative sensitivity (alpha_slow * 1.0)
         """
         old_global = self.global_confidence
 
-        if local_performance > self.config.performance_threshold:
-            # Positive evidence — damped update
+        prediction_error = local_performance - self.global_confidence
+        if prediction_error > 0:
+            # Positive evidence (better than believed) — damped by kappa (< 1 biased)
             effective_lr = self.config.global_lr * self.config.damping_factor
             update_type = "positive_damped"
         else:
