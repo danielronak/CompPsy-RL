@@ -201,12 +201,12 @@ Mean Regret           & $0.024\pm0.031$ & $0.028\pm0.033$ & $0.025\pm0.036$ & $0
 
 \subsection{Shared Mechanism: Action Visitation Staleness}
 
-Both Cognitive Dissonance and Choice Overload share a single mathematical root. Define staleness $\tau_a(t)=t-\max\{t'\leq t: a_{t'}=a\}$. After commitment, $\tau_{\text{rejected}}\to\infty$ and $Q(a_{\text{rejected}})\to0$ under decay, driving divergence. With $K$ near-tied options, $\mathbb{E}[\tau]\propto K$, diluting value separation. Empirically ($N=20$ seeds): rejected-arm staleness predicts excess value divergence ($r=0.4543$, $p=4.47\times10^{-52}$) and mean staleness predicts policy entropy ($r=0.8226$, $p=8.19\times10^{-21}$; Fig.~\ref{fig:shared_mechanism}).
+Both Cognitive Dissonance and Choice Overload share a single mathematical root. Define staleness $\tau_a(t)=t-\max\{t'\leq t: a_{t'}=a\}$. After commitment, $\tau_{\text{rejected}}\to\infty$ and $Q(a_{\text{rejected}})\to0$ under decay, driving divergence. With $K$ near-tied options, $\mathbb{E}[\tau]\propto K$, diluting value separation. Empirically, rejected-arm staleness predicts excess value divergence (per-seed mean $r=0.41$, 95\% CI $[0.30,0.51]$, $p<10^{-6}$ across $N=20$ independent seeds) and mean staleness predicts policy entropy ($r=0.82$, $p<10^{-20}$ across 80 independent runs; Fig.~\ref{fig:shared_mechanism}).
 
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\linewidth]{figures/shared_mechanism_staleness.png}
-\caption{Shared staleness mechanism. (Left) Rejected-arm staleness predicts post-decision value divergence ($r=0.454$, $p<10^{-50}$). (Right) Mean staleness predicts policy entropy ($r=0.823$, $p<10^{-20}$). Both Free biases share a common computational root.}
+\caption{Shared staleness mechanism. (Left) Rejected-arm staleness predicts post-decision value divergence (per-seed mean $r=0.41$, $p<10^{-6}$). (Right) Mean staleness predicts policy entropy ($r=0.82$, $p<10^{-20}$). Both Free biases share a common computational root.}
 \label{fig:shared_mechanism}
 \end{figure}
 

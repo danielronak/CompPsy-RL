@@ -90,6 +90,7 @@ def analyze_shared_mechanism(results_dir: str = "results/cross_experiment_analys
                 q_vals = agent.get_q_values(0)
                 div = q_vals[chosen_arm] - q_vals[rej_arm]
                 dissonance_staleness_records.append({
+                    "seed": seed,
                     "step": step,
                     "rej_staleness": rej_staleness,
                     "value_divergence": div,
@@ -158,11 +159,37 @@ def analyze_shared_mechanism(results_dir: str = "results/cross_experiment_analys
             })
 
     # Correlations
-    # Exp 4.1: Staleness vs Divergence
+    # Exp 4.1: Staleness vs Divergence.
+    # IMPORTANT: pooling every (seed, step) timepoint into one correlation is
+    # pseudo-replication -- timepoints within a seed are strongly autocorrelated,
+    # so the pooled n is not the number of independent units and the resulting
+    # p-value is meaningless. We instead compute the correlation WITHIN each seed
+    # (across its timepoints) and aggregate the 20 independent per-seed estimates
+    # via a Fisher z-transform, reporting the mean r, a 95% CI, and a one-sample
+    # test against zero with n = 20 seeds.
     stale_4_1 = [r["rej_staleness"] for r in dissonance_staleness_records]
     div_4_1 = [r["value_divergence"] for r in dissonance_staleness_records]
-    r_4_1, p_4_1 = pearsonr(stale_4_1, div_4_1)
-    print(f"\nExp 4.1 Staleness vs Value Divergence: r = {r_4_1:.4f} (p = {p_4_1:.4e})")
+
+    per_seed_r = []
+    for sd in range(n_seeds):
+        s_vals = [r["rej_staleness"] for r in dissonance_staleness_records if r["seed"] == sd]
+        d_vals = [r["value_divergence"] for r in dissonance_staleness_records if r["seed"] == sd]
+        if len(s_vals) > 2 and np.std(s_vals) > 0 and np.std(d_vals) > 0:
+            per_seed_r.append(pearsonr(s_vals, d_vals)[0])
+    per_seed_r = np.array(per_seed_r)
+
+    # Fisher z-transform aggregation across the independent per-seed correlations
+    z = np.arctanh(np.clip(per_seed_r, -0.9999, 0.9999))
+    from scipy.stats import t as _t
+    mean_z, se_z = np.mean(z), np.std(z, ddof=1) / np.sqrt(len(z))
+    r_4_1 = float(np.tanh(mean_z))                      # aggregate correlation
+    tcrit = _t.ppf(0.975, df=len(z) - 1)
+    ci_4_1 = (float(np.tanh(mean_z - tcrit * se_z)), float(np.tanh(mean_z + tcrit * se_z)))
+    t_stat_4_1 = float(mean_z / se_z)
+    p_4_1 = float(2 * _t.sf(abs(t_stat_4_1), df=len(z) - 1))  # one-sample test vs 0, n=20
+    print(f"\nExp 4.1 Staleness vs Value Divergence (per-seed, N={len(z)} seeds): "
+          f"mean r = {r_4_1:.3f}, 95% CI [{ci_4_1[0]:.3f}, {ci_4_1[1]:.3f}], "
+          f"t({len(z)-1}) = {t_stat_4_1:.2f}, p = {p_4_1:.2e}")
 
     # Exp 4.4: Mean Staleness vs Final Entropy
     all_k_stale = []
@@ -224,8 +251,13 @@ def analyze_shared_mechanism(results_dir: str = "results/cross_experiment_analys
     summary = {
         "exp_4_1_staleness_divergence_r": float(r_4_1),
         "exp_4_1_staleness_divergence_p": float(p_4_1),
+        "exp_4_1_method": "per-seed correlation, Fisher-z aggregated (N=20 independent seeds)",
+        "exp_4_1_r_ci95": [ci_4_1[0], ci_4_1[1]],
+        "exp_4_1_n_seeds": int(len(z)),
+        "exp_4_1_per_seed_r": [float(x) for x in per_seed_r],
         "exp_4_4_staleness_entropy_r": float(r_4_4),
         "exp_4_4_staleness_entropy_p": float(p_4_4),
+        "exp_4_4_n_runs": len(all_k_stale),  # one independent run per (seed, K)
         "arm_counts": arm_counts,
         "mean_staleness_by_k": {
             str(k): float(np.mean([r["mean_staleness"] for r in overload_staleness_records[k]]))
