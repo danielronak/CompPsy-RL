@@ -553,6 +553,13 @@ class SelfHandicappingExperiment(ExperimentRunner):
         print(f"  Plot saved to {plots_dir / 'handicap_penalty_sweep.png'}")
 
 
+def run_experiment_4_2(n_seeds: int = 20, results_dir: str = "results"):
+    """Run the impostor syndrome experiment."""
+    config = ImpostorConfig(n_seeds=n_seeds, results_dir=results_dir)
+    experiment = ImpostorSyndromeExperiment(config)
+    return experiment.run_full_experiment()
+
+
 def run_experiment_4_3(n_seeds: int = 20, results_dir: str = "results"):
     """Run the self-handicapping experiment (base + penalty sweep + beta robustness)."""
     config = SelfHandicapConfig(n_seeds=n_seeds, results_dir=results_dir)

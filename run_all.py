@@ -68,9 +68,31 @@ def main():
             results_dir=args.results_dir,
         )
 
+    if args.exp in ("all", "dqn", "5"):
+        print("\n" + "=" * 70)
+        print("PHASE 4: DQN Replication & Buffer Ablation (requires PyTorch)")
+        print("=" * 70)
+        # Imported lazily so the tabular experiments above run without torch.
+        import json
+        from pathlib import Path
+        from src.experiments.exp_dqn_replication import (
+            run_dqn_dissonance, run_dqn_choice_overload,
+            run_dqn_buffer_ablation, generate_dqn_plots,
+        )
+        dqn_dir = Path(args.results_dir) / "cross_experiment_analysis"
+        dqn_dir.mkdir(parents=True, exist_ok=True)
+        dqn_results = {
+            "dqn_dissonance": run_dqn_dissonance(n_seeds=args.seeds),
+            "dqn_choice_overload": run_dqn_choice_overload(n_seeds=args.seeds),
+            "dqn_buffer_ablation": run_dqn_buffer_ablation(n_seeds=args.seeds),
+        }
+        with open(dqn_dir / "dqn_replication_results.json", "w") as f:
+            json.dump(dqn_results, f, indent=2)
+        generate_dqn_plots(dqn_results, dqn_dir / "plots")
+
     if args.exp in ("all", "cross", "4"):
         print("\n" + "=" * 70)
-        print("PHASE 4: Cross-Experiment Analysis & Generality")
+        print("PHASE 5: Cross-Experiment Analysis & Generality")
         print("=" * 70)
         from src.analysis.shared_mechanism import analyze_shared_mechanism
         from src.analysis.human_benchmarks import generate_human_benchmarks_summary

@@ -318,6 +318,77 @@ def run_dqn_buffer_ablation(n_seeds: int = 20, buffer_sizes: list = None) -> dic
     }
 
 
+def generate_dqn_plots(results: dict, plots_dir: Path) -> None:
+    """Generate the three DQN figures referenced by the paper."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    plots_dir.mkdir(parents=True, exist_ok=True)
+
+    # --- 1. Choice overload: normalized entropy near the ceiling across K ---
+    co = results["dqn_choice_overload"]
+    ks = sorted((int(k) for k in co), key=int)
+    means = [co[str(k)]["normalized_entropy_mean"] for k in ks]
+    stds = [co[str(k)]["normalized_entropy_std"] for k in ks]
+    fig, ax = plt.subplots(figsize=(7, 5))
+    ax.errorbar([str(k) for k in ks], means, yerr=stds, marker="o", capsize=5,
+                color="#2a9d8f", linewidth=2)
+    ax.axhline(1.0, color="k", ls="--", alpha=0.5, label="Uniform ceiling")
+    ax.set_ylim(0.6, 1.02)
+    ax.set_xlabel("Number of near-tied arms $K$")
+    ax.set_ylabel(r"Normalized policy entropy $\hat{H}(\pi)$")
+    ax.set_title("DQN Choice Overload: credit-assignment inertia ($\\hat{H}\\approx0.99$)")
+    ax.legend()
+    ax.grid(True, alpha=0.3)
+    fig.tight_layout()
+    fig.savefig(str(plots_dir / "dqn_choice_overload.png"), dpi=300)
+    plt.close(fig)
+
+    # --- 2. Cognitive dissonance: near-zero post-commitment divergence ---
+    diss = results["dqn_dissonance"]
+    fig, ax = plt.subplots(figsize=(6, 5))
+    ax.bar([0], [diss["mean_divergence"]], yerr=[diss["std_divergence"]],
+           width=0.5, color="#457b9d", alpha=0.85, capsize=6)
+    ax.axhline(0, color="k", lw=1)
+    ax.set_xticks([0])
+    ax.set_xticklabels(["Committed DQN\n(ground-truth tied)"])
+    ax.set_ylabel(r"Excess value divergence $Q_{chosen}-Q_{rejected}$")
+    ax.set_ylim(-1.0, 1.0)
+    ax.set_title(f"DQN Cognitive Dissonance: no spreading\n"
+                 f"({diss['mean_divergence']:+.3f} $\\pm$ {diss['std_divergence']:.3f}, "
+                 f"lossless replay preserves unchosen arm)")
+    ax.grid(True, alpha=0.3, axis="y")
+    fig.tight_layout()
+    fig.savefig(str(plots_dir / "dqn_cognitive_dissonance.png"), dpi=300)
+    plt.close(fig)
+
+    # --- 3. Buffer ablation: entropy rises monotonically with capacity ---
+    ba = results["dqn_buffer_ablation"]["summary"]
+    bs = sorted((int(b) for b in ba), key=int)
+    b_means = [ba[str(b)]["normalized_entropy_mean"] for b in bs]
+    b_stds = [ba[str(b)]["normalized_entropy_std"] for b in bs]
+    sw_means = [ba[str(b)]["switching_rate_mean"] for b in bs]
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+    ax1.errorbar([str(b) for b in bs], b_means, yerr=b_stds, marker="o",
+                 capsize=5, color="#e76f51", linewidth=2)
+    ax1.set_xlabel("Replay buffer capacity $B$")
+    ax1.set_ylabel(r"Normalized policy entropy $\hat{H}(\pi)$")
+    ct = results["dqn_buffer_ablation"]["contrast_5000_vs_32"]
+    ax1.set_title(f"Buffer ablation ($K=8$): $t={ct['t_statistic']:.2f}$, "
+                  f"$d={ct['cohens_d']:.2f}$")
+    ax1.grid(True, alpha=0.3)
+    ax2.plot([str(b) for b in bs], sw_means, marker="s", color="#264653", linewidth=2)
+    ax2.set_xlabel("Replay buffer capacity $B$")
+    ax2.set_ylabel("Action switching rate")
+    ax2.set_title("Switching rate vs. buffer capacity")
+    ax2.grid(True, alpha=0.3)
+    fig.tight_layout()
+    fig.savefig(str(plots_dir / "dqn_buffer_ablation.png"), dpi=300)
+    plt.close(fig)
+    print(f"Saved DQN figures to {plots_dir}")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Run DQN Replication and Ablation Experiments")
     parser.add_argument("--seeds", type=int, default=20, help="Number of seeds (default: 20)")
@@ -332,7 +403,7 @@ def main():
     print("=" * 70)
 
     # 1. Cognitive Dissonance
-    dissonance_results = run_dqn_dissonance(n_seeds=min(n_seeds, 15))
+    dissonance_results = run_dqn_dissonance(n_seeds=n_seeds)
 
     # 2. Choice Overload
     choice_overload_results = run_dqn_choice_overload(n_seeds=n_seeds)
@@ -353,6 +424,8 @@ def main():
     out_file = output_dir / "dqn_replication_results.json"
     with open(out_file, "w") as f:
         json.dump(combined_results, f, indent=2)
+
+    generate_dqn_plots(combined_results, output_dir / "plots")
 
     print(f"\nSaved combined DQN replication results to {out_file}")
     print("\n" + "=" * 70)
