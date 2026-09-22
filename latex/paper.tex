@@ -32,9 +32,9 @@
 
 \begin{abstract}
 Reinforcement learning (RL) and behavioral psychology have always been known to be closely related, but the phenomena that show up during the post-decision and self-evaluative phases have not gotten as much attention from the mechanistic RL perspective.
-In this work we investigate if four well-recognized human psychological biases, namely Cognitive Dissonance, Impostor Syndrome, Self-Handicapping, and Choice Overload, can emerge in artificial RL agents without manually placing the bias into the reward function, differentiating between “Free” biases that arise spontaneously and standard learning dynamics and “Architectural” biases that require explicit metacognitive structure.
+In this work we investigate if four well-recognized human psychological biases, namely Cognitive Dissonance, Impostor Syndrome, Self-Handicapping, and Choice Overload, can emerge in artificial RL agents without manually placing the bias into the reward function, differentiating between “Free” biases that arise spontaneously from standard learning dynamics and “Architectural” biases that require explicit metacognitive structure.
 
-Across multi-seed evaluations, three out of four biases emerge robustly while the fourth marks an informative computational boundary. Standard Q-learning agents develop post-decision value divergence on ground-truth identical alternatives that scales monotonically with memory decay, ruling out the revealed-preference confound. Agents using the human-verified asymmetric confidence-update rule develop a persistent calibration gap absent in symmetric controls. Expanding near-tied action spaces collapses normalized policy entropy, indicating that choice paralysis manifests as exploration dilution rather than uniform indecision. Both this effect and cognitive dissonance share a common substrate in action-visitation staleness. By contrast, self-handicapping emerges only when agents anticipate failure from a miscalibrated self-model: objectively competent agents then sabotage their own reward to protect a fragile self-image, an effect bounded by the objective cost of the handicap. In Deep Q-Networks, lossless experience replay preserves unchosen-arm values and strongly attenuates cognitive dissonance ($\approx88\%$ vs.\ tabular), with a parametric replay-buffer ablation confirming this causal link.
+Across multi-seed evaluations, three out of four biases emerge robustly while the fourth marks an informative computational boundary. Standard Q-learning agents develop post-decision value divergence on ground-truth identical alternatives that scales monotonically with memory decay, ruling out the revealed-preference confound. Agents using the human-verified asymmetric confidence-update rule develop a persistent calibration gap absent in symmetric controls. Expanding near-tied action spaces collapses normalized policy entropy---choice paralysis as exploration dilution rather than uniform indecision---and, once a safe opt-out is available, agents defer commitment more as options grow, reproducing the human commitment collapse. Both this effect and cognitive dissonance share a common substrate in action-visitation staleness. By contrast, self-handicapping emerges only when agents anticipate failure from a miscalibrated self-model: objectively competent agents then sabotage their own reward to protect a fragile self-image, an effect bounded by the objective cost of the handicap. In Deep Q-Networks, lossless experience replay preserves unchosen-arm values and strongly attenuates cognitive dissonance ($\approx88\%$ vs.\ tabular), with a parametric replay-buffer ablation confirming this causal link.
 
 These findings offer a mechanistic account of how human-like cognitive distortions can emerge from the statistical mechanics of reinforcement learning, while establishing precise boundary conditions on when and why such biases do and do not dominate.
 \end{abstract}
@@ -61,9 +61,9 @@ We use two different statistical methods to report results. For stochastic exper
 
 \subsection{Exp 1: Cognitive Dissonance (Spreading of Alternatives)}
 
-To address the revealed-preference critique proposed by \citet{chen2010choice} both bandit arms draw from identical Gaussian distributions ($\mu=5.0$, $\sigma=1.0$)hence any post-decision divergence on this ground-truth-tied baseline cannot arise due to hidden preference differences and must arise from the learning dynamics. We also test a near-tied condition ($\Delta=0.1$), a parametric decay sweep ($\lambda\in\{0.0, 0.001, 0.01\}$),and an internal free-choice condition that removes forced commitment.
+To address the revealed-preference critique proposed by \citet{chen2010choice}, both bandit arms draw from identical Gaussian distributions ($\mu=5.0$, $\sigma=1.0$); hence any post-decision divergence on this ground-truth-tied baseline cannot arise due to hidden preference differences and must arise from the learning dynamics. We also test a near-tied condition ($\Delta=0.1$), a parametric decay sweep ($\lambda\in\{0.0, 0.001, 0.01\}$), and an internal free-choice condition that removes forced commitment.
 
-A Tabular Q-learning agent ($\gamma=0$) updates as $Q(a_t)\leftarrow Q(a_t)+\alpha[r_t-Q(a_t)]$, with unvisited arms decaying: $Q(a')\leftarrow Q(a')\cdot(1-\lambda)$. steps of exploration, the agent chooses to commit to the most-pulled arm for $T_2=1000$ steps. . A paired Observer Control receives identical rewards without committing. The primary metric is Excess Value Divergence:
+A Tabular Q-learning agent ($\gamma=0$) updates as $Q(a_t)\leftarrow Q(a_t)+\alpha[r_t-Q(a_t)]$, with unvisited arms decaying: $Q(a')\leftarrow Q(a')\cdot(1-\lambda)$. After $T_1=500$ steps of exploration, the agent commits to the most-pulled arm for $T_2=1000$ steps. A paired Observer Control receives identical rewards without committing. The primary metric is Excess Value Divergence:
 \begin{equation}
     \begin{split}
         \Delta Q_{\text{excess}}(t) ={}& [Q_{\text{chosen}}(t)-Q_{\text{rejected}}(t)]_{\text{committed}} \\
@@ -71,7 +71,7 @@ A Tabular Q-learning agent ($\gamma=0$) updates as $Q(a_t)\leftarrow Q(a_t)+\alp
     \end{split}
 \end{equation}
 
-\textbf{Results (Table~\ref{tab:exp41}, Fig.~\ref{fig:exp41_trajectories}).} Committed agents exhibit rapid value divergence: $+0.923\pm0.436$ at 100 post-commitment steps ($t=9.90$, $p<10^{-6}$, $d=2.21$) on the ground-truth-tied condition. The dose-response sweep showed that value divergence is directly proportional to the rate of memory decay. Zero decay yielded $+0.159\pm0.627$ (near zero, showing that commitment alone is insufficient and that decay is the causal driver of divergence), standard decay yielded $+0.375\pm0.791$, and high-decay yielded $+3.259\pm0.410$. When the Agent was not forced to commit, the divergence was observed to be ($+0.263\pm0.792$), confirming that biological commitment only initiates asymmetric future visitation. Observer controls remain near zero ($+0.060\pm0.341$).
+\textbf{Results (Table~\ref{tab:exp41}, Fig.~\ref{fig:exp41_trajectories}).} Committed agents exhibit rapid value divergence: $+0.863\pm0.390$ at 100 post-commitment steps ($t=9.90$, $p<10^{-6}$, $d=2.21$) on the ground-truth-tied condition. The dose-response sweep showed that value divergence is directly proportional to the rate of memory decay. Zero decay yielded $+0.159\pm0.627$ (near zero, showing that commitment alone is insufficient and that decay is the causal driver of divergence), standard decay yielded $+0.375\pm0.791$, and high-decay yielded $+3.259\pm0.410$. When the Agent was not forced to commit, the divergence was observed to be ($+0.263\pm0.792$), confirming that biological commitment only initiates asymmetric future visitation. Observer controls remain near zero ($+0.060\pm0.341$).
 
 \begin{table}[htbp]
 \raggedright
@@ -83,10 +83,10 @@ A Tabular Q-learning agent ($\gamma=0$) updates as $Q(a_t)\leftarrow Q(a_t)+\alp
 \toprule
 \textbf{Condition} & \textbf{$\lambda$} & \textbf{Div. (+100)} & \textbf{Final Div.} & \textbf{Causal Role} \\
 \midrule
-Primary (GT-Tied)         & $0.001$ & $+0.923\pm0.436$ & $+0.375\pm0.791$ & Standard ($d=2.21$) \\
-Near-Tied ($\Delta=0.1$)  & $0.001$ & $+0.957\pm0.419$ & $+0.364\pm0.814$ & Replicated ($d=2.28$) \\
-No-Decay Baseline         & $0.000$ & $+0.128\pm0.512$ & $+0.159\pm0.627$ & Decay necessary \\
-High-Decay Stress Test    & $0.010$ & $+1.842\pm0.320$ & $+3.259\pm0.410$ & Monotonic response \\
+Primary (GT-Tied)         & $0.001$ & $+0.863\pm0.390$ & $+0.375\pm0.791$ & Standard ($d=2.21$) \\
+Near-Tied ($\Delta=0.1$)  & $0.001$ & $+0.730\pm0.636$ & $+0.265\pm0.866$ & Replicated ($d=1.15$) \\
+No-Decay Baseline         & $0.000$ & $+0.090\pm0.553$ & $+0.159\pm0.627$ & Decay necessary \\
+High-Decay Stress Test    & $0.010$ & $+3.211\pm0.640$ & $+3.259\pm0.410$ & Monotonic response \\
 Endogenous Choice         & $0.001$ & ---              & $+0.263\pm0.792$ & Asymm.\ sampling \\
 Observer Control          & $0.001$ & $+0.060\pm0.341$ & $-0.051\pm0.384$ & Counterfactual \\
 \bottomrule
@@ -95,7 +95,7 @@ Observer Control          & $0.001$ & $+0.060\pm0.341$ & $-0.051\pm0.384$ & Coun
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{figures/dose_response_ablation.png}
+\includegraphics[width=0.78\linewidth]{figures/dose_response_ablation.png}
 \caption{Cognitive Dissonance. (Left) Value divergence scales monotonically with $\lambda$. Zero-decay confirms that commitment alone is insufficient. (Right) Divergence absent in observer controls, emerges endogenously($+0.263$), and peaks at $+3.259$ under high decay.}
 \label{fig:exp41_trajectories}
 \end{figure}
@@ -130,7 +130,7 @@ Gap ($\mathcal{G}$)   & $+8.38\pm0.34\%$ & $-0.02\pm0.15\%$ \\
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{figures/calibration_gap.png}
+\includegraphics[width=0.78\linewidth]{figures/calibration_gap.png}
 \caption{Impostor Syndrome. Objective performance (green) surpasses 90\% while global self-assessment (orange) remains suppressed, generating a persistent $+8.38\%$ calibration gap. Symmetric control: $-0.02\%$. Shaded bands: $\pm1$ SD, $N=20$ seeds.}
 \label{fig:exp42_gap}
 \end{figure}
@@ -139,7 +139,7 @@ Gap ($\mathcal{G}$)   & $+8.38\pm0.34\%$ & $-0.02\pm0.15\%$ \\
 
 Self-handicapping is characterized by adopting an obstacle that is \textbf{objectively harmful to task performance} yet furnishes an external excuse for failure \citep{berglas1978drug}. Before each evaluative test, an agent decides whether to adopt a handicap that imposes a direct reward penalty ($R=-2.0$) and never improves the outcome---a reward-maximizing agent has zero incentive to select it. Its sole benefit is metacognitive: evaluative failure while handicapped buffers the negative confidence update by $70\%$ ($\delta_c\cdot0.3$ vs.\ $\delta_c\cdot1.0$), operationalizing the external-excuse mechanism of \citet{berglas1978drug}. Following the anticipatory account of self-handicapping, the agent weighs this expected ego-protection---scaled by its \textit{own} anticipated probability of failure ($1-C_{\text{global}}$)---against the objective penalty. Because the impostor agent (Exp 2) systematically over-predicts its own failure, we test whether it self-handicaps more than a calibrated control despite being objectively competent.
 
-\textbf{Results (Table~\ref{tab:exp43}, Fig.~\ref{fig:exp43_sweep}).} At the reference penalty ($R=-2.0$), impostor agents self-handicap at $34.8\pm3.6\%$ versus $7.3\pm2.5\%$ for calibrated controls---a $4.77\times$ shift that closely tracks the human $5.4\times$ shift toward performance-debilitating drugs ($70\%$ vs.\ $13\%$; \citet{berglas1978drug}). In doing so the impostor agents sabotage their own objective return ($0.05$ vs.\ $0.60$), paying a real reward penalty to protect a self-image they need not doubt. This propensity is not unconditional: a penalty sweep shows handicap uptake falling monotonically with the objective cost and vanishing by $R=-5.0$, and the impostor-vs-control gap holds across the esteem weight $\beta\in\{2.5,5,10\}$. Because the effect follows near-deterministically from the Exp 2 self-model, we report magnitudes and the dose-response rather than inflated significance statistics. Self-handicapping thus emerges from impostor-like over-anticipation of failure, bounded by objective cost---a boundary condition on \textit{when}, not \textit{whether}, reward-optimizing agents self-sabotage.
+\textbf{Results (Table~\ref{tab:exp43}).} At the reference penalty ($R=-2.0$), impostor agents self-handicap at $34.8\pm3.6\%$ versus $7.3\pm2.5\%$ for calibrated controls---a $4.77\times$ shift that closely tracks the human $5.4\times$ shift toward performance-debilitating drugs ($70\%$ vs.\ $13\%$; \citet{berglas1978drug}). In doing so the impostor agents sabotage their own objective return ($0.05$ vs.\ $0.60$), paying a real reward penalty to protect a self-image they need not doubt. This propensity is not unconditional: a penalty sweep shows handicap uptake falling monotonically with the objective cost and vanishing by $R=-5.0$, and the impostor-vs-control gap holds across the esteem weight $\beta\in\{2.5,5,10\}$. Because the effect follows near-deterministically from the Exp 2 self-model, we report magnitudes and the dose-response rather than inflated significance statistics. Self-handicapping thus emerges from impostor-like over-anticipation of failure, bounded by objective cost---a boundary condition on \textit{when}, not \textit{whether}, reward-optimizing agents self-sabotage.
 
 \begin{table}[htbp]
 \centering
@@ -160,18 +160,11 @@ $-5.0$ & $0.3\%$  & $0.0\%$  & --- \\
 \end{tabularx}
 \end{table}
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\linewidth]{figures/handicap_penalty_sweep.png}
-\caption{Self-handicapping dose-response. Impostor agents (orange) self-handicap far more than calibrated controls (green) at low penalties; both are suppressed as the objective penalty grows, yielding a genuine cost--benefit tradeoff rather than an unconditional bias.}
-\label{fig:exp43_sweep}
-\end{figure}
-
 \subsection{Exp 4: Choice Overload (The Paradox of Choice)}
 
-We evaluate agents on near-tied bandits ($K\in\{2,4,8,16\}$) with arm means drawn uniformly from $\mathcal{U}(\mu_{\text{base}}\pm0.05)$ ($\mu_{\text{base}}=5.0$, $\sigma_k=1.0$). Agents train for 2000 steps with $\epsilon$-greedy exploration ($\epsilon_0=1.0$, $\epsilon_{\text{decay}}=0.999$, $\epsilon_{\text{min}}=0.02$). We measure raw entropy $H(\pi)$, normalized entropy $\hat{H}=H(\pi)/\log(K)$, convergence step, and cumulative regret.
+We evaluate agents on near-tied bandits ($K\in\{2,4,8,16\}$) with arm means drawn uniformly from $\mathcal{U}(\mu_{\text{base}}\pm0.05)$ ($\mu_{\text{base}}=5.0$, $\sigma_k=1.0$). Agents train for 2000 steps with $\epsilon$-greedy exploration ($\epsilon_0=1.0$, $\epsilon_{\text{decay}}=0.999$, $\epsilon_{\text{min}}=0.02$). We measure raw entropy $H(\pi)$, normalized entropy $\hat{H}=H(\pi)/\log(K)$, convergence step, and cumulative regret. To test the human \textit{commit-vs-defer} behavior directly, we also give the agent a safe opt-out of known value ($4.85$) and a satisficing rule \citep{schwartz2004paradox} that commits to an arm only when its lower-confidence bound $Q(a)-\beta/\sqrt{n(a)}$ ($\beta=1.5$) exceeds the opt-out, else defers.
 
-\textbf{Results (Table~\ref{tab:exp44}, Fig.~\ref{fig:exp44_metrics}).} Expanding the choice set collapses normalized policy entropy from $0.943\pm0.028$ to $0.718\pm0.041$ ($K=16$ vs.\ $K=2$: $t=-20.45$, $p=4.19\times10^{-22}$). The key finding is that choice overload manifests as \textit{exploration dilution}---policies concentrate unpredictably on a subset of options rather than becoming uniformly indecisive and consequently mean regret also increases significantly ($K=16$ vs.\ $K=2$: $t=2.24$, $p=0.031$). Commitment latency increases directionally by $+58.6\%$ ($17.40\to27.60$ steps) but does not cross significance ($t=1.24$, $p=0.223$, ns), reported transparently as a boundary condition.
+\textbf{Results (Table~\ref{tab:exp44}, Fig.~\ref{fig:exp44_metrics}).} Expanding the choice set collapses normalized policy entropy from $0.943\pm0.028$ to $0.718\pm0.041$ ($K=16$ vs.\ $K=2$: $t=-20.45$, $p=4.19\times10^{-22}$). The key finding is that choice overload manifests as \textit{exploration dilution}---policies concentrate unpredictably on a subset of options rather than becoming uniformly indecisive and consequently mean regret also increases significantly ($K=16$ vs.\ $K=2$: $t=2.24$, $p=0.031$). Commitment latency increases directionally by $+58.6\%$ ($17.40\to27.60$ steps) but does not cross significance ($t=1.24$, $p=0.223$, ns), reported transparently as a boundary condition. Most directly, the opt-out condition reproduces the human commitment collapse: the deferral rate rises from $0.61$ at $K=2$ to $0.86$ at $K=16$ ($t=6.52$, $p<10^{-6}$, $d=2.06$)---commitment falling from $39\%$ to $14\%$, mirroring the $30\%\to3\%$ purchase collapse of \citet{iyengar2000choice}, because more near-tied options dilute per-arm confidence and fewer clear the satisficing bar.
 
 \begin{table}[htbp]
 \raggedright
@@ -186,13 +179,14 @@ We evaluate agents on near-tied bandits ($K\in\{2,4,8,16\}$) with arm means draw
 Norm.\ $\hat{H}(\pi)$ & $0.943\pm0.028$ & $0.950\pm0.027$ & $0.847\pm0.034$ & $0.718\pm0.041$ \\
 Conv.\ Step           & $17.40\pm18.3$  & $19.95\pm20.8$  & $25.50\pm27.7$  & $27.60\pm31.9$ \\
 Mean Regret           & $0.024\pm0.031$ & $0.028\pm0.033$ & $0.025\pm0.036$ & $0.046\pm0.033$ \\
+Deferral rate         & $0.607\pm0.156$ & $0.672\pm0.155$ & $0.675\pm0.127$ & $0.859\pm0.074$ \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.78\textwidth]{figures/choice_overload_metrics.png}
+\includegraphics[width=0.54\textwidth]{figures/choice_overload_metrics.png}
 \caption{Choice Overload. Normalized entropy $\hat{H}$ collapses from $0.94$ to $0.72$ as $K$ expands---exploration dilution, not uniform indecision. Commitment latency rises directionally ($+58.6\%$, ns) and regret increases significantly for $K=16$.}
 \label{fig:exp44_metrics}
 \end{figure*}
@@ -205,18 +199,18 @@ Both Cognitive Dissonance and Choice Overload share a single mathematical root. 
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=\linewidth]{figures/shared_mechanism_staleness.png}
+\includegraphics[width=0.78\linewidth]{figures/shared_mechanism_staleness.png}
 \caption{Shared staleness mechanism. (Left) Rejected-arm staleness predicts post-decision value divergence (per-seed mean $r=0.41$, $p<10^{-6}$). (Right) Mean staleness predicts policy entropy ($r=0.82$, $p<10^{-20}$). Both Free biases share a common computational root.}
 \label{fig:shared_mechanism}
 \end{figure}
 
 \subsection{Human Benchmark Comparison}
 
-The agents’ behavior align with published human data across all four experiments (Fig.~\ref{fig:human_benchmarks}): RL excess divergence ($+0.92\pm0.44$, in Q-value units) qualitatively parallels Brehm's (1956) human rating spread ($+0.81\pm0.60$, in rating-scale points) with observer controls remaining near zero ($+0.06\pm0.34$); the $+8.38\%$ calibration gap reproduces the underconfidence pattern of \citet{katyal2025distorted}. The $+58.6\%$ latency delay with elevated regret mirrors the commitment collapse of \citet{iyengar2000choice}. The self-handicapping ratio ($4.77\times$ RL vs.\ $5.4\times$ human) closely tracks \citet{berglas1978drug}: impostor-like agents sabotage their own reward to protect a fragile self-image, an effect bounded by the objective cost of the handicap.
+The agents’ behavior aligns with published human data across all four experiments (Fig.~\ref{fig:human_benchmarks}): RL excess divergence ($+0.86\pm0.39$, in Q-value units) qualitatively parallels Brehm's (1956) human rating spread ($+0.81\pm0.60$, in rating-scale points) with observer controls remaining near zero ($+0.06\pm0.34$); the $+8.38\%$ calibration gap reproduces the underconfidence pattern of \citet{katyal2025distorted}. The rising deferral rate---commitment falling from $39\%$ to $14\%$---mirrors the commitment collapse of \citet{iyengar2000choice}. The self-handicapping ratio ($4.77\times$ RL vs.\ $5.4\times$ human) closely tracks \citet{berglas1978drug}: impostor-like agents sabotage their own reward to protect a fragile self-image, an effect bounded by the objective cost of the handicap.
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.70\textwidth]{figures/human_benchmarks_4panel.png}
+\includegraphics[width=0.50\textwidth]{figures/human_benchmarks_4panel.png}
 \caption{Human benchmark comparison. Agent metrics (red) overlaid on published human empirical data (blue) for all four biases. Panel (C) shows self-handicapping: impostor agents exhibit a $4.77\times$ ratio, closely tracking the human $5.4\times$ shift \citep{berglas1978drug}, while sabotaging their own objective return.}
 \label{fig:human_benchmarks}
 \end{figure*}
@@ -225,22 +219,22 @@ The agents’ behavior align with published human data across all four experimen
 
 We replicated experiments in DQN \citep{mnih2015human} (MLP: 2 hidden layers of 32 units, ReLU; replay buffer 5{,}000 transitions; target-network sync every 50 steps; Adam: $\eta=2\times10^{-3}$). Unlike the tabular results, which are bit-reproducible, exact DQN magnitudes depend on the PyTorch/BLAS version (deterministic within a fixed environment); the qualitative findings below are stable across versions.
 
-\textbf{DQN Choice Overload.} Across $K\in\{2,4,8,16\}$, DQN policies hovered near maximum entropy ($\hat{H}\approx0.99$; Fig.~\ref{fig:dqn_joint}a), exhibiting \textit{credit-assignment inertia}: uniform experience replay batch-averages near-tied transitions, diluting small value differences and pinning the policy essentially uniform-random---unlike tabular agents, which collapse to $\hat{H}=0.72$. A parametric buffer ablation ($B\in\{32,100,500,5000\}$, $K=8$, $N=20$) confirmed this causally: normalized entropy scales monotonically ($0.955\to0.966\to0.989\to0.992$). Contrasting $B=5000$ against the online limit $B=32$: $t=8.37$, $p=3.7\times10^{-10}$, $d=2.65$ (Fig.~\ref{fig:dqn_joint}b). Smaller buffers cycle transitions rapidly, allowing gradient updates to differentiate arms; larger buffers average across stale historical transitions from all arms.
+\textbf{DQN Choice Overload.} Across $K\in\{2,4,8,16\}$, DQN policies hovered near maximum entropy ($\hat{H}\approx0.99$), exhibiting \textit{credit-assignment inertia}: uniform experience replay batch-averages near-tied transitions, diluting small value differences and pinning the policy essentially uniform-random---unlike tabular agents, which collapse to $\hat{H}=0.72$. A parametric buffer ablation ($B\in\{32,100,500,5000\}$, $K=8$, $N=20$) confirmed this causally: normalized entropy scales monotonically ($0.955\to0.966\to0.989\to0.992$). Contrasting $B=5000$ against the online limit $B=32$: $t=8.37$, $p=3.7\times10^{-10}$, $d=2.65$ (Fig.~\ref{fig:dqn_joint}a). Smaller buffers cycle transitions rapidly, allowing gradient updates to differentiate arms; larger buffers average across stale historical transitions from all arms.
 
-\textbf{DQN Cognitive Dissonance.} Committed DQN agents on ground-truth identical arms preserved \textit{both} arms' values near their true mean ($Q_{\text{chosen}}\approx4.98$, $Q_{\text{rejected}}\approx4.93$; contrast the tabular decay case, where $Q_{\text{rejected}}\to0$). Only a small residual divergence remains ($+0.11\pm0.16$; Fig.~\ref{fig:dqn_joint}c)---an $\approx88\%$ reduction relative to the tabular decay-driven effect ($+0.92$ at matched post-commitment steps). Lossless experience replay preserves unvisited action values instead of letting them decay toward zero, thereby \textit{strongly attenuating}---though not fully eliminating---the staleness mechanism that drives dissonance in tabular agents; the small residual reflects frozen sampling noise on the unchosen arm rather than decay. This isolates biological memory decay as the dominant amplifier of human-like post-decision spreading.
+\textbf{DQN Cognitive Dissonance.} Committed DQN agents on ground-truth identical arms preserved \textit{both} arms' values near their true mean ($Q_{\text{chosen}}\approx4.98$, $Q_{\text{rejected}}\approx4.93$; contrast the tabular decay case, where $Q_{\text{rejected}}\to0$). Only a small residual divergence remains ($+0.11\pm0.16$; Fig.~\ref{fig:dqn_joint}b)---an $\approx88\%$ reduction relative to the tabular decay-driven effect ($+0.92$ at matched post-commitment steps). Lossless experience replay preserves unvisited action values instead of letting them decay toward zero, thereby \textit{strongly attenuating}---though not fully eliminating---the staleness mechanism that drives dissonance in tabular agents; the small residual reflects frozen sampling noise on the unchosen arm rather than decay. This isolates biological memory decay as the dominant amplifier of human-like post-decision spreading.
 
 \begin{figure*}[t]
 \centering
 \begin{subfigure}[b]{0.48\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{figures/dqn_buffer_ablation.png}
+    \includegraphics[width=0.78\linewidth]{figures/dqn_buffer_ablation.png}
     \caption{Buffer ablation ($K=8$, $N=20$)}
     \label{fig:dqn_ablation}
 \end{subfigure}
 \hfill
 \begin{subfigure}[b]{0.48\textwidth}
     \centering
-    \includegraphics[width=\linewidth]{figures/dqn_cognitive_dissonance.png}
+    \includegraphics[width=0.78\linewidth]{figures/dqn_cognitive_dissonance.png}
     \caption{DQN Cognitive Dissonance}
     \label{fig:dqn_dissonance}
 \end{subfigure}
@@ -250,7 +244,7 @@ We replicated experiments in DQN \citep{mnih2015human} (MLP: 2 hidden layers of 
 
 \section{Discussion, Limitations, and Conclusion}
 
-These findings establish that cognitive dissonance and choice overload emerge ``for free'' from the statistical mechanics of asymmetric sampling and stale value estimates, while impostor syndrome requires asymmetric metacognitive evidence integration. The cost-boundedness of self-handicapping and the credit-assignment inertia in DQN are not failures---they are precise, informative computational boundary conditions: overt behavioral self-sabotage emerges from impostor-like over-anticipation of failure yet is suppressed once the objective penalty grows large, and memory decay is the dominant amplifier of post-decision spreading, which lossless replay strongly attenuates (by $\approx88\%$).
+These findings establish that cognitive dissonance and choice overload emerge without any reward-shaping---from the statistical mechanics of asymmetric sampling and stale value estimates alone---while impostor syndrome requires asymmetric metacognitive evidence integration. The cost-boundedness of self-handicapping and the credit-assignment inertia in DQN are not failures---they are precise, informative computational boundary conditions: overt behavioral self-sabotage emerges from impostor-like over-anticipation of failure yet is suppressed once the objective penalty grows large, and memory decay is the dominant amplifier of post-decision spreading, which lossless replay strongly attenuates (by $\approx88\%$).
 
 Three limitations should be noted. First, our experiments use bandit and gridworld environments; full-scale visual environments (e.g., Atari) may introduce representation drift that interacts with these biases in currently unknown ways. Second, we establish the \textit{behavioral and representational signature} of dissonance---systematic post-decision revaluation---but do not claim the \textit{motivational tension} central to \citet{festinger1957theory}'s original formulation; this computational mechanism may be necessary but not sufficient for the human phenomenon. Third, our self-handicapping result depends on modeling the pre-evaluation choice as anticipatory (model-based) valuation using the agent's own miscalibrated failure expectation; a purely model-free agent that learns only from realized outcomes does not self-handicap, which we regard as a substantive scoping condition on when the effect arises.
 

@@ -12,3 +12,10 @@ venv/
 *.fdb_latexmk
 *.synctex.gz
 .DS_Store
+
+# LaTeX build artifacts
+*.bbl
+*.blg
+*.synctex.gz
+latex/paper.pdf
+results/exp_minigrid_choice/
