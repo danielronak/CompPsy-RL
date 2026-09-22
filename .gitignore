@@ -18,3 +18,4 @@ venv/
 *.blg
 *.synctex.gz
 latex/paper.pdf
+results/exp_minigrid_choice/
