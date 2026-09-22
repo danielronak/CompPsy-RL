@@ -1,0 +1,762 @@
+{
+  "2": {
+    "best_color_rate_mean": 0.7024974645373393,
+    "best_color_rate_std": 0.16304084474032374,
+    "chance_rate": 0.5,
+    "norm_entropy_mean": 0.7862571907589097,
+    "norm_entropy_std": 0.21711671112561,
+    "regret_mean": 0.009995913361195242,
+    "rows": [
+      {
+        "K": 2,
+        "seed": 0,
+        "best_color_rate": 0.6,
+        "chance_rate": 0.5,
+        "norm_entropy": 0.9709505944546688,
+        "reach_rate": 0.975,
+        "regret": 0.006655034497803758
+      },
+      {
+        "K": 2,
+        "seed": 1,
+        "best_color_rate": 0.6395939086294417,
+        "chance_rate": 0.5,
+        "norm_entropy": 0.9430197593253007,
+        "reach_rate": 0.985,
+        "regret": 0.01093120644695967
+      },
+      {
+        "K": 2,
+        "seed": 2,
+        "best_color_rate": 0.755,
+        "chance_rate": 0.5,
+        "norm_entropy": 0.8032566997760643,
+        "reach_rate": 1.0,
+        "regret": 0.010046682422695748
+      },
+      {
+        "K": 2,
+        "seed": 3,
+        "best_color_rate": 0.6042780748663101,
+        "chance_rate": 0.5,
+        "norm_entropy": 0.9683930063611208,
+        "reach_rate": 0.935,
+        "regret": 0.0062266813279257946
+      },
+      {
+        "K": 2,
+        "seed": 4,
+        "best_color_rate": 0.7397959183673469,
+        "chance_rate": 0.5,
+        "norm_entropy": 0.8270541783360665,
+        "reach_rate": 0.98,
+        "regret": 0.010923304633538647
+      },
+      {
+        "K": 2,
+        "seed": 5,
+        "best_color_rate": 0.945,
+        "chance_rate": 0.5,
+        "norm_entropy": 0.3072683598607598,
+        "reach_rate": 1.0,
+        "regret": 0.0035680652429820035
+      },
+      {
+        "K": 2,
+        "seed": 6,
+        "best_color_rate": 0.73,
+        "chance_rate": 0.5,
+        "norm_entropy": 0.8414646362081756,
+        "reach_rate": 1.0,
+        "regret": 0.01514376934564023
+      },
+      {
+        "K": 2,
+        "seed": 7,
+        "best_color_rate": 0.9,
+        "chance_rate": 0.5,
+        "norm_entropy": 0.46899559358928117,
+        "reach_rate": 1.0,
+        "regret": 0.0070361050286615765
+      },
+      {
+        "K": 2,
+        "seed": 8,
+        "best_color_rate": 0.6984924623115578,
+        "chance_rate": 0.5,
+        "norm_entropy": 0.8831259027291832,
+        "reach_rate": 0.995,
+        "regret": 0.0028676761817823574
+      },
+      {
+        "K": 2,
+        "seed": 9,
+        "best_color_rate": 0.795,
+        "chance_rate": 0.5,
+        "norm_entropy": 0.731816079376955,
+        "reach_rate": 1.0,
+        "regret": 0.010075758984392287
+      },
+      {
+        "K": 2,
+        "seed": 10,
+        "best_color_rate": 0.8097826086956522,
+        "chance_rate": 0.5,
+        "norm_entropy": 0.7019260041986656,
+        "reach_rate": 0.92,
+        "regret": 0.014277121894976657
+      },
+      {
+        "K": 2,
+        "seed": 11,
+        "best_color_rate": 0.215,
+        "chance_rate": 0.5,
+        "norm_entropy": 0.7509319796338464,
+        "reach_rate": 1.0,
+        "regret": 0.012622364120047826
+      },
+      {
+        "K": 2,
+        "seed": 12,
+        "best_color_rate": 0.715,
+        "chance_rate": 0.5,
+        "norm_entropy": 0.8621745299412249,
+        "reach_rate": 1.0,
+        "regret": 0.016697775342868395
+      },
+      {
+        "K": 2,
+        "seed": 13,
+        "best_color_rate": 0.725,
+        "chance_rate": 0.5,
+        "norm_entropy": 0.8485481782946158,
+        "reach_rate": 1.0,
+        "regret": 0.01485443273981994
+      },
+      {
+        "K": 2,
+        "seed": 14,
+        "best_color_rate": 0.5606060606060606,
+        "chance_rate": 0.5,
+        "norm_entropy": 0.9893755831922303,
+        "reach_rate": 0.99,
+        "regret": 0.011390044758926587
+      },
+      {
+        "K": 2,
+        "seed": 15,
+        "best_color_rate": 0.6649484536082474,
+        "chance_rate": 0.5,
+        "norm_entropy": 0.9200044721023374,
+        "reach_rate": 0.97,
+        "regret": 0.022445832578656077
+      },
+      {
+        "K": 2,
+        "seed": 16,
+        "best_color_rate": 0.6756756756756757,
+        "chance_rate": 0.5,
+        "norm_entropy": 0.9090221560878149,
+        "reach_rate": 0.925,
+        "regret": 0.009725586883690938
+      },
+      {
+        "K": 2,
+        "seed": 17,
+        "best_color_rate": 0.766497461928934,
+        "chance_rate": 0.5,
+        "norm_entropy": 0.7840672224172417,
+        "reach_rate": 0.985,
+        "regret": 0.0055088328092571266
+      },
+      {
+        "K": 2,
+        "seed": 18,
+        "best_color_rate": 0.5454545454545454,
+        "chance_rate": 0.5,
+        "norm_entropy": 0.9940302114769566,
+        "reach_rate": 0.99,
+        "regret": 0.006587312182034081
+      },
+      {
+        "K": 2,
+        "seed": 19,
+        "best_color_rate": 0.964824120603015,
+        "chance_rate": 0.5,
+        "norm_entropy": 0.219718667815683,
+        "reach_rate": 0.995,
+        "regret": 0.0023346798012451415
+      }
+    ]
+  },
+  "4": {
+    "best_color_rate_mean": 0.44607941807795165,
+    "best_color_rate_std": 0.12386076541500524,
+    "chance_rate": 0.25,
+    "norm_entropy_mean": 0.8226751876765388,
+    "norm_entropy_std": 0.0940237503069803,
+    "regret_mean": 0.01441962747840792,
+    "rows": [
+      {
+        "K": 4,
+        "seed": 0,
+        "best_color_rate": 0.23756906077348067,
+        "chance_rate": 0.25,
+        "norm_entropy": 0.927709938770844,
+        "reach_rate": 0.905,
+        "regret": 0.010605659420438453
+      },
+      {
+        "K": 4,
+        "seed": 1,
+        "best_color_rate": 0.457286432160804,
+        "chance_rate": 0.25,
+        "norm_entropy": 0.8721121877001028,
+        "reach_rate": 0.995,
+        "regret": 0.024029173076011826
+      },
+      {
+        "K": 4,
+        "seed": 2,
+        "best_color_rate": 0.4444444444444444,
+        "chance_rate": 0.25,
+        "norm_entropy": 0.922941311651496,
+        "reach_rate": 0.99,
+        "regret": 0.011299999660654833
+      },
+      {
+        "K": 4,
+        "seed": 3,
+        "best_color_rate": 0.335,
+        "chance_rate": 0.25,
+        "norm_entropy": 0.9775762028999883,
+        "reach_rate": 1.0,
+        "regret": 0.015831204912488298
+      },
+      {
+        "K": 4,
+        "seed": 4,
+        "best_color_rate": 0.40816326530612246,
+        "chance_rate": 0.25,
+        "norm_entropy": 0.8949337698817992,
+        "reach_rate": 0.98,
+        "regret": 0.008093533932879163
+      },
+      {
+        "K": 4,
+        "seed": 5,
+        "best_color_rate": 0.601010101010101,
+        "chance_rate": 0.25,
+        "norm_entropy": 0.8004982711980853,
+        "reach_rate": 0.99,
+        "regret": 0.018493177122713665
+      },
+      {
+        "K": 4,
+        "seed": 6,
+        "best_color_rate": 0.63,
+        "chance_rate": 0.25,
+        "norm_entropy": 0.7048321175024636,
+        "reach_rate": 1.0,
+        "regret": 0.01037068803731321
+      },
+      {
+        "K": 4,
+        "seed": 7,
+        "best_color_rate": 0.305,
+        "chance_rate": 0.25,
+        "norm_entropy": 0.7345917304497743,
+        "reach_rate": 1.0,
+        "regret": 0.0088079997879068
+      },
+      {
+        "K": 4,
+        "seed": 8,
+        "best_color_rate": 0.49746192893401014,
+        "chance_rate": 0.25,
+        "norm_entropy": 0.7538733975037003,
+        "reach_rate": 0.985,
+        "regret": 0.008787893173414708
+      },
+      {
+        "K": 4,
+        "seed": 9,
+        "best_color_rate": 0.4076086956521739,
+        "chance_rate": 0.25,
+        "norm_entropy": 0.8449835497667028,
+        "reach_rate": 0.92,
+        "regret": 0.008257242568402457
+      },
+      {
+        "K": 4,
+        "seed": 10,
+        "best_color_rate": 0.15789473684210525,
+        "chance_rate": 0.25,
+        "norm_entropy": 0.8073242957463159,
+        "reach_rate": 0.95,
+        "regret": 0.00803311429613641
+      },
+      {
+        "K": 4,
+        "seed": 11,
+        "best_color_rate": 0.415,
+        "chance_rate": 0.25,
+        "norm_entropy": 0.8449082184078954,
+        "reach_rate": 1.0,
+        "regret": 0.022152849027478112
+      },
+      {
+        "K": 4,
+        "seed": 12,
+        "best_color_rate": 0.39,
+        "chance_rate": 0.25,
+        "norm_entropy": 0.904647929697792,
+        "reach_rate": 1.0,
+        "regret": 0.021172608813702854
+      },
+      {
+        "K": 4,
+        "seed": 13,
+        "best_color_rate": 0.61,
+        "chance_rate": 0.25,
+        "norm_entropy": 0.6530114338477632,
+        "reach_rate": 1.0,
+        "regret": 0.006052981353890431
+      },
+      {
+        "K": 4,
+        "seed": 14,
+        "best_color_rate": 0.5078534031413613,
+        "chance_rate": 0.25,
+        "norm_entropy": 0.6119628426125423,
+        "reach_rate": 0.955,
+        "regret": 0.008392015965771639
+      },
+      {
+        "K": 4,
+        "seed": 15,
+        "best_color_rate": 0.54,
+        "chance_rate": 0.25,
+        "norm_entropy": 0.8078758217746933,
+        "reach_rate": 1.0,
+        "regret": 0.026781680791297356
+      },
+      {
+        "K": 4,
+        "seed": 16,
+        "best_color_rate": 0.43,
+        "chance_rate": 0.25,
+        "norm_entropy": 0.8441943083257808,
+        "reach_rate": 1.0,
+        "regret": 0.01014361018103218
+      },
+      {
+        "K": 4,
+        "seed": 17,
+        "best_color_rate": 0.4375,
+        "chance_rate": 0.25,
+        "norm_entropy": 0.8875751640183416,
+        "reach_rate": 0.96,
+        "regret": 0.01770691528309837
+      },
+      {
+        "K": 4,
+        "seed": 18,
+        "best_color_rate": 0.5268817204301075,
+        "chance_rate": 0.25,
+        "norm_entropy": 0.8624890378108065,
+        "reach_rate": 0.93,
+        "regret": 0.01906136542456257
+      },
+      {
+        "K": 4,
+        "seed": 19,
+        "best_color_rate": 0.5829145728643216,
+        "chance_rate": 0.25,
+        "norm_entropy": 0.7954622239638869,
+        "reach_rate": 0.995,
+        "regret": 0.024318836738965083
+      }
+    ]
+  },
+  "8": {
+    "best_color_rate_mean": 0.3013014744733753,
+    "best_color_rate_std": 0.09380166003759845,
+    "chance_rate": 0.125,
+    "norm_entropy_mean": 0.8048288109391815,
+    "norm_entropy_std": 0.0837756578948953,
+    "regret_mean": 0.018230621327014893,
+    "rows": [
+      {
+        "K": 8,
+        "seed": 0,
+        "best_color_rate": 0.3422459893048128,
+        "chance_rate": 0.125,
+        "norm_entropy": 0.9010607658233144,
+        "reach_rate": 0.935,
+        "regret": 0.022640991417412992
+      },
+      {
+        "K": 8,
+        "seed": 1,
+        "best_color_rate": 0.4897959183673469,
+        "chance_rate": 0.125,
+        "norm_entropy": 0.6821615123601462,
+        "reach_rate": 0.98,
+        "regret": 0.02092068271114347
+      },
+      {
+        "K": 8,
+        "seed": 2,
+        "best_color_rate": 0.23076923076923078,
+        "chance_rate": 0.125,
+        "norm_entropy": 0.8531332092576194,
+        "reach_rate": 0.975,
+        "regret": 0.013636363459908502
+      },
+      {
+        "K": 8,
+        "seed": 3,
+        "best_color_rate": 0.38190954773869346,
+        "chance_rate": 0.125,
+        "norm_entropy": 0.6723808194178005,
+        "reach_rate": 0.995,
+        "regret": 0.00834382966849586
+      },
+      {
+        "K": 8,
+        "seed": 4,
+        "best_color_rate": 0.16080402010050251,
+        "chance_rate": 0.125,
+        "norm_entropy": 0.7997595601574992,
+        "reach_rate": 0.995,
+        "regret": 0.011815426144761818
+      },
+      {
+        "K": 8,
+        "seed": 5,
+        "best_color_rate": 0.22279792746113988,
+        "chance_rate": 0.125,
+        "norm_entropy": 0.8742293565276402,
+        "reach_rate": 0.965,
+        "regret": 0.023835131387399122
+      },
+      {
+        "K": 8,
+        "seed": 6,
+        "best_color_rate": 0.25125628140703515,
+        "chance_rate": 0.125,
+        "norm_entropy": 0.8285765799976179,
+        "reach_rate": 0.995,
+        "regret": 0.024160346267950758
+      },
+      {
+        "K": 8,
+        "seed": 7,
+        "best_color_rate": 0.24731182795698925,
+        "chance_rate": 0.125,
+        "norm_entropy": 0.6790410020768948,
+        "reach_rate": 0.93,
+        "regret": 0.021115674519613097
+      },
+      {
+        "K": 8,
+        "seed": 8,
+        "best_color_rate": 0.34517766497461927,
+        "chance_rate": 0.125,
+        "norm_entropy": 0.8653173867495119,
+        "reach_rate": 0.985,
+        "regret": 0.023377811147192003
+      },
+      {
+        "K": 8,
+        "seed": 9,
+        "best_color_rate": 0.20812182741116753,
+        "chance_rate": 0.125,
+        "norm_entropy": 0.9181364639337276,
+        "reach_rate": 0.985,
+        "regret": 0.016617823451077103
+      },
+      {
+        "K": 8,
+        "seed": 10,
+        "best_color_rate": 0.2849740932642487,
+        "chance_rate": 0.125,
+        "norm_entropy": 0.7805800660960571,
+        "reach_rate": 0.965,
+        "regret": 0.007600735496036531
+      },
+      {
+        "K": 8,
+        "seed": 11,
+        "best_color_rate": 0.34517766497461927,
+        "chance_rate": 0.125,
+        "norm_entropy": 0.8298227083140517,
+        "reach_rate": 0.985,
+        "regret": 0.01960106020386679
+      },
+      {
+        "K": 8,
+        "seed": 12,
+        "best_color_rate": 0.41450777202072536,
+        "chance_rate": 0.125,
+        "norm_entropy": 0.6558296471497405,
+        "reach_rate": 0.965,
+        "regret": 0.01066763435350406
+      },
+      {
+        "K": 8,
+        "seed": 13,
+        "best_color_rate": 0.31,
+        "chance_rate": 0.125,
+        "norm_entropy": 0.8700014600101744,
+        "reach_rate": 1.0,
+        "regret": 0.012882450353576705
+      },
+      {
+        "K": 8,
+        "seed": 14,
+        "best_color_rate": 0.08854166666666667,
+        "chance_rate": 0.125,
+        "norm_entropy": 0.8125282328199445,
+        "reach_rate": 0.96,
+        "regret": 0.025021359543492855
+      },
+      {
+        "K": 8,
+        "seed": 15,
+        "best_color_rate": 0.3869346733668342,
+        "chance_rate": 0.125,
+        "norm_entropy": 0.8561642589886646,
+        "reach_rate": 0.995,
+        "regret": 0.03262475552444075
+      },
+      {
+        "K": 8,
+        "seed": 16,
+        "best_color_rate": 0.3567567567567568,
+        "chance_rate": 0.125,
+        "norm_entropy": 0.7630877481488798,
+        "reach_rate": 0.925,
+        "regret": 0.017731513271813472
+      },
+      {
+        "K": 8,
+        "seed": 17,
+        "best_color_rate": 0.3230769230769231,
+        "chance_rate": 0.125,
+        "norm_entropy": 0.8477700551895808,
+        "reach_rate": 0.975,
+        "regret": 0.016793770417859226
+      },
+      {
+        "K": 8,
+        "seed": 18,
+        "best_color_rate": 0.26903553299492383,
+        "chance_rate": 0.125,
+        "norm_entropy": 0.897022341457541,
+        "reach_rate": 0.985,
+        "regret": 0.022508342094520163
+      },
+      {
+        "K": 8,
+        "seed": 19,
+        "best_color_rate": 0.36683417085427134,
+        "chance_rate": 0.125,
+        "norm_entropy": 0.709973044307221,
+        "reach_rate": 0.995,
+        "regret": 0.012716725106232514
+      }
+    ]
+  },
+  "16": {
+    "best_color_rate_mean": 0.15389630749574412,
+    "best_color_rate_std": 0.0871323455661771,
+    "chance_rate": 0.0625,
+    "norm_entropy_mean": 0.8333585063974935,
+    "norm_entropy_std": 0.03957585687538847,
+    "regret_mean": 0.029214136306096837,
+    "rows": [
+      {
+        "K": 16,
+        "seed": 0,
+        "best_color_rate": 0.10050251256281408,
+        "chance_rate": 0.0625,
+        "norm_entropy": 0.8666654573833747,
+        "reach_rate": 0.995,
+        "regret": 0.025942438866513092
+      },
+      {
+        "K": 16,
+        "seed": 1,
+        "best_color_rate": 0.075,
+        "chance_rate": 0.0625,
+        "norm_entropy": 0.8736947917361686,
+        "reach_rate": 1.0,
+        "regret": 0.040898505797160055
+      },
+      {
+        "K": 16,
+        "seed": 2,
+        "best_color_rate": 0.18274111675126903,
+        "chance_rate": 0.0625,
+        "norm_entropy": 0.8713349284301789,
+        "reach_rate": 0.985,
+        "regret": 0.03085633688858225
+      },
+      {
+        "K": 16,
+        "seed": 3,
+        "best_color_rate": 0.075,
+        "chance_rate": 0.0625,
+        "norm_entropy": 0.8383820135955604,
+        "reach_rate": 1.0,
+        "regret": 0.02572405939245204
+      },
+      {
+        "K": 16,
+        "seed": 4,
+        "best_color_rate": 0.075,
+        "chance_rate": 0.0625,
+        "norm_entropy": 0.7953589171119181,
+        "reach_rate": 1.0,
+        "regret": 0.02120280858896945
+      },
+      {
+        "K": 16,
+        "seed": 5,
+        "best_color_rate": 0.2814070351758794,
+        "chance_rate": 0.0625,
+        "norm_entropy": 0.7703558619606888,
+        "reach_rate": 0.995,
+        "regret": 0.017627340490405655
+      },
+      {
+        "K": 16,
+        "seed": 6,
+        "best_color_rate": 0.11557788944723618,
+        "chance_rate": 0.0625,
+        "norm_entropy": 0.8566577165266742,
+        "reach_rate": 0.995,
+        "regret": 0.0288560186947787
+      },
+      {
+        "K": 16,
+        "seed": 7,
+        "best_color_rate": 0.175,
+        "chance_rate": 0.0625,
+        "norm_entropy": 0.8607563226277061,
+        "reach_rate": 1.0,
+        "regret": 0.026867210449971042
+      },
+      {
+        "K": 16,
+        "seed": 8,
+        "best_color_rate": 0.23115577889447236,
+        "chance_rate": 0.0625,
+        "norm_entropy": 0.8386178840241316,
+        "reach_rate": 0.995,
+        "regret": 0.030105720959790125
+      },
+      {
+        "K": 16,
+        "seed": 9,
+        "best_color_rate": 0.145,
+        "chance_rate": 0.0625,
+        "norm_entropy": 0.8131782298902704,
+        "reach_rate": 1.0,
+        "regret": 0.03522422320086761
+      },
+      {
+        "K": 16,
+        "seed": 10,
+        "best_color_rate": 0.12626262626262627,
+        "chance_rate": 0.0625,
+        "norm_entropy": 0.8206292354406658,
+        "reach_rate": 0.99,
+        "regret": 0.028130348850210762
+      },
+      {
+        "K": 16,
+        "seed": 11,
+        "best_color_rate": 0.23,
+        "chance_rate": 0.0625,
+        "norm_entropy": 0.8110864061221359,
+        "reach_rate": 1.0,
+        "regret": 0.020165153242601173
+      },
+      {
+        "K": 16,
+        "seed": 12,
+        "best_color_rate": 0.11055276381909548,
+        "chance_rate": 0.0625,
+        "norm_entropy": 0.8292964786101833,
+        "reach_rate": 0.995,
+        "regret": 0.02218436413223988
+      },
+      {
+        "K": 16,
+        "seed": 13,
+        "best_color_rate": 0.015228426395939087,
+        "chance_rate": 0.0625,
+        "norm_entropy": 0.9086267048672064,
+        "reach_rate": 0.985,
+        "regret": 0.0304948185251288
+      },
+      {
+        "K": 16,
+        "seed": 14,
+        "best_color_rate": 0.11734693877551021,
+        "chance_rate": 0.0625,
+        "norm_entropy": 0.8675232183272141,
+        "reach_rate": 0.98,
+        "regret": 0.038450239920538296
+      },
+      {
+        "K": 16,
+        "seed": 15,
+        "best_color_rate": 0.27692307692307694,
+        "chance_rate": 0.0625,
+        "norm_entropy": 0.8203158345858153,
+        "reach_rate": 0.975,
+        "regret": 0.03325750375389047
+      },
+      {
+        "K": 16,
+        "seed": 16,
+        "best_color_rate": 0.355,
+        "chance_rate": 0.0625,
+        "norm_entropy": 0.7678981516773181,
+        "reach_rate": 1.0,
+        "regret": 0.0379253503055088
+      },
+      {
+        "K": 16,
+        "seed": 17,
+        "best_color_rate": 0.050761421319796954,
+        "chance_rate": 0.0625,
+        "norm_entropy": 0.8217444513401236,
+        "reach_rate": 0.985,
+        "regret": 0.027717151323899195
+      },
+      {
+        "K": 16,
+        "seed": 18,
+        "best_color_rate": 0.20100502512562815,
+        "chance_rate": 0.0625,
+        "norm_entropy": 0.7636045480125906,
+        "reach_rate": 0.995,
+        "regret": 0.020607333997032917
+      },
+      {
+        "K": 16,
+        "seed": 19,
+        "best_color_rate": 0.13846153846153847,
+        "chance_rate": 0.0625,
+        "norm_entropy": 0.8714429756799426,
+        "reach_rate": 0.975,
+        "regret": 0.042045798741396447
+      }
+    ]
+  }
+}
