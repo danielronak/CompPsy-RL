@@ -164,7 +164,7 @@ $-5.0$ & $0.3\%$  & $0.0\%$  & --- \\
 
 We evaluate agents on near-tied bandits ($K\in\{2,4,8,16\}$) with arm means drawn uniformly from $\mathcal{U}(\mu_{\text{base}}\pm0.05)$ ($\mu_{\text{base}}=5.0$, $\sigma_k=1.0$). Agents train for 2000 steps with $\epsilon$-greedy exploration ($\epsilon_0=1.0$, $\epsilon_{\text{decay}}=0.999$, $\epsilon_{\text{min}}=0.02$). We measure raw entropy $H(\pi)$, normalized entropy $\hat{H}=H(\pi)/\log(K)$, convergence step, and cumulative regret. To test the human \textit{commit-vs-defer} behavior directly, we also give the agent a safe opt-out of known value ($4.85$) and a satisficing rule \citep{schwartz2004paradox} that commits to an arm only when its lower-confidence bound $Q(a)-\beta/\sqrt{n(a)}$ ($\beta=1.5$) exceeds the opt-out, else defers.
 
-\textbf{Results (Table~\ref{tab:exp44}, Fig.~\ref{fig:exp44_metrics}).} Expanding the choice set collapses normalized policy entropy from $0.943\pm0.028$ to $0.718\pm0.041$ ($K=16$ vs.\ $K=2$: $t=-20.45$, $p=4.19\times10^{-22}$). The key finding is that choice overload manifests as \textit{exploration dilution}---policies concentrate unpredictably on a subset of options rather than becoming uniformly indecisive and consequently mean regret also increases significantly ($K=16$ vs.\ $K=2$: $t=2.24$, $p=0.031$). Commitment latency increases directionally by $+58.6\%$ ($17.40\to27.60$ steps) but does not cross significance ($t=1.24$, $p=0.223$, ns), reported transparently as a boundary condition. Most directly, the opt-out condition reproduces the human commitment collapse: the deferral rate rises from $0.61$ at $K=2$ to $0.86$ at $K=16$ ($t=6.52$, $p<10^{-6}$, $d=2.06$)---commitment falling from $39\%$ to $14\%$, mirroring the $30\%\to3\%$ purchase collapse of \citet{iyengar2000choice}, because more near-tied options dilute per-arm confidence and fewer clear the satisficing bar.
+\textbf{Results (Table~\ref{tab:exp44}).} Expanding the choice set collapses normalized policy entropy from $0.943\pm0.028$ to $0.718\pm0.041$ ($K=16$ vs.\ $K=2$: $t=-20.45$, $p=4.19\times10^{-22}$). The key finding is that choice overload manifests as \textit{exploration dilution}---policies concentrate unpredictably on a subset of options rather than becoming uniformly indecisive and consequently mean regret also increases significantly ($K=16$ vs.\ $K=2$: $t=2.24$, $p=0.031$). Commitment latency increases directionally by $+58.6\%$ ($17.40\to27.60$ steps) but does not cross significance ($t=1.24$, $p=0.223$, ns), reported transparently as a boundary condition. Most directly, the opt-out condition reproduces the human commitment collapse: the deferral rate rises from $0.61$ at $K=2$ to $0.86$ at $K=16$ ($t=6.52$, $p<10^{-6}$, $d=2.06$)---commitment falling from $39\%$ to $14\%$, mirroring the $30\%\to3\%$ purchase collapse of \citet{iyengar2000choice}, because more near-tied options dilute per-arm confidence and fewer clear the satisficing bar.
 
 \begin{table}[htbp]
 \raggedright
@@ -183,13 +183,6 @@ Deferral rate         & $0.607\pm0.156$ & $0.672\pm0.155$ & $0.675\pm0.127$ & $0
 \bottomrule
 \end{tabularx}
 \end{table}
-
-\begin{figure*}[t]
-\centering
-\includegraphics[width=0.54\textwidth]{figures/choice_overload_metrics.png}
-\caption{Choice Overload. Normalized entropy $\hat{H}$ collapses from $0.94$ to $0.72$ as $K$ expands---exploration dilution, not uniform indecision. Commitment latency rises directionally ($+58.6\%$, ns) and regret increases significantly for $K=16$.}
-\label{fig:exp44_metrics}
-\end{figure*}
 
 \section{Synthesis and DQN Replication}
 
@@ -242,11 +235,22 @@ We replicated experiments in DQN \citep{mnih2015human} (MLP: 2 hidden layers of 
 \label{fig:dqn_joint}
 \end{figure*}
 
+\subsection{Choice Overload beyond Toy States: ChoiceRoom}
+
+To test whether these effects survive outside tabular/bandit states, we port Choice Overload to \textbf{ChoiceRoom}: a procedurally-generated, partially spatial gridworld observed as a multi-channel image and solved by a convolutional DQN. The agent navigates to one of $K$ coloured tiles on an equidistant ring; each colour carries a near-tied latent value that is \textit{not} encoded in the observation, so the agent must learn colour$\to$value from reward feedback under function approximation and generalise across layouts. As a chance-corrected discrimination measure we use $d=(\text{best-option rate}-1/K)/(1-1/K)$ ($0$ = chance, $1$ = perfect). Across $K\in\{2,4,8,16\}$ ($N=20$; Fig.~\ref{fig:minigrid}), discrimination degrades monotonically ($d:0.41\to0.26\to0.20\to0.10$; $K{=}16$ vs.\ $K{=}2$: $t=-4.06$, $p=2.4\times10^{-4}$, $d=1.28$) and mean regret nearly triples ($0.010\to0.029$; $t=9.83$, $p=5.4\times10^{-12}$). The agent remains above chance throughout---a \textit{graded} decline in decision quality, not a collapse to random---showing that choice overload persists under neural function approximation in a richer, procedurally-generated environment.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\linewidth]{figures/minigrid_choice_overload.png}
+\caption{Choice Overload survives function approximation (ChoiceRoom + CNN-DQN, $N=20$). (A) Chance-corrected best-option discrimination $d$ falls $\approx4\times$ as near-tied options grow. (B) Mean regret nearly triples.}
+\label{fig:minigrid}
+\end{figure}
+
 \section{Discussion, Limitations, and Conclusion}
 
 These findings establish that cognitive dissonance and choice overload emerge without any reward-shaping---from the statistical mechanics of asymmetric sampling and stale value estimates alone---while impostor syndrome requires asymmetric metacognitive evidence integration. The cost-boundedness of self-handicapping and the credit-assignment inertia in DQN are not failures---they are precise, informative computational boundary conditions: overt behavioral self-sabotage emerges from impostor-like over-anticipation of failure yet is suppressed once the objective penalty grows large, and memory decay is the dominant amplifier of post-decision spreading, which lossless replay strongly attenuates (by $\approx88\%$).
 
-Three limitations should be noted. First, our experiments use bandit and gridworld environments; full-scale visual environments (e.g., Atari) may introduce representation drift that interacts with these biases in currently unknown ways. Second, we establish the \textit{behavioral and representational signature} of dissonance---systematic post-decision revaluation---but do not claim the \textit{motivational tension} central to \citet{festinger1957theory}'s original formulation; this computational mechanism may be necessary but not sufficient for the human phenomenon. Third, our self-handicapping result depends on modeling the pre-evaluation choice as anticipatory (model-based) valuation using the agent's own miscalibrated failure expectation; a purely model-free agent that learns only from realized outcomes does not self-handicap, which we regard as a substantive scoping condition on when the effect arises.
+Three limitations should be noted. First, while ChoiceRoom shows one paradigm survives CNN function approximation, our environments remain small; full-scale visual environments (e.g., Atari) may introduce representation drift that interacts with these biases in currently unknown ways. Second, we establish the \textit{behavioral and representational signature} of dissonance---systematic post-decision revaluation---but do not claim the \textit{motivational tension} central to \citet{festinger1957theory}'s original formulation; this computational mechanism may be necessary but not sufficient for the human phenomenon. Third, our self-handicapping result depends on modeling the pre-evaluation choice as anticipatory (model-based) valuation using the agent's own miscalibrated failure expectation; a purely model-free agent that learns only from realized outcomes does not self-handicap, which we regard as a substantive scoping condition on when the effect arises.
 
 For AI alignment, these results have concrete implications: post-decision rationalization will arise in any agent with asymmetric visitation and forgetting (do not mistake it for deliberate misalignment); choice overload emerges naturally in tool-use agents with large near-tied action sets; and augmenting agents with asymmetric self-critique loops risks decoupling self-assessed competence from objective performance. By directly benchmarking against statistical data from human psychological experiments and confirming that they are seen across tabular and deep architectures, these findings show that human-like cognitive biases simply reflect fundamental mathematical trade-offs in decision-making under uncertainty.
 
