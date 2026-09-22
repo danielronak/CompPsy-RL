@@ -1,0 +1,38 @@
+{
+  "2.5": {
+    "penalty": -2.0,
+    "esteem_weight": 2.5,
+    "biased_rate_mean": 0.25425000000000003,
+    "biased_rate_std": 0.026570412908068695,
+    "control_rate_mean": 0.05475,
+    "control_rate_std": 0.0179527889638058,
+    "t_statistic": 27.298587148613038,
+    "p_value": 1.0457204518225837e-16,
+    "cohens_d": 8.79832910327847,
+    "ratio": 4.6438356164383565
+  },
+  "5.0": {
+    "penalty": -2.0,
+    "esteem_weight": 5.0,
+    "biased_rate_mean": 0.6797500000000001,
+    "biased_rate_std": 0.03537301231164797,
+    "control_rate_mean": 0.1575,
+    "control_rate_std": 0.04342264749862074,
+    "t_statistic": 39.59054765161371,
+    "p_value": 1.0079204773227938e-19,
+    "cohens_d": 13.187172020720247,
+    "ratio": 4.3158730158730165
+  },
+  "10.0": {
+    "penalty": -2.0,
+    "esteem_weight": 10.0,
+    "biased_rate_mean": 0.9605,
+    "biased_rate_std": 0.016214029013237423,
+    "control_rate_mean": 0.4485,
+    "control_rate_std": 0.08349440573759229,
+    "t_statistic": 24.8418015340438,
+    "p_value": 5.989238358224795e-16,
+    "cohens_d": 8.51313238842977,
+    "ratio": 2.141583054626533
+  }
+}

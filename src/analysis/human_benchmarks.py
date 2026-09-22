@@ -197,16 +197,18 @@ def generate_human_benchmarks_summary(results_dir: str = "results/cross_experime
                   yerr=[rl_handicap_biased_std * 100, rl_handicap_control_std * 100], capsize=6)
 
     ax_c.set_xticks(x_c)
-    ax_c.set_xticklabels(["Evaluative Threat\n(Underconfident Agent)", "Control Baseline\n(Calibrated Agent)"], fontsize=10)
+    ax_c.set_xticklabels(["Evaluative Threat\n(Impostor Agent)", "Control Baseline\n(Calibrated Agent)"], fontsize=10)
     ax_c.set_ylabel("RL Handicap Choice Rate (%)", fontsize=10, fontweight="bold")
-    ax_c.set_title("C. Self-Handicapping: Ego-Protective Defense\nDirectional Analogue to Berglas & Jones (1978)",
+    ax_c.set_title("C. Self-Handicapping: Ego-Protective Defense\nAnalogue to Berglas & Jones (1978)",
                    fontsize=11, fontweight="bold")
-    ax_c.set_ylim(0, 35)
+    _ratio = (rl_handicap_biased / rl_handicap_control) if rl_handicap_control > 0 else float("nan")
+    ax_c.set_ylim(0, max(45.0, rl_handicap_biased * 100 + 12.0))
     ax_c.text(0, rl_handicap_biased * 100 + 2.0, f"{rl_handicap_biased*100:.1f}%\n(Threat)",
               ha="center", va="bottom", color="#e76f51", fontweight="bold", fontsize=9.5)
     ax_c.text(1, rl_handicap_control * 100 + 2.0, f"{rl_handicap_control*100:.1f}%\n(Control)",
               ha="center", va="bottom", color="#2a9d8f", fontweight="bold", fontsize=9.5)
-    ax_c.text(0.5, 30.0, "p = 0.200 (ns) — Informative Boundary Condition\n(Human: directional preference for debilitating drug)",
+    ax_c.text(0.5, ax_c.get_ylim()[1] * 0.88,
+              f"RL {_ratio:.1f}x  vs  Human 5.4x (70% vs 13%)\nImpostor sabotages own reward; bounded by cost",
               ha="center", va="center", bbox=dict(boxstyle="round,pad=0.3", fc="#f8f9fa", ec="#ced4da"), fontsize=8.5)
     ax_c.grid(True, alpha=0.25, axis="y")
 

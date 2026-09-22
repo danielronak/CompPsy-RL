@@ -51,7 +51,7 @@ class ImpostorConfig(ExperimentConfig):
     max_steps_per_episode: int = 100
 
     # Confidence module
-    damping_factor_biased: float = 0.4     # < 1: damped positive evidence
+    damping_factor_biased: float = 0.2     # kappa < 1: damped positive evidence
     damping_factor_control: float = 1.0    # 1.0: symmetric (well-calibrated)
     global_lr: float = 0.02
     n_ensemble: int = 5
@@ -175,7 +175,10 @@ class ImpostorSyndromeExperiment(ExperimentRunner):
                 episode_return, max_possible, min_possible
             )
 
-            # Update global confidence
+            # Local self-appraisal: the agent's own (noisy, per-episode) readout of
+            # how competent it was this episode, operationalized as the normalized
+            # episode return. The global self-model integrates these local appraisals
+            # with damped sensitivity to positive prediction errors (Katyal et al. 2025).
             conf.update_global_confidence(norm_return)
 
             # Record metrics
@@ -302,318 +305,253 @@ class ImpostorSyndromeExperiment(ExperimentRunner):
 
 @dataclass
 class SelfHandicapConfig(ExperimentConfig):
-    """Configuration for the self-handicapping experiment."""
+    """Configuration for the self-handicapping experiment (learned tradeoff)."""
     experiment_name: str = "exp_4_3_self_handicapping"
-    discount_factor: float = 0.99
 
-    # Gridworld
-    grid_size: int = 7
-    n_episodes: int = 500
-    max_steps_per_episode: int = 100
-
-    # Confidence module — stronger contrast than 4.2 to produce
-    # a larger calibration gap that drives measurable handicapping
-    damping_factor_biased: float = 0.2     # very damped positive signals
+    # --- Self-model (confidence) dynamics: shared mechanism with Exp 4.2 ---
+    damping_factor_biased: float = 0.2     # kappa < 1: damped positive evidence (underconfident)
     damping_factor_control: float = 1.0    # symmetric (well-calibrated)
-    global_lr: float = 0.05               # faster confidence updates
-    n_ensemble: int = 5
+    global_lr: float = 0.05                # confidence update rate
 
-    # Evaluation events: occur every N episodes
-    eval_every: int = 20
-    # Confidence update multiplier at evaluation (larger updates = higher stakes)
-    eval_confidence_multiplier: float = 3.0
+    # --- Evaluative-threat trials ---
+    n_trials: int = 800                    # number of pre-evaluation decisions
+    p_success: float = 0.75                # true competence: prob of passing an evaluation
+                                           # (evaluative threat = the residual failure chance)
+    eval_reward_success: float = 1.0
+    eval_reward_fail: float = 0.0
 
-    # Handicap
-    handicap_reward_penalty: float = -2.0
-    # States where handicap is available: around the mid-path
-    n_handicap_states: int = 3
+    # --- Handicap action ---
+    handicap_penalty: float = -2.0         # objective reward cost of handicapping (base; swept)
+    # A handicapped FAILURE buffers the negative confidence update to 0.3x (the
+    # external-excuse attribution); applied inside ConfidenceModule.update_global_confidence.
 
-    # Tracking
-    snapshot_every_episodes: int = 10
+    # --- Anticipatory ego-protection decision ---
+    # The agent weighs expected ego-protection (esteem_weight * anticipated failure)
+    # against the objective penalty, choosing via a softmax (logit) with temperature.
+    esteem_weight: float = 3.0             # beta: value placed on protecting self-image
+    meta_temp: float = 0.5                 # softmax (logit) temperature for the H-vs-N choice
+
+    # --- Sweeps ---
+    penalty_sweep: list = None             # handicap penalties to sweep
+    beta_robustness: list = None           # esteem_weight values for robustness
+
+    eval_window: int = 200                 # trailing window for reporting handicap rate
+
+    def __post_init__(self):
+        if self.penalty_sweep is None:
+            self.penalty_sweep = [-0.25, -0.5, -1.0, -2.0, -3.0, -5.0, -10.0]
+        if self.beta_robustness is None:
+            self.beta_robustness = [2.5, 5.0, 10.0]
+
+
+ACTION_NO_HANDICAP = 0
+ACTION_TAKE_HANDICAP = 1
 
 
 class SelfHandicappingExperiment(ExperimentRunner):
     """
-    Experiment 4.3: Self-Handicapping.
+    Experiment 4.3: Self-Handicapping as a learned ego-protective tradeoff.
 
-    Uses the same damped-confidence module from 4.2. Introduces periodic
-    evaluation events and a "handicap" action. Tests whether agents with
-    fragile confidence take the handicap action more often before evaluations.
+    Reframed as the genuine pre-evaluation choice studied by Berglas & Jones
+    (1978): before each evaluative test an agent decides whether to adopt an
+    objectively harmful handicap. The handicap
+      * costs environmental reward (handicap_penalty) and never improves the task
+        outcome -> a pure reward-maximizer would never take it; and
+      * on a FAILED evaluation, buffers the negative self-confidence update by 70%
+        (delta_c * 0.3), operationalizing the external excuse ("I failed because of
+        the handicap, not because I'm incompetent").
+
+    The agent optimizes an augmented objective -- environmental reward plus a
+    self-esteem term esteem_weight * global_confidence -- and LEARNS the value of
+    handicapping vs. not by trial and error (no scripted probability). Overt
+    self-handicapping therefore emerges only when the esteem-protection benefit
+    outweighs the objective reward penalty. Underconfident agents (the damped-
+    positive self-model from Exp 4.2) hold a lower, slower-recovering confidence,
+    so an unbuffered failure costs them more esteem; they value the handicap more
+    than calibrated controls. The penalty sweep traces this tradeoff directly,
+    replacing the flat, scripted response of the earlier formulation.
     """
 
     def __init__(self, config: SelfHandicapConfig):
         super().__init__(config)
         self.exp_config = config
 
-    def _create_gridworld(self, seed: int) -> Gridworld:
-        """Create a gridworld with evaluation states and handicap action."""
-        gs = self.exp_config.grid_size
-        mid = gs // 2
-
-        # Handicap available at a few states in the middle of the grid
-        handicap_states = [(mid, mid - 1), (mid, mid), (mid, mid + 1)]
-        handicap_states = handicap_states[:self.exp_config.n_handicap_states]
-
-        # Evaluation states: near the goal
-        eval_states = [(gs - 2, gs - 2), (gs - 2, gs - 1)]
-
-        config = GridworldConfig(
-            width=gs,
-            height=gs,
-            start_pos=(0, 0),
-            goal_pos=(gs - 1, gs - 1),
-            step_reward=-0.1,
-            goal_reward=10.0,
-            slip_prob=0.1,
-            max_steps=self.exp_config.max_steps_per_episode,
-            enable_handicap=True,
-            handicap_available_states=handicap_states,
-            handicap_reward_penalty=self.exp_config.handicap_reward_penalty,
-            eval_states=eval_states,
-            eval_reward_multiplier=2.0,
-        )
-        return Gridworld(config, seed=seed)
-
-    def _create_confidence_module(self, n_states: int, n_actions: int,
-                                   seed: int, is_control: bool) -> ConfidenceModule:
-        """Create confidence module (biased or symmetric)."""
+    def _create_confidence_module(self, seed: int, is_control: bool) -> ConfidenceModule:
         conf_config = ConfidenceConfig(
             global_lr=self.exp_config.global_lr,
             damping_factor=(self.exp_config.damping_factor_control if is_control
                            else self.exp_config.damping_factor_biased),
             performance_threshold=0.0,
-            n_ensemble=self.exp_config.n_ensemble,
+            n_ensemble=1,          # ensemble unused here; the self-model is the global scalar
             ensemble_lr=self.exp_config.learning_rate,
         )
-        return ConfidenceModule(conf_config, n_states, n_actions, seed=seed)
+        return ConfidenceModule(conf_config, n_states=1, n_actions=2, seed=seed)
 
-    def run_single_seed(self, seed: int, is_control: bool) -> SeedResult:
-        """Run a single seed for biased or control agent."""
-        env = self._create_gridworld(seed)
-        agent_config = TabularQConfig(
-            n_states=env.n_states,
-            n_actions=env.n_actions,
-            learning_rate=self.exp_config.learning_rate,
-            discount_factor=self.exp_config.discount_factor,
-            epsilon=self.exp_config.epsilon,
-            epsilon_decay=0.995,
-            epsilon_min=0.02,  # slightly higher floor to keep some exploration
-        )
-        agent = TabularQAgent(agent_config, seed=seed)
-        conf = self._create_confidence_module(
-            env.n_states, env.n_actions, seed, is_control
-        )
+    def _run_session(self, seed: int, is_control: bool,
+                     handicap_penalty: float, esteem_weight: float) -> Dict:
+        """Run one agent through n_trials of the pre-evaluation handicap decision."""
+        rng = np.random.RandomState(seed + (0 if is_control else 10_000))
+        conf = self._create_confidence_module(seed, is_control)
 
-        # Tracking
-        handicap_events = []  # (episode, step_in_episode, proximity_to_eval)
-        total_handicap_count = 0
-        total_at_handicap_state = 0  # times agent visited a handicap state
-        episode_returns = []
+        # Model-based ANTICIPATORY handicap decision (Berglas & Jones 1978;
+        # Rhodewalt): self-handicapping is chosen BEFORE the evaluation, in
+        # proportion to the agent's own EXPECTED probability of failure. The agent
+        # estimates that probability from its self-model, felt_threat = 1 - C_global,
+        # and weighs the resulting ego-protection (esteem_weight * felt_threat)
+        # against the certain objective penalty. Crucially the failure expectation
+        # is the agent's *miscalibrated* self-model, not the true failure rate:
+        # the impostor agent (damped-positive self-model from Exp 4.2) systematically
+        # over-predicts its own failure, so it anticipates more threat and
+        # self-handicaps more -- even though it is objectively competent and, on the
+        # true outcome distribution, has no reason to. The true outcome and the
+        # confidence update below still use the real success probability.
+        temp = max(self.exp_config.meta_temp, 1e-6)
+        actions, confidence_history, env_rewards = [], [], []
 
-        max_possible = env.config.goal_reward
-        min_possible = env.config.step_reward * env.config.max_steps
+        for t in range(self.exp_config.n_trials):
+            # --- anticipatory cost/benefit: expected ego-protection vs. penalty ---
+            felt_threat = float(np.clip(1.0 - conf.global_confidence, 0.0, 1.0))
+            handicap_advantage = esteem_weight * felt_threat + handicap_penalty
+            p_handicap = 1.0 / (1.0 + np.exp(-handicap_advantage / temp))
+            took_handicap = rng.random() < p_handicap
+            a = ACTION_TAKE_HANDICAP if took_handicap else ACTION_NO_HANDICAP
 
-        for ep in range(self.exp_config.n_episodes):
-            state = env.reset()
-            episode_return = 0.0
-            episode_steps = 0
-            ep_handicap_count = 0
-            ep_handicap_opportunities = 0
+            # --- true evaluation outcome; the handicap never raises success prob ---
+            success = rng.random() < self.exp_config.p_success
+            env_reward = (self.exp_config.eval_reward_success if success
+                          else self.exp_config.eval_reward_fail)
+            if took_handicap:
+                env_reward += handicap_penalty  # objective cost actually paid
 
-            is_eval_episode = (ep > 0 and ep % self.exp_config.eval_every == 0)
-            # Proximity to next evaluation
-            next_eval = ((ep // self.exp_config.eval_every) + 1) * self.exp_config.eval_every
-            proximity_to_eval = next_eval - ep
+            # --- self-model update (shared Katyal mechanism); a handicapped failure
+            #     buffers the negative update (external-excuse attribution) ---
+            perf_signal = 1.0 if success else 0.0
+            conf.update_global_confidence(perf_signal, handicap_active=took_handicap)
 
-            while True:
-                available = env.get_available_actions(state)
-                pos = env.state_to_pos(state)
+            actions.append(a)
+            confidence_history.append(conf.global_confidence)
+            env_rewards.append(env_reward)
 
-                # --- Calibration-gap-driven handicap decision ---
-                # Key mechanism: the biased agent has a persistent calibration
-                # gap (actual performance > self-assessed confidence). This gap
-                # drives protective handicapping: agents that believe they are
-                # worse than they are will take handicaps as "excuse insurance"
-                # before evaluations.
-                action = None
-                if (pos in env.config.handicap_available_states
-                        and ACTION_HANDICAP in available):
-                    # Compute calibration gap: how much the agent underestimates itself
-                    if len(episode_returns) >= 20:
-                        recent_perf = np.mean(episode_returns[-20:])
-                    else:
-                        recent_perf = 0.5  # no data yet
-                    calibration_gap = max(0.0, recent_perf - conf.global_confidence)
-
-                    # Proximity to next evaluation (0 = far, 1 = at eval)
-                    eval_proximity = max(0.0, 1.0 - proximity_to_eval / self.exp_config.eval_every)
-
-                    # P(handicap) scales with calibration gap and proximity
-                    # The 8.0 multiplier amplifies the calibration gap
-                    # (biased gap ~0.03-0.05, control ~0)
-                    handicap_prob = 8.0 * calibration_gap * (0.3 + 0.7 * eval_proximity)
-                    handicap_prob = np.clip(handicap_prob, 0.0, 0.5)
-
-                    if agent.rng.random() < handicap_prob:
-                        action = ACTION_HANDICAP
-
-                # Standard epsilon-greedy if not handicapping
-                if action is None:
-                    ensemble_q = conf.get_ensemble_q_values(state)
-                    if agent.rng.random() < agent.epsilon:
-                        move_actions = [a for a in available if a != ACTION_HANDICAP]
-                        action = agent.rng.choice(move_actions) if move_actions else agent.rng.choice(available)
-                    else:
-                        move_actions = [a for a in available if a != ACTION_HANDICAP]
-                        if move_actions:
-                            available_q = np.array([ensemble_q[a] for a in move_actions])
-                            best_idx = np.argmax(available_q)
-                            action = move_actions[best_idx]
-                        else:
-                            action = agent.rng.choice(available)
-
-
-                # Track handicap usage
-                pos = env.state_to_pos(state)
-                if pos in env.config.handicap_available_states:
-                    ep_handicap_opportunities += 1
-                    total_at_handicap_state += 1
-                    if action == ACTION_HANDICAP:
-                        ep_handicap_count += 1
-                        total_handicap_count += 1
-                        handicap_events.append({
-                            "episode": ep,
-                            "step": episode_steps,
-                            "proximity_to_eval": proximity_to_eval,
-                            "global_confidence": conf.global_confidence,
-                            "confidence_fragility": conf.get_confidence_fragility(),
-                            "is_eval_episode": is_eval_episode,
-                        })
-
-                next_state, reward, done, info = env.step(action)
-                episode_return += reward
-                episode_steps += 1
-
-                agent.update(state, action, reward, next_state, done)
-                conf.update_ensemble(state, action, reward, next_state, done,
-                                      discount_factor=self.exp_config.discount_factor)
-
-                state = next_state
-                if done:
-                    break
-
-            # Normalize return
-            norm_return = np.clip(
-                (episode_return - min_possible) / (max_possible - min_possible),
-                0.0, 1.0
-            )
-
-            # Confidence update (amplified at evaluation episodes)
-            has_handicap = (ep_handicap_count > 0)
-            if is_eval_episode:
-                # Larger confidence update at evaluation
-                old_lr = conf.config.global_lr
-                conf.config.global_lr *= self.exp_config.eval_confidence_multiplier
-                conf.update_global_confidence(norm_return, handicap_active=has_handicap)
-                conf.config.global_lr = old_lr
-            else:
-                conf.update_global_confidence(norm_return, handicap_active=has_handicap)
-
-            episode_returns.append(norm_return)
-            agent.decay_epsilon()
-
-        # --- Compute summary metrics ---
-        # Handicap rate overall
-        handicap_rate = (total_handicap_count / max(total_at_handicap_state, 1))
-
-        # Handicap rate by proximity to evaluation
-        proximity_bins = [1, 2, 3, 5, 10, 25]  # episodes until eval
-        handicap_by_proximity = {}
-        for p_bin in proximity_bins:
-            events_in_bin = [e for e in handicap_events
-                             if e["proximity_to_eval"] <= p_bin]
-            handicap_by_proximity[f"handicap_rate_prox_{p_bin}"] = (
-                len(events_in_bin) / max(total_at_handicap_state, 1)
-            )
-
-        final_window = 100
-        final_perf = float(np.mean(episode_returns[-final_window:]))
-
-        metrics = {
+        w = self.exp_config.eval_window
+        recent = actions[-w:]
+        handicap_rate = float(np.mean([x == ACTION_TAKE_HANDICAP for x in recent]))
+        return {
             "handicap_rate": handicap_rate,
-            "total_handicap_count": total_handicap_count,
-            "total_handicap_opportunities": total_at_handicap_state,
-            "final_performance": final_perf,
-            "n_handicap_events": len(handicap_events),
-            **handicap_by_proximity,
+            "handicap_count": int(np.sum([x == ACTION_TAKE_HANDICAP for x in actions])),
+            "final_confidence": float(np.mean(confidence_history[-w:])),
+            "final_env_reward": float(np.mean(env_rewards[-w:])),
         }
 
+    def run_single_seed(self, seed: int, is_control: bool) -> SeedResult:
+        """Base condition (handicap_penalty and esteem_weight from config)."""
+        metrics = self._run_session(
+            seed, is_control,
+            handicap_penalty=self.exp_config.handicap_penalty,
+            esteem_weight=self.exp_config.esteem_weight,
+        )
         return SeedResult(seed=seed, metrics=metrics)
 
+    # -------------------------------------------------------------- sweeps ---
+    def _condition_stats(self, penalty: float, esteem_weight: float,
+                         seeds: list) -> Dict:
+        b = np.array([self._run_session(s, False, penalty, esteem_weight)["handicap_rate"]
+                      for s in seeds])
+        c = np.array([self._run_session(s, True, penalty, esteem_weight)["handicap_rate"]
+                      for s in seeds])
+        res = paired_ttest(b, c, description=f"penalty={penalty}, beta={esteem_weight}")
+        ratio = float(b.mean() / c.mean()) if c.mean() > 0 else float("nan")
+        return {
+            "penalty": penalty,
+            "esteem_weight": esteem_weight,
+            "biased_rate_mean": float(b.mean()),
+            "biased_rate_std": float(b.std(ddof=1)),
+            "control_rate_mean": float(c.mean()),
+            "control_rate_std": float(c.std(ddof=1)),
+            "t_statistic": float(res.statistic),
+            "p_value": float(res.p_value),
+            "cohens_d": float(res.effect_size),
+            "ratio": ratio,
+        }
+
     def run_full_experiment(self):
-        """Run the complete self-handicapping experiment."""
         print("\n" + "=" * 70)
-        print("EXPERIMENT 4.3: SELF-HANDICAPPING")
-        print("Deliberate Performance Sabotage Before Evaluation")
+        print("EXPERIMENT 4.3: SELF-HANDICAPPING (learned ego-protective tradeoff)")
         print("=" * 70)
 
+        seeds = list(range(self.config.seed_offset,
+                           self.config.seed_offset + self.config.n_seeds))
+
+        # --- base condition (main table + human-benchmark compatibility) ---
         self.run_all_seeds()
-
-        test_metrics = ["handicap_rate", "total_handicap_count"]
-        test_results = self.compute_comparisons(test_metrics, test_type="paired")
-        self.print_summary(test_metrics, test_results)
-
+        test_results = self.compute_comparisons(["handicap_rate"], test_type="paired")
+        self.print_summary(["handicap_rate"], test_results)
         self.save_results()
-        self._generate_plots()
 
-        return {"test_results": test_results}
+        # --- penalty dose-response sweep (paired test throughout) ---
+        print("\n--- Penalty dose-response sweep ---")
+        sweep = {}
+        for p in self.exp_config.penalty_sweep:
+            sp = self._condition_stats(p, self.exp_config.esteem_weight, seeds)
+            sweep[str(p)] = sp
+            print(f"  penalty={p:6.2f}: biased={sp['biased_rate_mean']:.3f} "
+                  f"control={sp['control_rate_mean']:.3f} ratio={sp['ratio']:.2f} "
+                  f"p={sp['p_value']:.4f} d={sp['cohens_d']:.3f}")
 
-    def _generate_plots(self):
-        """Generate self-handicapping plots."""
+        # --- esteem-weight (beta) robustness at the base penalty ---
+        print("\n--- Esteem-weight (beta) robustness at base penalty ---")
+        beta_rob = {}
+        for beta in self.exp_config.beta_robustness:
+            sb = self._condition_stats(self.exp_config.handicap_penalty, beta, seeds)
+            beta_rob[str(beta)] = sb
+            print(f"  beta={beta:5.2f}: biased={sb['biased_rate_mean']:.3f} "
+                  f"control={sb['control_rate_mean']:.3f} ratio={sb['ratio']:.2f} "
+                  f"p={sb['p_value']:.4f}")
+
+        self._save_sweeps(sweep, beta_rob)
+        self._generate_plots(sweep)
+        return {"test_results": test_results, "sweep": sweep, "beta_robustness": beta_rob}
+
+    def _save_sweeps(self, sweep: Dict, beta_rob: Dict):
+        import json
+        out = Path(self.config.results_dir) / "exp_4_3_penalty_sweep"
+        out.mkdir(parents=True, exist_ok=True)
+        with open(out / "sweep_results.json", "w") as f:
+            json.dump(sweep, f, indent=2)
+        with open(out / "beta_robustness.json", "w") as f:
+            json.dump(beta_rob, f, indent=2)
+        print(f"\nSweep results saved to {out}")
+
+    def _generate_plots(self, sweep: Dict):
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+
         plots_dir = self.results_dir / "plots"
         plots_dir.mkdir(exist_ok=True)
 
-        # Handicap rate by proximity
-        proximity_bins = [1, 2, 3, 5, 10, 25]
-        biased_rates = []
-        control_rates = []
+        penalties = sorted((float(k) for k in sweep), reverse=True)
+        biased = [sweep[str(p)]["biased_rate_mean"] for p in penalties]
+        biased_sd = [sweep[str(p)]["biased_rate_std"] for p in penalties]
+        control = [sweep[str(p)]["control_rate_mean"] for p in penalties]
+        control_sd = [sweep[str(p)]["control_rate_std"] for p in penalties]
+        x = [abs(p) for p in penalties]
 
-        for p_bin in proximity_bins:
-            key = f"handicap_rate_prox_{p_bin}"
-            b_vals = [r.metrics.get(key, 0) for r in self.biased_results]
-            c_vals = [r.metrics.get(key, 0) for r in self.control_results]
-            biased_rates.append(float(np.mean(b_vals)))
-            control_rates.append(float(np.mean(c_vals)))
+        fig, ax = plt.subplots(figsize=(8, 5))
+        ax.errorbar(x, biased, yerr=biased_sd, marker="o", capsize=4,
+                    color="#e76f51", label="Underconfident (damped)")
+        ax.errorbar(x, control, yerr=control_sd, marker="s", capsize=4,
+                    color="#2a9d8f", label="Calibrated control")
+        ax.set_xscale("log")
+        ax.set_xlabel("Handicap penalty magnitude |R|  (log scale)")
+        ax.set_ylabel("Handicap selection rate (last %d trials)" % self.exp_config.eval_window)
+        ax.set_title("Exp 4.3: Self-handicapping vs. objective penalty (dose-response)")
+        ax.legend()
+        ax.grid(True, alpha=0.3)
+        fig.tight_layout()
+        fig.savefig(str(plots_dir / "handicap_penalty_sweep.png"), dpi=300)
+        plt.close(fig)
+        print(f"  Plot saved to {plots_dir / 'handicap_penalty_sweep.png'}")
 
-        plot_handicap_uptake(
-            np.array(proximity_bins),
-            np.array(biased_rates),
-            np.array(control_rates),
-            title="Exp 4.3: Handicap Uptake vs. Proximity to Evaluation",
-            save_path=str(plots_dir / "handicap_uptake.png"),
-        )
-
-        # Distribution of total handicap counts
-        plot_seed_distribution(
-            {
-                "Biased\n(damped)": np.array([
-                    r.metrics["total_handicap_count"] for r in self.biased_results
-                ]),
-                "Control\n(symmetric)": np.array([
-                    r.metrics["total_handicap_count"] for r in self.control_results
-                ]),
-            },
-            metric_name="Total Handicap Actions Taken",
-            title="Exp 4.3: Handicap Action Distribution",
-            save_path=str(plots_dir / "handicap_distribution.png"),
-        )
-
-        print(f"\n  Plots saved to {plots_dir}")
-
-
-# ---------------------------------------------------------------------------
-# Convenience runners
-# ---------------------------------------------------------------------------
 
 def run_experiment_4_2(n_seeds: int = 20, results_dir: str = "results"):
     """Run the impostor syndrome experiment."""
@@ -623,7 +561,7 @@ def run_experiment_4_2(n_seeds: int = 20, results_dir: str = "results"):
 
 
 def run_experiment_4_3(n_seeds: int = 20, results_dir: str = "results"):
-    """Run the self-handicapping experiment."""
+    """Run the self-handicapping experiment (base + penalty sweep + beta robustness)."""
     config = SelfHandicapConfig(n_seeds=n_seeds, results_dir=results_dir)
     experiment = SelfHandicappingExperiment(config)
     return experiment.run_full_experiment()
