@@ -95,7 +95,7 @@ Observer Control          & $0.001$ & $+0.060\pm0.341$ & $-0.051\pm0.384$ & Coun
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.82\linewidth]{figures/dose_response_ablation.png}
+\includegraphics[width=0.78\linewidth]{figures/dose_response_ablation.png}
 \caption{Cognitive Dissonance. (Left) Value divergence scales monotonically with $\lambda$. Zero-decay confirms that commitment alone is insufficient. (Right) Divergence absent in observer controls, emerges endogenously($+0.263$), and peaks at $+3.259$ under high decay.}
 \label{fig:exp41_trajectories}
 \end{figure}
@@ -130,7 +130,7 @@ Gap ($\mathcal{G}$)   & $+8.38\pm0.34\%$ & $-0.02\pm0.15\%$ \\
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.82\linewidth]{figures/calibration_gap.png}
+\includegraphics[width=0.78\linewidth]{figures/calibration_gap.png}
 \caption{Impostor Syndrome. Objective performance (green) surpasses 90\% while global self-assessment (orange) remains suppressed, generating a persistent $+8.38\%$ calibration gap. Symmetric control: $-0.02\%$. Shaded bands: $\pm1$ SD, $N=20$ seeds.}
 \label{fig:exp42_gap}
 \end{figure}
@@ -162,9 +162,9 @@ $-5.0$ & $0.3\%$  & $0.0\%$  & --- \\
 
 \subsection{Exp 4: Choice Overload (The Paradox of Choice)}
 
-We evaluate agents on near-tied bandits ($K\in\{2,4,8,16\}$) with arm means drawn uniformly from $\mathcal{U}(\mu_{\text{base}}\pm0.05)$ ($\mu_{\text{base}}=5.0$, $\sigma_k=1.0$). Agents train for 2000 steps with $\epsilon$-greedy exploration ($\epsilon_0=1.0$, $\epsilon_{\text{decay}}=0.999$, $\epsilon_{\text{min}}=0.02$). We measure raw entropy $H(\pi)$, normalized entropy $\hat{H}=H(\pi)/\log(K)$, convergence step, and cumulative regret.
+We evaluate agents on near-tied bandits ($K\in\{2,4,8,16\}$) with arm means drawn uniformly from $\mathcal{U}(\mu_{\text{base}}\pm0.05)$ ($\mu_{\text{base}}=5.0$, $\sigma_k=1.0$). Agents train for 2000 steps with $\epsilon$-greedy exploration ($\epsilon_0=1.0$, $\epsilon_{\text{decay}}=0.999$, $\epsilon_{\text{min}}=0.02$). We measure raw entropy $H(\pi)$, normalized entropy $\hat{H}=H(\pi)/\log(K)$, convergence step, and cumulative regret. To test the human \textit{commit-vs-defer} behavior directly, we also give the agent a safe opt-out of known value ($4.85$) and a satisficing rule \citep{schwartz2004paradox} that commits to an arm only when its lower-confidence bound $Q(a)-\beta/\sqrt{n(a)}$ ($\beta=1.5$) exceeds the opt-out, else defers.
 
-\textbf{Results (Table~\ref{tab:exp44}, Fig.~\ref{fig:exp44_metrics}).} Expanding the choice set collapses normalized policy entropy from $0.943\pm0.028$ to $0.718\pm0.041$ ($K=16$ vs.\ $K=2$: $t=-20.45$, $p=4.19\times10^{-22}$). The key finding is that choice overload manifests as \textit{exploration dilution}---policies concentrate unpredictably on a subset of options rather than becoming uniformly indecisive and consequently mean regret also increases significantly ($K=16$ vs.\ $K=2$: $t=2.24$, $p=0.031$). Commitment latency increases directionally by $+58.6\%$ ($17.40\to27.60$ steps) but does not cross significance ($t=1.24$, $p=0.223$, ns), reported transparently as a boundary condition.
+\textbf{Results (Table~\ref{tab:exp44}, Fig.~\ref{fig:exp44_metrics}).} Expanding the choice set collapses normalized policy entropy from $0.943\pm0.028$ to $0.718\pm0.041$ ($K=16$ vs.\ $K=2$: $t=-20.45$, $p=4.19\times10^{-22}$). The key finding is that choice overload manifests as \textit{exploration dilution}---policies concentrate unpredictably on a subset of options rather than becoming uniformly indecisive and consequently mean regret also increases significantly ($K=16$ vs.\ $K=2$: $t=2.24$, $p=0.031$). Commitment latency increases directionally by $+58.6\%$ ($17.40\to27.60$ steps) but does not cross significance ($t=1.24$, $p=0.223$, ns), reported transparently as a boundary condition. Most directly, the opt-out condition reproduces the human commitment collapse: the deferral rate rises from $0.61$ at $K=2$ to $0.86$ at $K=16$ ($t=6.52$, $p<10^{-6}$, $d=2.06$)---commitment falling from $39\%$ to $14\%$, mirroring the $30\%\to3\%$ purchase collapse of \citet{iyengar2000choice}, because more near-tied options dilute per-arm confidence and fewer clear the satisficing bar.
 
 \begin{table}[htbp]
 \raggedright
@@ -179,13 +179,14 @@ We evaluate agents on near-tied bandits ($K\in\{2,4,8,16\}$) with arm means draw
 Norm.\ $\hat{H}(\pi)$ & $0.943\pm0.028$ & $0.950\pm0.027$ & $0.847\pm0.034$ & $0.718\pm0.041$ \\
 Conv.\ Step           & $17.40\pm18.3$  & $19.95\pm20.8$  & $25.50\pm27.7$  & $27.60\pm31.9$ \\
 Mean Regret           & $0.024\pm0.031$ & $0.028\pm0.033$ & $0.025\pm0.036$ & $0.046\pm0.033$ \\
+Deferral rate         & $0.607\pm0.156$ & $0.672\pm0.155$ & $0.675\pm0.127$ & $0.859\pm0.074$ \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.62\textwidth]{figures/choice_overload_metrics.png}
+\includegraphics[width=0.54\textwidth]{figures/choice_overload_metrics.png}
 \caption{Choice Overload. Normalized entropy $\hat{H}$ collapses from $0.94$ to $0.72$ as $K$ expands---exploration dilution, not uniform indecision. Commitment latency rises directionally ($+58.6\%$, ns) and regret increases significantly for $K=16$.}
 \label{fig:exp44_metrics}
 \end{figure*}
@@ -198,7 +199,7 @@ Both Cognitive Dissonance and Choice Overload share a single mathematical root. 
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.82\linewidth]{figures/shared_mechanism_staleness.png}
+\includegraphics[width=0.78\linewidth]{figures/shared_mechanism_staleness.png}
 \caption{Shared staleness mechanism. (Left) Rejected-arm staleness predicts post-decision value divergence (per-seed mean $r=0.41$, $p<10^{-6}$). (Right) Mean staleness predicts policy entropy ($r=0.82$, $p<10^{-20}$). Both Free biases share a common computational root.}
 \label{fig:shared_mechanism}
 \end{figure}
@@ -209,7 +210,7 @@ The agents’ behavior align with published human data across all four experimen
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.56\textwidth]{figures/human_benchmarks_4panel.png}
+\includegraphics[width=0.50\textwidth]{figures/human_benchmarks_4panel.png}
 \caption{Human benchmark comparison. Agent metrics (red) overlaid on published human empirical data (blue) for all four biases. Panel (C) shows self-handicapping: impostor agents exhibit a $4.77\times$ ratio, closely tracking the human $5.4\times$ shift \citep{berglas1978drug}, while sabotaging their own objective return.}
 \label{fig:human_benchmarks}
 \end{figure*}
@@ -226,14 +227,14 @@ We replicated experiments in DQN \citep{mnih2015human} (MLP: 2 hidden layers of 
 \centering
 \begin{subfigure}[b]{0.48\textwidth}
     \centering
-    \includegraphics[width=0.82\linewidth]{figures/dqn_buffer_ablation.png}
+    \includegraphics[width=0.78\linewidth]{figures/dqn_buffer_ablation.png}
     \caption{Buffer ablation ($K=8$, $N=20$)}
     \label{fig:dqn_ablation}
 \end{subfigure}
 \hfill
 \begin{subfigure}[b]{0.48\textwidth}
     \centering
-    \includegraphics[width=0.82\linewidth]{figures/dqn_cognitive_dissonance.png}
+    \includegraphics[width=0.78\linewidth]{figures/dqn_cognitive_dissonance.png}
     \caption{DQN Cognitive Dissonance}
     \label{fig:dqn_dissonance}
 \end{subfigure}

@@ -60,6 +60,17 @@ class ChoiceOverloadConfig(ExperimentConfig):
     entropy_window: int = 50       # compute entropy over last N steps
     switching_window: int = 100    # compute switching over last N steps
 
+    # --- Deferral / opt-out condition (Iyengar & Lepper commit-vs-defer analogue) ---
+    # The agent additionally has a safe opt-out action of known value; under an
+    # uncertainty-averse (satisficing) rule it commits to an arm only when confident
+    # that arm beats the opt-out, else it defers. More near-tied options dilute
+    # per-arm confidence, so deferral rises with the choice-set size.
+    deferral_steps: int = 2500
+    deferral_eps: float = 0.25         # exploration (always samples an arm to learn)
+    opt_out_value: float = 4.85        # known reward of the safe default (< arm mean)
+    satisficing_beta: float = 1.5      # lower-confidence-bound width (Schwartz satisficing)
+    deferral_window: int = 400         # trailing decision window for the deferral rate
+
     def __post_init__(self):
         if self.n_arms_conditions is None:
             self.n_arms_conditions = [2, 4, 8, 16]
@@ -77,6 +88,7 @@ class ChoiceOverloadExperiment(ExperimentRunner):
         super().__init__(config)
         self.exp_config = config
         self.condition_results: Dict[int, List[SeedResult]] = {}
+        self.deferral_results: Dict[int, np.ndarray] = {}
 
     def _compute_policy_entropy(self, q_values: np.ndarray,
                                  temperature: float = 1.0) -> float:
@@ -208,6 +220,46 @@ class ChoiceOverloadExperiment(ExperimentRunner):
         """Not used directly."""
         pass
 
+    def _run_deferral_condition(self, n_arms: int, seeds: list) -> np.ndarray:
+        """
+        Iyengar & Lepper (2000) commit-vs-defer analogue.
+
+        The agent has an extra safe opt-out action of known value (opt_out_value).
+        Exploration always samples an arm (so arm values are learned regardless),
+        but a greedy DECISION commits to an arm only when that arm's lower-confidence
+        bound Q(a) - beta / sqrt(n(a)+1) exceeds the opt-out value; otherwise the
+        agent defers (satisficing; Schwartz 2004). With more near-tied options the
+        per-arm visit count is lower, the lower-confidence bound is looser, fewer
+        arms clear the bar, and the deferral rate rises -- reproducing the collapse
+        in commitment that Iyengar & Lepper observed as choice sets grow.
+        """
+        cfg = self.exp_config
+        rates = []
+        for seed in tqdm(seeds, desc=f"  deferral n_arms={n_arms}"):
+            rng = np.random.RandomState(seed)
+            means = np.array([cfg.arm_mean + rng.uniform(-cfg.arm_delta, cfg.arm_delta)
+                              for _ in range(n_arms)])
+            Q = np.zeros(n_arms)
+            n = np.zeros(n_arms)
+            decision_defers = []  # 1 = deferred, on greedy (decision) steps only
+            for _ in range(cfg.deferral_steps):
+                if rng.random() < cfg.deferral_eps:
+                    a = rng.randint(0, n_arms)                      # explore: learn an arm
+                    Q[a] += cfg.learning_rate * (rng.normal(means[a], cfg.arm_sigma) - Q[a])
+                    n[a] += 1
+                else:
+                    lcb = Q - cfg.satisficing_beta / np.sqrt(n + 1.0)
+                    best = int(np.argmax(lcb))
+                    if lcb[best] > cfg.opt_out_value:               # confident: commit
+                        Q[best] += cfg.learning_rate * (rng.normal(means[best], cfg.arm_sigma) - Q[best])
+                        n[best] += 1
+                        decision_defers.append(0)
+                    else:                                           # not confident: defer
+                        decision_defers.append(1)
+            window = decision_defers[-cfg.deferral_window:]
+            rates.append(float(np.mean(window)) if window else 1.0)
+        return np.array(rates)
+
     def run_full_experiment(self):
         """Run all conditions and statistical comparisons."""
         print("\n" + "=" * 70)
@@ -223,6 +275,22 @@ class ChoiceOverloadExperiment(ExperimentRunner):
         for n_arms in self.exp_config.n_arms_conditions:
             print(f"\n--- Condition: {n_arms} near-tied arms ---")
             self.condition_results[n_arms] = self._run_condition(n_arms, seeds)
+
+        # --- Deferral / opt-out condition (Iyengar & Lepper commit-vs-defer) ---
+        print("\n--- Deferral (opt-out) condition ---")
+        self.deferral_results = {
+            n_arms: self._run_deferral_condition(n_arms, seeds)
+            for n_arms in self.exp_config.n_arms_conditions
+        }
+        base_k = self.exp_config.n_arms_conditions[0]
+        top_k = self.exp_config.n_arms_conditions[-1]
+        defer_test = independent_ttest(
+            self.deferral_results[top_k], self.deferral_results[base_k],
+            description=f"Deferral: K={top_k} vs K={base_k}")
+        print("  Deferral rate by K: " + ", ".join(
+            f"K={k}: {self.deferral_results[k].mean():.3f}±{self.deferral_results[k].std(ddof=1):.3f}"
+            for k in self.exp_config.n_arms_conditions))
+        print(f"  {format_result(defer_test)}")
 
         # Statistical comparisons vs. baseline (fewest arms)
         baseline_key = self.exp_config.n_arms_conditions[0]
@@ -287,6 +355,13 @@ class ChoiceOverloadExperiment(ExperimentRunner):
                 }}
                 for r in results
             ]
+
+        if self.deferral_results:
+            output["deferral"] = {
+                str(k): {"mean": float(v.mean()), "std": float(v.std(ddof=1)),
+                         "values": v.tolist()}
+                for k, v in self.deferral_results.items()
+            }
 
         with open(results_dir / "results.json", "w") as f:
             json.dump(output, f, indent=2)
