@@ -8,12 +8,18 @@
 \usepackage{ragged2e}
 \usepackage{subcaption}
 \newcolumntype{L}{>{\RaggedRight\arraybackslash}X}
-\captionsetup[table]{justification=raggedright,singlelinecheck=false}
+\captionsetup[table]{justification=raggedright,singlelinecheck=false,skip=3pt}
+\captionsetup[figure]{skip=3pt}
 \usepackage{microtype}
 \usepackage[numbers,sort&compress]{natbib}
 \usepackage{xcolor} 
 \usepackage{hyperref}
 \usepackage{times}
+
+% Keep figures readable while avoiding oversized gaps around floats.
+\setlength{\textfloatsep}{5pt plus 2pt minus 2pt}
+\setlength{\floatsep}{5pt plus 2pt minus 2pt}
+\setlength{\intextsep}{5pt plus 2pt minus 2pt}
 
 \hypersetup{
     colorlinks=true,
@@ -24,13 +30,13 @@
 
 \title{Computational Analogues of Post-Decision and Self-Evaluative Biases in Reinforcement Learning Agents}
 
-\author{\IEEEauthorblockN{Ronak Daniel}
-\IEEEauthorblockA{\textit{Computational Cognitive Systems Research}}
+\author{\IEEEauthorblockN{Ronak Daniel B. Tech. A.I. MPSTME NMIMS-Mumbai ronak.daniel27@nmims.in\\
+Avinash Tandle assistant professor MPSTME NMIMS-Mumbai avinash.tandle@nmims.edu.in}}
 % === IEEE camera-ready copyright notice (first-page footer) ===
 % REPLACE the placeholder code below with the exact string MoSICom/IEEE
 % assigns you after acceptance (its ISBN + /26/$31.00 line). Delete this
 % \thanks for the initial (review) submission if the CFP wants no notice.
-\thanks{979-8-XXXX-XXXX-X/26/\$31.00~\copyright2026~IEEE}}
+% \thanks{979-8-XXXX-XXXX-X/26/\$31.00~\copyright2026~IEEE}}
 
 \begin{document}
 \maketitle
@@ -104,7 +110,9 @@ Observer Control          & $0.001$ & $+0.060\pm0.341$ & $-0.051\pm0.384$ & Coun
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.78\linewidth]{figures/dose_response_ablation.png}
+\makebox[\linewidth][c]{%
+    \includegraphics[width=1.12\linewidth]{figures/dose_response_ablation.png}%
+}
 \caption{Cognitive Dissonance. (Left) Value divergence scales monotonically with $\lambda$. Zero-decay confirms that commitment alone is insufficient. (Right) Divergence absent in observer controls, emerges endogenously($+0.263$), and peaks at $+3.259$ under high decay.}
 \label{fig:exp41_trajectories}
 \end{figure}
@@ -139,7 +147,7 @@ Gap ($\mathcal{G}$)   & $+8.38\pm0.34\%$ & $-0.02\pm0.15\%$ \\
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.78\linewidth]{figures/calibration_gap.png}
+\includegraphics[width=\linewidth]{figures/calibration_gap.png}
 \caption{Impostor Syndrome. Objective performance (green) surpasses 90\% while global self-assessment (orange) remains suppressed, generating a persistent $+8.38\%$ calibration gap. Symmetric control: $-0.02\%$. Shaded bands: $\pm1$ SD, $N=20$ seeds.}
 \label{fig:exp42_gap}
 \end{figure}
@@ -201,7 +209,7 @@ Both Cognitive Dissonance and Choice Overload share a single mathematical root. 
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.78\linewidth]{figures/shared_mechanism_staleness.png}
+\includegraphics[width=\linewidth]{figures/shared_mechanism_staleness.png}
 \caption{Shared staleness mechanism. (Left) Rejected-arm staleness predicts post-decision value divergence (per-seed mean $r=0.41$, $p<10^{-6}$). (Right) Mean staleness predicts policy entropy ($r=0.82$, $p<10^{-20}$). Both Free biases share a common computational root.}
 \label{fig:shared_mechanism}
 \end{figure}
@@ -212,7 +220,7 @@ The agents’ behavior aligns with published human data across all four experime
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=0.50\textwidth]{figures/human_benchmarks_4panel.png}
+\includegraphics[width=0.54\textwidth]{figures/human_benchmarks_4panel.png}
 \caption{Human benchmark comparison. Agent metrics (red) overlaid on published human empirical data (blue) for all four biases. Panel (C) shows self-handicapping: impostor agents exhibit a $4.77\times$ ratio, closely tracking the human $5.4\times$ shift \citep{berglas1978drug}, while sabotaging their own objective return.}
 \label{fig:human_benchmarks}
 \end{figure*}
@@ -229,14 +237,14 @@ We replicated experiments in DQN \citep{mnih2015human} (MLP: 2 hidden layers of 
 \centering
 \begin{subfigure}[b]{0.48\textwidth}
     \centering
-    \includegraphics[width=0.78\linewidth]{figures/dqn_buffer_ablation.png}
+    \includegraphics[width=0.92\linewidth]{figures/dqn_buffer_ablation.png}
     \caption{Buffer ablation ($K=8$, $N=20$)}
     \label{fig:dqn_ablation}
 \end{subfigure}
 \hfill
 \begin{subfigure}[b]{0.48\textwidth}
     \centering
-    \includegraphics[width=0.78\linewidth]{figures/dqn_cognitive_dissonance.png}
+    \includegraphics[width=0.92\linewidth]{figures/dqn_cognitive_dissonance.png}
     \caption{DQN Cognitive Dissonance}
     \label{fig:dqn_dissonance}
 \end{subfigure}
@@ -250,7 +258,9 @@ To test whether these effects survive outside tabular/bandit states, we port Cho
 
 \begin{figure}[htbp]
 \centering
-\includegraphics[width=0.92\linewidth]{figures/minigrid_choice_overload.png}
+\makebox[\linewidth][c]{%
+    \includegraphics[width=0.99\linewidth,trim=11bp 11bp 10bp 6bp,clip]{figures/minigrid_choice_overload.png}%
+}
 \caption{Choice Overload survives function approximation (ChoiceRoom + CNN-DQN, $N=20$). (A) Chance-corrected best-option discrimination $d$ falls $\approx4\times$ as near-tied options grow. (B) Mean regret nearly triples.}
 \label{fig:minigrid}
 \end{figure}
@@ -264,9 +274,12 @@ Three limitations should be noted. First, while ChoiceRoom shows one paradigm su
 For AI alignment, these results have concrete implications: post-decision rationalization will arise in any agent with asymmetric visitation and forgetting (do not mistake it for deliberate misalignment); choice overload emerges naturally in tool-use agents with large near-tied action sets; and augmenting agents with asymmetric self-critique loops risks decoupling self-assessed competence from objective performance. By directly benchmarking against statistical data from human psychological experiments and confirming that they are seen across tabular and deep architectures, these findings show that human-like cognitive biases simply reflect fundamental mathematical trade-offs in decision-making under uncertainty.
 
 \section*{Reproducibility}
-All source code, environments, agent architectures, and analysis scripts are available at \url{https://github.com/danielronak/CompPsy-RL}. All experiments use $N=20$ fixed seeds (0--19), reproducible end-to-end via \texttt{python run\_all.py}.
+All source code, environments, agent architectures, and analysis scripts are available at \url{https://github.com/danielronak/CompPsy-RL}. All experiments use $N=20$ fixed seeds (0--19), reproducible end-to-end via \texttt{python run\_all.py}. AI-assisted tools were used for code implementation and manuscript drafting. All experimental designs, analyses, results, and conclusions were verified by and are the sole responsibility of the author.
 
+{\small
+\setlength{\bibsep}{4pt}
 \bibliographystyle{plainnat}
 \bibliography{references}
+}
 
 \end{document}
