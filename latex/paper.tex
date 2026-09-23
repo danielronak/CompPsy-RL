@@ -12,6 +12,7 @@
 \captionsetup[figure]{skip=3pt}
 \usepackage{microtype}
 \usepackage[numbers,sort&compress]{natbib}
+\setlength{\bibsep}{0pt plus 0.3ex}
 \usepackage{xcolor} 
 \usepackage{hyperref}
 \usepackage{times}
@@ -274,12 +275,9 @@ Three limitations should be noted. First, while ChoiceRoom shows one paradigm su
 For AI alignment, these results have concrete implications: post-decision rationalization will arise in any agent with asymmetric visitation and forgetting (do not mistake it for deliberate misalignment); choice overload emerges naturally in tool-use agents with large near-tied action sets; and augmenting agents with asymmetric self-critique loops risks decoupling self-assessed competence from objective performance. By directly benchmarking against statistical data from human psychological experiments and confirming that they are seen across tabular and deep architectures, these findings show that human-like cognitive biases simply reflect fundamental mathematical trade-offs in decision-making under uncertainty.
 
 \section*{Reproducibility}
-All source code, environments, agent architectures, and analysis scripts are available at \url{https://github.com/danielronak/CompPsy-RL}. All experiments use $N=20$ fixed seeds (0--19), reproducible end-to-end via \texttt{python run\_all.py}. AI-assisted tools were used for code implementation and manuscript drafting. All experimental designs, analyses, results, and conclusions were verified by and are the sole responsibility of the author.
+All source code, environments, agent architectures, and analysis scripts are available at \url{https://github.com/danielronak/CompPsy-RL}. All experiments use $N=20$ fixed seeds (0--19), reproducible end-to-end via \texttt{python run\_all.py}.
 
-{\small
-\setlength{\bibsep}{4pt}
 \bibliographystyle{plainnat}
 \bibliography{references}
-}
 
 \end{document}
