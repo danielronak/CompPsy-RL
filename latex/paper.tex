@@ -55,7 +55,7 @@ avinash.tandle@nmims.edu}}
 Reinforcement learning (RL) and behavioral psychology have always been known to be closely related, but the phenomena that show up during the post-decision and self-evaluative phases have not gotten as much attention from the mechanistic RL perspective.
 In this work we investigate if four well-recognized human psychological biases, namely Cognitive Dissonance, Impostor Syndrome, Self-Handicapping, and Choice Overload, can emerge in artificial RL agents without manually placing the bias into the reward function, differentiating between “Free” biases that arise spontaneously from standard learning dynamics and “Architectural” biases that require explicit metacognitive structure.
 
-Across multi-seed evaluations, three out of four biases emerge robustly while the fourth marks an informative computational boundary. Standard Q-learning agents develop post-decision value divergence on ground-truth identical alternatives that scales monotonically with memory decay and, by construction, cannot reflect revealed pre-existing preferences. Agents given the asymmetric confidence-update rule reported in human studies develop a persistent calibration gap absent in symmetric controls. Expanding near-tied action spaces collapses normalized policy entropy---choice paralysis as exploration dilution rather than uniform indecision---and, once a safe opt-out is available, agents defer commitment more as options grow, qualitatively resembling the human commitment collapse. Both this effect and cognitive dissonance share a common substrate in action-visitation staleness. By contrast, self-handicapping emerges only when agents anticipate failure from a miscalibrated self-model: objectively competent agents then sabotage their own reward to protect a fragile self-image, an effect bounded by the objective cost of the handicap. In Deep Q-Networks, lossless experience replay preserves unchosen-arm values and strongly attenuates cognitive dissonance ($\approx88\%$ vs.\ tabular), and a replay-buffer ablation shows that buffer size controls how well near-tied options are differentiated.
+Across multi-seed evaluations, two biases (cognitive dissonance and choice overload) emerge from standard learning dynamics, while the other two appear only when a metacognitive self-model with an explicitly asymmetric update is built in. Standard Q-learning agents develop post-decision value divergence on ground-truth identical alternatives that scales monotonically with memory decay and, by construction, cannot reflect revealed pre-existing preferences. Agents given the asymmetric confidence-update rule reported in human studies develop a persistent calibration gap absent in symmetric controls. Expanding near-tied action spaces collapses normalized policy entropy---choice paralysis as exploration dilution rather than uniform indecision---and, once a safe opt-out is available, agents defer commitment more as options grow, qualitatively resembling the human commitment collapse. Both this effect and cognitive dissonance share a common substrate in action-visitation staleness. By contrast, self-handicapping emerges only when agents anticipate failure from a miscalibrated self-model: objectively competent agents then sabotage their own reward to protect a fragile self-image, an effect bounded by the objective cost of the handicap. In Deep Q-Networks, lossless experience replay preserves unchosen-arm values and strongly attenuates cognitive dissonance ($\approx88\%$ vs.\ tabular), and a replay-buffer ablation shows that buffer size controls how well near-tied options are differentiated.
 
 These findings offer a candidate mechanistic account of how behavioral signatures resembling human cognitive distortions can emerge from the statistical mechanics of reinforcement learning in small agents, and identify boundary conditions on when such biases do and do not appear.
 \end{abstract}
@@ -78,7 +78,7 @@ Midbrain dopamine activity resembles TD prediction errors \citep{schultz1997neur
 
 \textbf{Free (Dynamics-Driven) Biases} appear spontaneously in standard, single-tier agents without manually modifying the reward function $R(s,a)$, introducing metacognitive variables, or adding additional losses. They arise because selecting $a^*$ does not allow the agent to observe rewards for $a'\neq a^*$; under memory decay or weight regularization, the information of unvisited choices becomes stale, which causes behavioral and representational distortions.
 
-\textbf{Architectural (Metacognitive) Biases} require a dual-tier architecture consisting of a local evaluator that makes the decisions, and a global model that estimates overall competence. We also include an asymmetric update rule because standard agents maintain coherent value estimates: (they can't act with high competence while representing that competence as poor) hence, generating impostor-like phenomena would require explicitly programming asymmetric evidence filtering.
+\textbf{Architectural (Metacognitive) Biases} require a dual-tier architecture consisting of a local evaluator that makes the decisions, and a global model that estimates overall competence. A standard agent keeps its value estimates coherent with its behavior: it cannot act competently while representing that competence as poor. Impostor-like behavior therefore does not emerge on its own. We program an asymmetric evidence-filtering rule explicitly, so Exps 2 and 3 test the consequences of a designed mechanism, not its emergence.
 
 \section{Empirical Investigations}
 
@@ -100,7 +100,7 @@ A Tabular Q-learning agent ($\gamma=0$) updates as $Q(a_t)\leftarrow Q(a_t)+\alp
 
 \begin{table}[htbp]
 \raggedright
-\small
+\footnotesize
 \setlength{\tabcolsep}{4pt}
 \caption{Cognitive Dissonance: Dose-Response Decomposition ($N=20$ Seeds).}
 \label{tab:exp41}
@@ -133,11 +133,11 @@ Building on \citet{katyal2025distorted}, we design a dual-tier metacognitive age
 \end{equation}
 The symmetric control uses $\kappa=1.0$. The calibration gap is: $\mathcal{G}=\text{Objective Performance}-C_{\text{global}}$.
 
-\textbf{Results (Table~\ref{tab:exp42}, Fig.~\ref{fig:exp42_gap}).} The damped-positive agent ($\kappa=0.2$) achieves objective competence $0.932\pm0.002$ but its global self-assessment plateaus at $0.848\pm0.002$, yielding $\mathcal{G}=+8.38\pm0.34\%$ (95\% CI: $[+8.22\%, +8.54\%]$) across all 20 seeds. The symmetric control tracks ground truth with near-perfect fidelity: $\mathcal{G}=-0.02\pm0.15\%$. The $+8.40\%$ divergence between conditions holds across every seed, reflecting the deterministic mathematical accumulation of evidence under asymmetric weighting.
+\textbf{Results (Table~\ref{tab:exp42}, Fig.~\ref{fig:exp42_gap}).} The damped-positive agent ($\kappa=0.2$) achieves objective competence $0.932\pm0.002$ but its global self-assessment plateaus at $0.848\pm0.002$, yielding $\mathcal{G}=+8.38\pm0.34\%$ (95\% CI: $[+8.22\%, +8.54\%]$) across all 20 seeds. The symmetric control tracks ground truth with near-perfect fidelity: $\mathcal{G}=-0.02\pm0.15\%$. The $+8.40\%$ divergence between conditions holds across every seed, reflecting the deterministic mathematical accumulation of evidence under asymmetric weighting. The gap is therefore a direct consequence of the programmed rule, not an emergent effect.
 
 \begin{table}[htbp]
 \raggedright
-\small
+\footnotesize
 \setlength{\tabcolsep}{4pt}
 \caption{Impostor Syndrome: Calibration Gap ($N=20$ Seeds).}
 \label{tab:exp42}
@@ -193,7 +193,7 @@ We evaluate agents on near-tied bandits ($K\in\{2,4,8,16\}$) with arm means draw
 
 \begin{table}[htbp]
 \raggedright
-\small
+\footnotesize
 \setlength{\tabcolsep}{4pt}
 \caption{Choice Overload across Choice-Set Sizes ($N=20$).}
 \label{tab:exp44}
@@ -224,12 +224,12 @@ We propose that Cognitive Dissonance and Choice Overload share a common root. De
 
 \subsection{Human Benchmark Comparison}
 
-The agents' behavior parallels published human data in direction across all four experiments (Fig.~\ref{fig:human_benchmarks}). These comparisons are qualitative: units, tasks, and populations differ, and several agent magnitudes depend on free parameters, so numerical proximity is not quantitative equivalence. RL excess divergence ($+0.86\pm0.39$, in Q-value units) qualitatively parallels Brehm's (1956) human rating spread ($+0.81\pm0.60$, in rating-scale points) with observer controls remaining near zero ($+0.06\pm0.34$); the $+8.38\%$ calibration gap has the same sign as the underconfidence pattern of \citet{katyal2025distorted}. The rising deferral rate---commitment falling from $39\%$ to $14\%$---parallels the commitment collapse of \citet{iyengar2000choice}. The self-handicapping ratio ($4.77\times$ RL vs.\ $5.4\times$ human) is of similar order to that of \citet{berglas1978drug}: impostor-like agents sabotage their own reward to protect a fragile self-image, an effect bounded by the objective cost of the handicap.
+The agents' behavior parallels published human data in direction across all four experiments (Fig.~\ref{fig:human_benchmarks}). These comparisons are qualitative: units, tasks, and populations differ, and several agent magnitudes depend on free parameters, so numerical proximity is not quantitative equivalence. RL excess divergence ($+0.86\pm0.39$, in Q-value units) qualitatively parallels Brehm's (1956) human rating spread ($+0.81\pm0.60$, in rating-scale points) with observer controls remaining near zero ($+0.06\pm0.34$); the $+8.38\%$ calibration gap has the same sign as the underconfidence pattern of \citet{katyal2025distorted}. The rising deferral rate---commitment falling from $39\%$ to $14\%$---parallels the commitment collapse of \citet{iyengar2000choice}. The self-handicapping ratio ($4.77\times$ RL vs.\ $5.4\times$ human) is of similar order to that of \citet{berglas1978drug}.
 
 \begin{figure*}[t]
 \centering
 \includegraphics[width=0.54\textwidth]{figures/human_benchmarks_4panel.png}
-\caption{Human benchmark comparison. Agent metrics (red) overlaid on published human empirical data (blue) for all four biases. Panel (C) shows self-handicapping: impostor agents exhibit a $4.77\times$ ratio, of similar order to the human $5.4\times$ shift \citep{berglas1978drug}, while sabotaging their own objective return. Comparisons are qualitative.}
+\caption{Human benchmark comparison. Agent metrics (red) overlaid on published human empirical data (blue) for all four biases. Panel (C): impostor agents show a $4.77\times$ self-handicapping ratio, of similar order to the human $5.4\times$ shift \citep{berglas1978drug}. Comparisons are qualitative.}
 \label{fig:human_benchmarks}
 \end{figure*}
 
@@ -275,7 +275,7 @@ To test whether these effects survive outside tabular/bandit states, we port Cho
 
 \section{Discussion, Limitations, and Conclusion}
 
-These findings indicate that signatures of cognitive dissonance and choice overload can emerge without any reward-shaping---from the statistical mechanics of asymmetric sampling and stale value estimates alone---while impostor syndrome requires asymmetric metacognitive evidence integration. The cost-boundedness of self-handicapping and the credit-assignment inertia in DQN are not failures---they are precise, informative computational boundary conditions: overt behavioral self-sabotage emerges from impostor-like over-anticipation of failure yet is suppressed once the objective penalty grows large, and memory decay appears to be the main amplifier of post-decision spreading, which lossless replay strongly attenuates (by $\approx88\%$).
+These findings indicate that signatures of cognitive dissonance and choice overload can emerge without any reward-shaping---from the statistical mechanics of asymmetric sampling and stale value estimates alone---while the impostor-like calibration gap and self-handicapping appear only with an explicitly programmed asymmetric self-model. The cost-boundedness of self-handicapping and the credit-assignment inertia in DQN are not failures---they are precise, informative computational boundary conditions: overt behavioral self-sabotage emerges from impostor-like over-anticipation of failure yet is suppressed once the objective penalty grows large, and memory decay appears to be the main amplifier of post-decision spreading, which lossless replay strongly attenuates (by $\approx88\%$).
 
 Three limitations should be noted. First, while ChoiceRoom shows one paradigm survives CNN function approximation, our environments remain small; full-scale visual environments (e.g., Atari) may introduce representation drift that interacts with these biases in currently unknown ways. Second, we establish the \textit{behavioral and representational signature} of dissonance---systematic post-decision revaluation---but do not claim the \textit{motivational tension} central to \citet{festinger1957theory}'s original formulation; this computational mechanism may be necessary but not sufficient for the human phenomenon. Third, our self-handicapping result depends on modeling the pre-evaluation choice as anticipatory (model-based) valuation using the agent's own miscalibrated failure expectation; a purely model-free agent that learns only from realized outcomes does not self-handicap, which we regard as a substantive scoping condition on when the effect arises.
 

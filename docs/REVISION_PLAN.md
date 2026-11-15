@@ -197,7 +197,7 @@ Replace the whole "For AI alignment, ..." paragraph of the Discussion with:
 (The old last sentence also claimed the biases were "seen across tabular and
 deep architectures", which contradicts the DQN dissonance result.)
 
-### [ ] Revision 4: separate emergent from designed behaviour (Reviewer 3)
+### [x] Revision 4: separate emergent from designed behaviour (Reviewer 3)
 
 1. Abstract: "three out of four biases emerge robustly while the fourth marks
    an informative computational boundary" → "two biases (cognitive
