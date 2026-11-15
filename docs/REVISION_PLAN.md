@@ -144,7 +144,7 @@ Each item gives the text to find and what it becomes. "→" means "replace with"
    "memory decay is the dominant amplifier" → "memory decay appears to be the
    main amplifier".
 
-### [ ] Revision 2: human comparisons are qualitative (Reviewers 1 and 3)
+### [x] Revision 2: human comparisons are qualitative (Reviewers 1 and 3)
 
 1. Abstract: "Agents using the human-verified asymmetric confidence-update
    rule" → "Agents given the asymmetric confidence-update rule reported in
