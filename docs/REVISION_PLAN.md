@@ -291,8 +291,15 @@ Already applied during Revision 1 (the build went to 7 pages): the reference
 list was changed from `\small` with `\bibsep` 4pt to `\footnotesize` with
 `\bibsep` 2pt, which is the standard IEEE 8pt reference size.
 
-If it overflows again, apply in this order, rebuilding after each, and stop
-as soon as it fits:
+Also applied later to stay at 6 pages: Tables I, II and IV set in
+`\footnotesize` like Table III (Revision 4); Fig. 5 panels balanced to equal
+height; a sentence duplicated from Exp 3 cut from the benchmark section and
+the Fig. 4 caption; Fig. 4 narrowed to `0.50\textwidth` (Revision 5). The
+Fig. 5 source now sits above its subsection so the figure lands on page 5.
+The finished paper has about 4 free lines on page 6.
+
+If a later edit overflows, the remaining options, in order (item 1 is
+already done):
 
 1. Fig. 4: `width=0.54\textwidth` → `0.50\textwidth`.
 2. Remove "Non-significant findings are reported explicitly as boundary
@@ -302,8 +309,8 @@ as soon as it fits:
 
 ## After the edits
 
-- [ ] Rebuild the PDF and run all four checks above.
-- [ ] Regenerate the Word file:
+- [x] Rebuild the PDF and run all four checks above.
+- [x] Regenerate the Word file:
 
   ```bash
   cd tools/docx_build
@@ -318,7 +325,7 @@ as soon as it fits:
   `prep.py` reads `paper.aux` and `paper.bbl`, so build the PDF first. It
   stops with an error if a table cell contains math it cannot convert.
   Needs `pandoc` and `python-docx`.
-- [ ] Send the author the new PDF and Word file.
+- [x] Send the author the new PDF and Word file.
 - [ ] The author must run the new PDF through IEEE PDF eXpress again (the
   approved copy has the old text) and upload the newly approved file.
 - [ ] If CMT asks for a response to reviewers, write it from this file: each
