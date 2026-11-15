@@ -66,7 +66,7 @@ Two of these are corrections to the paper, not only wording:
 
 Each item gives the text to find and what it becomes. "→" means "replace with".
 
-### [ ] Revision 1: moderate causal claims (Reviewers 1 and 3)
+### [x] Revision 1: moderate causal claims (Reviewers 1 and 3)
 
 1. Abstract. "that scales monotonically with memory decay, ruling out the
    revealed-preference confound" → "that scales monotonically with memory
@@ -287,7 +287,12 @@ deep architectures", which contradicts the DQN dissonance result.)
 
 ## If it runs over 6 pages
 
-Apply in this order, rebuilding after each, and stop as soon as it fits:
+Already applied during Revision 1 (the build went to 7 pages): the reference
+list was changed from `\small` with `\bibsep` 4pt to `\footnotesize` with
+`\bibsep` 2pt, which is the standard IEEE 8pt reference size.
+
+If it overflows again, apply in this order, rebuilding after each, and stop
+as soon as it fits:
 
 1. Fig. 4: `width=0.54\textwidth` → `0.50\textwidth`.
 2. Remove "Non-significant findings are reported explicitly as boundary
