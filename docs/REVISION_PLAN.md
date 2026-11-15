@@ -178,7 +178,7 @@ Each item gives the text to find and what it becomes. "→" means "replace with"
    similar order to the human $5.4\times$ shift"; add "Comparisons are
    qualitative."
 
-### [ ] Revision 3: moderate generalization to larger AI systems (Reviewer 1)
+### [x] Revision 3: moderate generalization to larger AI systems (Reviewer 1)
 
 Replace the whole "For AI alignment, ..." paragraph of the Discussion with:
 
