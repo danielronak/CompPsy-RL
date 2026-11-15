@@ -218,7 +218,7 @@ deep architectures", which contradicts the DQN dissonance result.)
    gap and self-handicapping appear only with an explicitly programmed
    asymmetric self-model".
 
-### [ ] Revision 5: clearer statistics and implementation detail (Reviewers 1 and 3)
+### [x] Revision 5: clearer statistics and implementation detail (Reviewers 1 and 3)
 
 1. Replace the statistics paragraph at the start of "Empirical
    Investigations" with:
