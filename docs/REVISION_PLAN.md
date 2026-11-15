@@ -262,7 +262,7 @@ deep architectures", which contradicts the DQN dissonance result.)
 9. Reproducibility: after "via \texttt{python run\_all.py}." add "All
    hyperparameters are set in the configuration classes of the repository."
 
-### [ ] Revision 6: proofread (Reviewer 4)
+### [x] Revision 6: proofread (Reviewer 4)
 
 1. Abstract: "have always been known to be closely related" → "have long been
    known to be closely related"; "have not gotten as much attention" → "have
