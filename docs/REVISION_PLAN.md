@@ -338,3 +338,54 @@ This plan answers by stating that the staleness evidence is correlational
 (Revision 1.7). A new intervention experiment (forcing occasional visits to
 the rejected arm and checking that divergence shrinks) would be a stronger
 answer, but the author has not asked for it.
+
+## Staleness intervention (run after the six revisions; NOT yet in the paper)
+
+The author asked to try the experiment listed under "Not in scope". It is in
+`src/experiments/exp_staleness_intervention.py`; results are in
+`results/exp_staleness_intervention/results.json`. Run it from the repo root
+with `python -m src.experiments.exp_staleness_intervention` (about a minute).
+
+Design: Exp 1's primary condition unchanged (tied arms, lambda = 0.001, same
+20 seeds), plus a staleness cap: after step 500, any arm that has gone `cap`
+steps without an update is force-visited. No cap reproduces the paper's
++0.863 at 100 steps exactly.
+
+Result in the paper's design, excess divergence at 100 steps (mean, SD):
+
+| Cap (steps) | Mean staleness of rejected arm | Excess divergence | Paired t(19) vs. no cap |
+|---|---|---|---|
+| none | 15.8 | +0.863 (0.390) | baseline |
+| 50 | 12.8 | +0.839 (0.360) | t = -1.08, p = 0.29 |
+| 20 | 4.4 | +0.374 (0.641) | t = -4.27, p = 4.1e-4 |
+| 10 | 2.3 | +0.185 (0.542) | t = -6.21, p = 5.8e-6 |
+| 5 | 1.0 | -0.108 (0.518) | t = -7.15, p = 8.5e-7 |
+| 2 | 0.5 | -0.133 (0.237) | t = -12.32, p = 1.7e-10 |
+
+Divergence falls as staleness is capped, in all 20 seeds (mean within-seed
+Spearman rho = 0.86), with the decay rate held fixed.
+
+### Finding about Exp 1 that the author must decide on
+
+The paper says that after 500 steps "the agent commits to the most-pulled
+arm for 1000 steps". In the code (`src/environments/bandit.py` and
+`_run_bandit_session` in `exp_dissonance.py`) the environment pays out from
+the committed arm, but the agent keeps choosing epsilon-greedily and each
+reward is credited to the arm the agent chose. After "commitment" the
+rejected arm's estimate still receives 231 of 1000 updates on average (range
+35 to 881 across seeds). With identical arms this is the same process as an
+agent that never commits. The paper's numbers are what this code produces,
+but the description of commitment does not match it.
+
+If commitment is made to bind the agent (the `lock_in` mode of the new
+script), Exp 1 gives larger and less noisy effects, but the zero-decay
+control is no longer near zero:
+
+| lambda | Excess at 100 steps | Excess at end |
+|---|---|---|
+| 0 | +0.339 (0.336) | +0.269 (0.439) |
+| 0.001 | +1.326 (0.364) | +3.441 (0.383) |
+| 0.01 | +4.342 (0.338) | +4.939 (0.378) |
+
+Nothing in the paper has been changed for either point. Options are in the
+chat reply of the session that added this section.
