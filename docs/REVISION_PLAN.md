@@ -389,3 +389,20 @@ control is no longer near zero:
 
 Nothing in the paper has been changed for either point. Options are in the
 chat reply of the session that added this section.
+
+### Follow-up measurement: does the gap grow after the decision?
+
+Chosen-minus-rejected gap in the committed agent (tied arms, lambda = 0.001,
+20 seeds), measured at the decision (step 500), 100 steps later, and at the end:
+
+| Version | At decision | +100 steps | End | Change by +100 |
+|---|---|---|---|---|
+| Paper's code (agent not bound) | +0.841 | +0.923 | +0.324 | +0.082, p = 0.56 |
+| Binding commitment | +0.841 | +1.387 | +3.438 | +0.546, p = 1.8e-6 |
+
+In the paper's code the gap is already present at the decision and does not
+grow afterwards. The reported +0.863 is the gap the committed agent keeps
+while the observer, which samples both arms equally, loses it. So the current
+Exp 1 supports "self-determined sampling plus decay maintains a value gap
+between identical options", but not "the gap spreads after the decision".
+With binding commitment the gap does spread after the decision.
