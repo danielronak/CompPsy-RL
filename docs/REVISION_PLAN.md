@@ -466,20 +466,20 @@ the 8.38% bar was drawn cut off (`src/analysis/human_benchmarks.py`).
 
 ### Paper edits that follow
 
-- [ ] Exp 1 results paragraph, Table I, Fig. 1 caption: all numbers.
-- [ ] Zero-decay wording: "commitment alone is insufficient" becomes a small
+- [x] Exp 1 results paragraph, Table I, Fig. 1 caption: all numbers.
+- [x] Zero-decay wording: "commitment alone is insufficient" becomes a small
   selection effect on noisy estimates (the Chen and Risen artifact) that decay
   amplifies. Abstract and contribution (2) must not say the confound is
   excluded outright.
-- [ ] Staleness section: new per-seed r; add the intervention result in place
+- [x] Staleness section: new per-seed r; add the intervention result in place
   of "left to future work"; note the Exp 4.4 staleness simulation uses
   epsilon_0 = 0.2 (it differs from Exp 4's 0.1).
-- [ ] Human benchmark sentence and Fig. 4 caption: new Exp 1 value; it no
+- [x] Human benchmark sentence and Fig. 4 caption: new Exp 1 value; it no
   longer sits numerically close to Brehm's 0.81, so describe direction only.
-- [ ] DQN section, abstract, Fig. 5 caption, Discussion: the tabular
+- [x] DQN section, abstract, Fig. 5 caption, Discussion: the tabular
   comparator (was +0.92) and the "about 88%" reduction, recomputed against
   the tabular raw gap at the end of the run.
-- [ ] Keep 6 pages; run the four build checks; diff numbers against JSON.
+- [x] Keep 6 pages; run the four build checks; diff numbers against JSON.
 - [ ] Regenerate the Word file; send both files.
 - [ ] Tell the author what to say to the chairs (results in Exp 1 changed
   because a code/description mismatch was corrected).

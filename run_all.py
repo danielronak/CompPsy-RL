@@ -100,6 +100,9 @@ def main():
         analyze_shared_mechanism(results_dir=f"{args.results_dir}/cross_experiment_analysis")
         print("\nGenerating Human-Benchmark Summary Plots...")
         generate_human_benchmarks_summary(results_dir=f"{args.results_dir}/cross_experiment_analysis")
+        print("\nRunning Staleness Intervention (Exp 1, direct manipulation)...")
+        from src.experiments.exp_staleness_intervention import main as run_staleness_intervention
+        run_staleness_intervention()
 
     print("\n" + "=" * 70)
     print("ALL REQUESTED EXPERIMENTS COMPLETE")
