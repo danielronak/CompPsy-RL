@@ -406,3 +406,58 @@ while the observer, which samples both arms equally, loses it. So the current
 Exp 1 supports "self-determined sampling plus decay maintains a value gap
 between identical options", but not "the gap spreads after the decision".
 With binding commitment the gap does spread after the decision.
+
+## Path 1 (chosen by the author): re-run Exp 1 with binding commitment
+
+Goal: make the code do what the paper says ("the agent commits to the
+most-pulled arm"), re-run everything that depends on it, and update the paper.
+Tick each step when done and committed.
+
+### Code
+
+- [ ] `src/experiments/exp_dissonance.py`, `_run_bandit_session`: credit each
+  reward to the arm that was actually pulled (`info["effective_action"]`), and
+  log that arm in `step_log`. The environment already forces the committed
+  arm after step 500, so this makes commitment bind the agent.
+- [ ] `src/analysis/shared_mechanism.py`: the Exp 4.1 staleness simulation has
+  the same crediting line; fix it the same way.
+- [ ] `src/experiments/exp_staleness_intervention.py`: drop the old "free"
+  mode; keep the cap sweep under binding commitment. With no cap it must
+  reproduce the new primary numbers.
+- The DQN dissonance run (`exp_dqn_replication.py`) already binds the agent
+  and is **not** re-run. Exps 2, 3, 4 and ChoiceRoom do not use commitment.
+
+### Re-run (needs numpy, scipy, matplotlib, seaborn, pandas, tqdm; no torch)
+
+- [ ] `python run_all.py --exp 4.1`
+- [ ] `python run_all.py --exp cross` (staleness analysis and benchmark figure)
+- [ ] `python -m src.experiments.exp_staleness_intervention`
+- [ ] Copy regenerated figures into `latex/figures/`:
+  `dose_response_ablation.png` (Fig. 1), `shared_mechanism_staleness.png`
+  (Fig. 3), `human_benchmarks_4panel.png` (Fig. 4).
+
+### Expected numbers (from the exploratory run; replace with the re-run values)
+
+Primary: about +1.33 at 100 steps and +3.44 at the end. Zero decay: about
++0.34 and +0.27, so it is no longer "near zero". High decay: about +4.34 and
++4.94. Endogenous and observer rows should not change.
+
+### Paper edits that follow
+
+- [ ] Exp 1 results paragraph, Table I, Fig. 1 caption: all numbers.
+- [ ] Zero-decay wording: "commitment alone is insufficient" becomes a small
+  selection effect on noisy estimates (the Chen and Risen artifact) that decay
+  amplifies. Abstract and contribution (2) must not say the confound is
+  excluded outright.
+- [ ] Staleness section: new per-seed r; add the intervention result in place
+  of "left to future work"; note the Exp 4.4 staleness simulation uses
+  epsilon_0 = 0.2 (it differs from Exp 4's 0.1).
+- [ ] Human benchmark sentence and Fig. 4 caption: new Exp 1 value; it no
+  longer sits numerically close to Brehm's 0.81, so describe direction only.
+- [ ] DQN section, abstract, Fig. 5 caption, Discussion: the tabular
+  comparator (was +0.92) and the "about 88%" reduction, recomputed against
+  the tabular raw gap at the end of the run.
+- [ ] Keep 6 pages; run the four build checks; diff numbers against JSON.
+- [ ] Regenerate the Word file; send both files.
+- [ ] Tell the author what to say to the chairs (results in Exp 1 changed
+  because a code/description mismatch was corrected).
