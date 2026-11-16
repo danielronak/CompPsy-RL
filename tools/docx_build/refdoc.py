@@ -59,7 +59,7 @@ style("First Paragraph", 10, J, Inches(0.2))
 style("Compact", 8, C, None)
 style("Heading 1", 10, C, None, before=8, after=4, small_caps=True)
 style("Heading 2", 10, L, None, before=6, after=3, italic=True)
-style("Image Caption", 8, J, None, before=2, after=8)
+style("Image Caption", 8, J, None, before=2, after=4)
 style("Table Caption", 8, C, None, before=8, after=3)
 for nm in ("Captioned Figure", "Figure"):
     try:

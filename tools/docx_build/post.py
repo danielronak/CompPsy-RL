@@ -106,7 +106,7 @@ for p in d.paragraphs:
     if in_refs and p.text.strip():
         pf = p.paragraph_format
         pf.left_indent, pf.first_line_indent = Inches(0.3), Inches(-0.3)
-        pf.space_after = Pt(2)
+        pf.space_after = Pt(0)
         for r in p.runs:
             r.font.size = Pt(8)
 
@@ -120,7 +120,8 @@ for inline in body.iter(qn("wp:inline")):
     ext = inline.find(qn("wp:extent"))
     cx, cy = int(ext.get("cx")), int(ext.get("cy"))
     aspect = cx / cy
-    w = Inches(2.4) if aspect < 1.3 else COL_W   # the near-square DQN bar chart stays compact
+    # near-square DQN bar chart and the 4-panel benchmark figure stay compact; the rest fill the column
+    w = Inches(1.8) if aspect < 1.3 else (Inches(2.7) if aspect < 1.6 else Inches(3.1))
     h = int(w / aspect)
     ext.set("cx", str(int(w))); ext.set("cy", str(h))
     for a_ext in inline.iter(qn("a:ext")):
