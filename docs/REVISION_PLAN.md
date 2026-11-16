@@ -415,13 +415,13 @@ Tick each step when done and committed.
 
 ### Code
 
-- [ ] `src/experiments/exp_dissonance.py`, `_run_bandit_session`: credit each
+- [x] `src/experiments/exp_dissonance.py`, `_run_bandit_session`: credit each
   reward to the arm that was actually pulled (`info["effective_action"]`), and
   log that arm in `step_log`. The environment already forces the committed
   arm after step 500, so this makes commitment bind the agent.
-- [ ] `src/analysis/shared_mechanism.py`: the Exp 4.1 staleness simulation has
+- [x] `src/analysis/shared_mechanism.py`: the Exp 4.1 staleness simulation has
   the same crediting line; fix it the same way.
-- [ ] `src/experiments/exp_staleness_intervention.py`: drop the old "free"
+- [x] `src/experiments/exp_staleness_intervention.py`: drop the old "free"
   mode; keep the cap sweep under binding commitment. With no cap it must
   reproduce the new primary numbers.
 - The DQN dissonance run (`exp_dqn_replication.py`) already binds the agent
@@ -429,18 +429,40 @@ Tick each step when done and committed.
 
 ### Re-run (needs numpy, scipy, matplotlib, seaborn, pandas, tqdm; no torch)
 
-- [ ] `python run_all.py --exp 4.1`
-- [ ] `python run_all.py --exp cross` (staleness analysis and benchmark figure)
-- [ ] `python -m src.experiments.exp_staleness_intervention`
-- [ ] Copy regenerated figures into `latex/figures/`:
+- [x] `python run_all.py --exp 4.1`
+- [x] `python run_all.py --exp cross` (staleness analysis and benchmark figure)
+- [x] `python -m src.experiments.exp_staleness_intervention`
+- [x] Copy regenerated figures into `latex/figures/`:
   `dose_response_ablation.png` (Fig. 1), `shared_mechanism_staleness.png`
   (Fig. 3), `human_benchmarks_4panel.png` (Fig. 4).
 
-### Expected numbers (from the exploratory run; replace with the re-run values)
+### Re-run results (from the JSON files; these are the numbers for the paper)
 
-Primary: about +1.33 at 100 steps and +3.44 at the end. Zero decay: about
-+0.34 and +0.27, so it is no longer "near zero". High decay: about +4.34 and
-+4.94. Endogenous and observer rows should not change.
+Excess divergence, mean ± SD over 20 seeds:
+
+| Condition | At 100 steps | At end |
+|---|---|---|
+| Primary (lambda 0.001) | +1.326 ± 0.364, paired t(19) = 16.29, p = 1.3e-12, d = 3.64 | +3.489 ± 0.219 |
+| Near-tied | +1.338 ± 0.367, d = 3.65 | +3.520 ± 0.216 |
+| No decay (lambda 0) | +0.340 ± 0.335, t(19) = 4.53, p = 2.3e-4, d = 1.01 | +0.331 ± 0.306 |
+| High decay (lambda 0.01) | +4.340 ± 0.330 | +4.995 ± 0.173 |
+| Endogenous (unchanged) | n/a | +0.263 ± 0.792 |
+| Observer (unchanged) | +0.060 ± 0.341 | -0.051 ± 0.384 |
+
+Committed agent's raw gap at the end: +3.438 ± 0.251 (Q_chosen 4.95,
+Q_rejected 1.51). DQN raw gap at the end is +0.11, so the reduction is
+1 - 0.11/3.44 = about 97%.
+
+Staleness correlation in Exp 1: per-seed mean r = 0.948, 95% CI [0.942,
+0.953], p = 1.7e-24. Exp 4.4 staleness-entropy r = 0.82 is unchanged.
+
+Staleness intervention (excess at end): no cap +3.489; cap 200 +2.778; cap
+100 +2.277; cap 50 +1.605; cap 20 +0.840; cap 10 +0.461; cap 5 +0.310; cap 2
+-0.031. Cap 10 vs. no cap: paired t(19) = -57.50, p = 8.9e-23. Monotonic in
+20/20 seeds.
+
+Also fixed while regenerating Fig. 4: panel B's y-axis was capped at 1.8%, so
+the 8.38% bar was drawn cut off (`src/analysis/human_benchmarks.py`).
 
 ### Paper edits that follow
 

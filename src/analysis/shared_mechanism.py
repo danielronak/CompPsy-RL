@@ -77,6 +77,8 @@ def analyze_shared_mechanism(results_dir: str = "results/cross_experiment_analys
         for step in range(n_steps):
             action = agent.select_action(0)
             _, reward, _, info = env.step(action)
+            # credit the arm actually pulled (the committed arm after commitment)
+            action = info.get("effective_action", action)
             agent.update(0, action, reward, 0, True)
 
             last_pulled[action] = step

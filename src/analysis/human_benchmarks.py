@@ -182,7 +182,7 @@ def generate_human_benchmarks_summary(results_dir: str = "results/cross_experime
     ax_b.set_title("B. Impostor Syndrome: Persistent Underconfidence\nBenchmarked against Katyal et al. (2025)",
                    fontsize=11, fontweight="bold")
     ax_b.axhline(0, color="black", linestyle="--", alpha=0.5)
-    ax_b.set_ylim(-0.3, 1.8)
+    ax_b.set_ylim(-0.8, rl_gap_impostor * 100 + 2.6)   # show the full bar and its label
     ax_b.text(0, rl_gap_impostor * 100 + 0.25, f"Gap = +{rl_gap_impostor*100:.2f}%\n(Damped Rule $\\kappa=0.2$)",
               ha="center", va="bottom", color="#e63946", fontweight="bold", fontsize=9.5)
     ax_b.text(1, 0.2, f"Gap = {rl_gap_control*100:.2f}%\n(Calibrated $\\kappa=1.0$)",
@@ -202,7 +202,7 @@ def generate_human_benchmarks_summary(results_dir: str = "results/cross_experime
     ax_c.set_title("C. Self-Handicapping: Ego-Protective Defense\nAnalogue to Berglas & Jones (1978)",
                    fontsize=11, fontweight="bold")
     _ratio = (rl_handicap_biased / rl_handicap_control) if rl_handicap_control > 0 else float("nan")
-    ax_c.set_ylim(0, max(45.0, rl_handicap_biased * 100 + 12.0))
+    ax_c.set_ylim(0, max(45.0, rl_handicap_biased * 100 + 20.0))   # headroom so the note clears the bar label
     ax_c.text(0, rl_handicap_biased * 100 + 2.0, f"{rl_handicap_biased*100:.1f}%\n(Threat)",
               ha="center", va="bottom", color="#e76f51", fontweight="bold", fontsize=9.5)
     ax_c.text(1, rl_handicap_control * 100 + 2.0, f"{rl_handicap_control*100:.1f}%\n(Control)",

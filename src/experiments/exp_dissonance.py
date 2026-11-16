@@ -175,7 +175,11 @@ class CognitiveDissonanceExperiment(ExperimentRunner):
                     arm_reward = env.get_all_rewards_at_step(step)[arm]
                     agent.update(state, arm, arm_reward, next_state, True)
             else:
-                # Standard: only update the arm that was pulled
+                # Standard: only update the arm that was pulled. After
+                # commitment the environment forces the committed arm, so the
+                # reward must be credited to that arm (the effective action),
+                # not to whatever the agent's epsilon-greedy rule proposed.
+                action = info.get("effective_action", action)
                 agent.update(state, action, reward, next_state, True)
 
             # --- Record commitment ---
