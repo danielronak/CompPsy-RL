@@ -480,6 +480,6 @@ the 8.38% bar was drawn cut off (`src/analysis/human_benchmarks.py`).
   comparator (was +0.92) and the "about 88%" reduction, recomputed against
   the tabular raw gap at the end of the run.
 - [x] Keep 6 pages; run the four build checks; diff numbers against JSON.
-- [ ] Regenerate the Word file; send both files.
+- [x] Regenerate the Word file; send both files.
 - [ ] Tell the author what to say to the chairs (results in Exp 1 changed
   because a code/description mismatch was corrected).
